@@ -1,4 +1,4 @@
-package com.example.nuevomovil.ui.theme
+package com.example.soymusicreviewapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

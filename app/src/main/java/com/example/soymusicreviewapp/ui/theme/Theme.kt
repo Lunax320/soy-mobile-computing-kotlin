@@ -1,4 +1,4 @@
-package com.example.nuevomovil.ui.theme
+package com.example.soymusicreviewapp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
