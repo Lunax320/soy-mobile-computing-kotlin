@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
-import com.example.soymusicreviewapp.ui.utils.FooterScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Scaffold(
                 bottomBar = {
-                    FooterScreen()
+
                 }
             ){
                 ExploreScreen(
@@ -41,7 +40,7 @@ fun GreetingPreview2() {
     CompMovilProyectoTheme {
         Scaffold(
             bottomBar = {
-                FooterScreen()
+
             }
         ){
             ExploreScreen(Modifier.padding(it))

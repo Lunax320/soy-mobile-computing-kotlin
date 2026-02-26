@@ -14,28 +14,3 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-@Composable
-fun BottomIcon(
-    modifier: Modifier = Modifier,
-    imageId: Int,
-    descriptionId: Int,
-    iconNameId: Int
-){
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Image(
-            painter = painterResource(imageId),
-            contentDescription = stringResource(descriptionId),
-            modifier = Modifier.size(30.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = stringResource(iconNameId),
-            color = Color.White,
-            fontSize = 13.sp
-        )
-    }
-}
