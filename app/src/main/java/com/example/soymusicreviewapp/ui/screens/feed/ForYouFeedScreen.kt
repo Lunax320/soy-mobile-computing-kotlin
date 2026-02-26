@@ -15,6 +15,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 
 @Composable
 fun ForYouScreenBody(
+    onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val allReviews = LocalReviewProvider.reviews
@@ -23,19 +24,28 @@ fun ForYouScreenBody(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            ReviewList(allReviews, modifier = Modifier.weight(1f), title = stringResource(R.string.recommended_reviews_for_you))
+
+            ReviewList(
+                onReviewClick = { reviewId -> onReviewClick(reviewId) },
+                modifier = Modifier.weight(1f),
+                title = stringResource(R.string.recommended_reviews_for_you),
+                reviews = allReviews
+            )
         }
     }
 }
 
 @Composable
-fun ForYouScreen() {
+fun ForYouFeedScreen(
+    onReviewClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         FeedScreenHeader(0)
         ForYouScreenBody(
+            onReviewClick = onReviewClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -48,6 +58,9 @@ fun ForYouScreen() {
 //--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
-fun ForYouScreenPreview() {
-    ForYouScreen()
+fun ForYouFeedScreenPreview() {
+    ForYouFeedScreen(
+        onReviewClick = {}
+    )
 }
+

@@ -6,6 +6,7 @@ import com.example.soymusicreviewapp.data.Review
 object LocalReviewProvider {
     val reviews = listOf(
         Review(
+            usernameId = 1,
             userImageId = R.drawable.img_avatar_one,
             userName = "MusicLover",
             date = "2023-08-01",
@@ -15,6 +16,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            usernameId = 2,
             userImageId = R.drawable.img_avatar_two,
             userName = "Sarah_Music",
             date = "2023-08-01",
@@ -24,6 +26,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            usernameId = 3,
             userImageId = R.drawable.img_avatar_three,
             userName = "Joselito Records",
             date = "2025-11-23",
@@ -33,6 +36,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            usernameId = 4,
             userImageId = R.drawable.img_avatar_four,
             userName = "SynthFan99",
             date = "2025-12-05",
@@ -42,6 +46,7 @@ object LocalReviewProvider {
             rating = 4
         ),
         Review(
+            usernameId = 5,
             userImageId = R.drawable.img_avatar_five,
             userName = "AuroraBorealis",
             date = "2026-01-10",
@@ -51,6 +56,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            usernameId = 6,
             userImageId = R.drawable.img_avatar_six,
             userName = "NightDriver",
             date = "2026-02-14",
@@ -60,6 +66,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            usernameId = 7,
             userImageId = R.drawable.img_avatar_one,
             userName = "PopCritic",
             date = "2026-02-19",

@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -112,6 +111,7 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
+    onReviewClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false
 ) {
@@ -120,11 +120,12 @@ fun ReviewCard(
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.vclaro)
         ),
+        onClick = { onReviewClick(review.usernameId) },
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        ReviewContent(
+        ReviewInfo(
             review = review,
             isProfileView = isProfileView
         )
@@ -133,6 +134,7 @@ fun ReviewCard(
 
 @Composable
 fun ReviewList(
+    onReviewClick: (Int) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
@@ -159,7 +161,8 @@ fun ReviewList(
             ReviewCard(
                 review = reviews[index],
                 modifier = Modifier.fillMaxWidth(),
-                isProfileView = isProfileView
+                isProfileView = isProfileView,
+                onReviewClick = onReviewClick
             )
         }
     }

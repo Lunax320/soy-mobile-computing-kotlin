@@ -15,6 +15,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 
 @Composable
 fun FollowingFeedScreenBody(
+    onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val allReviews = LocalReviewProvider.reviews
@@ -23,19 +24,26 @@ fun FollowingFeedScreenBody(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            ReviewList(allReviews, modifier = Modifier.weight(1f), title = stringResource(R.string.reviews_from_users_you_follow))
+            ReviewList(
+                onReviewClick = { reviewId -> onReviewClick(reviewId) },
+                allReviews, modifier = Modifier.weight(1f),
+                title = stringResource(R.string.reviews_from_users_you_follow))
         }
     }
 }
 
 @Composable
-fun FollowingFeedScreen() {
+fun FollowingFeedScreen(
+    onReviewClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         FeedScreenHeader(1)
         FollowingFeedScreenBody(
+            onReviewClick = onReviewClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -49,5 +57,7 @@ fun FollowingFeedScreen() {
 @Preview(showBackground = true)
 @Composable
 fun FollowingFeedScreenPreview() {
-    FollowingFeedScreen()
+    FollowingFeedScreen(
+        onReviewClick = {}
+    )
 }
