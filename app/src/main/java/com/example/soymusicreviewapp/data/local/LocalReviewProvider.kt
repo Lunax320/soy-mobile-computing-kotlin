@@ -1,7 +1,7 @@
-package com.example.soymusicreviewapp.ui.data.local
+package com.example.soymusicreviewapp.data.local
 
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Review
+import com.example.soymusicreviewapp.data.Review
 
 object LocalReviewProvider {
     val reviews = listOf(

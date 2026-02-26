@@ -19,10 +19,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Review
-import com.example.soymusicreviewapp.ui.data.Song
-import com.example.soymusicreviewapp.ui.data.local.LocalReviewProvider
-import com.example.soymusicreviewapp.ui.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.data.Song
+import com.example.soymusicreviewapp.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewCard
@@ -85,7 +85,7 @@ fun LatestFeedList(
 }
 
 @Composable
-fun NewsFeedScreen() {
+fun LatestFeedScreen() {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -108,6 +108,6 @@ fun NewsFeedScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun NewsFeedPreview() {
-    NewsFeedScreen()
+fun LatestFeedPreview() {
+    LatestFeedScreen()
 }

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewList

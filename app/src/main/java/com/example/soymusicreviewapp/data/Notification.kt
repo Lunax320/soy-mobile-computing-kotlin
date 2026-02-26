@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.data
+package com.example.soymusicreviewapp.data
 
 import androidx.annotation.DrawableRes
 

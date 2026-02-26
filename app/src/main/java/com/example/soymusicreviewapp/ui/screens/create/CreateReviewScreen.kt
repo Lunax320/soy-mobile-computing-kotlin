@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
 import com.example.soymusicreviewapp.ui.utils.SearchBar
 import com.example.soymusicreviewapp.ui.utils.SongList

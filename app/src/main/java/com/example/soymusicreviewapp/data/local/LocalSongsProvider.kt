@@ -1,7 +1,7 @@
-package com.example.soymusicreviewapp.ui.data.local
+package com.example.soymusicreviewapp.data.local
 
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Song
+import com.example.soymusicreviewapp.data.Song
 
 object LocalSongsProvider {
     val songs = listOf(

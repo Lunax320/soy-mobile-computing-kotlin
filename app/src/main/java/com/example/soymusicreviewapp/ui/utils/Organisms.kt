@@ -31,8 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Review
-import com.example.soymusicreviewapp.ui.data.Song
+import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.data.Song
 import kotlin.Boolean
 
 @Composable

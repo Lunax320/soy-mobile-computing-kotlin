@@ -1,7 +1,7 @@
-package com.example.soymusicreviewapp.ui.data.local
+package com.example.soymusicreviewapp.data.local
 
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Notification
+import com.example.soymusicreviewapp.data.Notification
 
 object LocalNotificationProvider {
     val notifications = listOf(
