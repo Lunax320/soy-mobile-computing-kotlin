@@ -23,6 +23,7 @@ import com.example.soymusicreviewapp.ui.screens.feed.LatestFeedScreen
 import com.example.soymusicreviewapp.ui.screens.feed.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileScreen
+import com.example.soymusicreviewapp.ui.screens.profile.SettingsScreen
 
 sealed class Screen (val route: String) {
     object StartScreen : Screen("start")
@@ -113,11 +114,15 @@ fun AppNavigation (
         }
 
         composable(route = Screen.ProfileScreen.route) {
-            ProfileScreen()
+            ProfileScreen(
+                settingsButtonPressed = {
+                    navController.navigate(Screen.SettingsScreen.route)
+                }
+            )
         }
 
         composable(route = Screen.SettingsScreen.route) {
-            /*SettingsScreen()*/
+            SettingsScreen()
         }
 
 
