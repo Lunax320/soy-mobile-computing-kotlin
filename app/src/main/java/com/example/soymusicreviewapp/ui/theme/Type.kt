@@ -2,6 +2,7 @@ package com.example.soymusicreviewapp.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.googlefonts.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -11,6 +12,7 @@ import com.example.soymusicreviewapp.R
 
 
 // Set of Material typography styles to start with
+
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
     providerPackage = "com.google.android.gms",
@@ -32,7 +34,7 @@ val displayFontFamily = FontFamily(
 )
 
 val soyLogoFont = FontFamily (
-    androidx.compose.ui.text.font.Font(R.font.Cedarville)
+    androidx.compose.ui.text.font.Font(R.font.cedarville)
 )
 
 

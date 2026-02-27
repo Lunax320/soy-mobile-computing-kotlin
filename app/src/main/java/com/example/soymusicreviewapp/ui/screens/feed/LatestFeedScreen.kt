@@ -85,11 +85,17 @@ fun LatestFeedList(
 }
 
 @Composable
-fun LatestFeedScreen() {
+fun LatestFeedScreen(
+    modifier: Modifier,
+    latestCreateAccount: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        FeedScreenHeader(2)
+        FeedScreenHeader(
+            currentTab = 2,
+            HeaderButtonPressed = latestCreateAccount
+        )
 
         Box {
             val allReviews = LocalReviewProvider.reviews
@@ -109,5 +115,8 @@ fun LatestFeedScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LatestFeedPreview() {
-    LatestFeedScreen()
+    LatestFeedScreen(
+        modifier = Modifier,
+        latestCreateAccount = {}
+    )
 }

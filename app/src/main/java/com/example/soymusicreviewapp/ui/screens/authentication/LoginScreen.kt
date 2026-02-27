@@ -36,7 +36,9 @@ import com.example.soymusicreviewapp.ui.utils.LogoSoy
 import com.example.soymusicreviewapp.ui.utils.TextSoy
 
 @Composable
-fun LoginScreenBody(modifier: Modifier = Modifier) {
+fun LoginScreenBody(
+    modifier: Modifier = Modifier,
+    loginButtonPressed: () -> Unit) {
 
     var userText by remember { mutableStateOf("") }
     var passwordText by remember { mutableStateOf("") }
@@ -82,28 +84,29 @@ fun LoginScreenBody(modifier: Modifier = Modifier) {
             textValue = passwordText,
             onValueChanged = { newText -> passwordText = newText }
         )
-
         Spacer(modifier = Modifier.height(50.dp))
-
         GeneralButton(
             text = stringResource(R.string.login),
             onClick = {
-                Log.d("Login screen", "User: $userText")
-                Log.d("Login screen","Password: $passwordText")
+                loginButtonPressed()
             }
         )
     }
 }
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    loginButtonPressed: () -> Unit) {
     Box(modifier = modifier) {
         PlainBackground()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ){
-            LoginScreenBody()
+            LoginScreenBody(
+                loginButtonPressed = loginButtonPressed
+            )
         }
     }
 }
@@ -115,6 +118,8 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 @Preview
 fun LoginScreenPreview(){
     CompMovilProyectoTheme {
-        LoginScreen()
+        LoginScreen(
+            loginButtonPressed = {}
+        )
     }
 }

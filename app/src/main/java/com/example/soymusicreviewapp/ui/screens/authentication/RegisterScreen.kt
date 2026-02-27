@@ -1,6 +1,5 @@
 package com.example.soymusicreviewapp.ui.screens.authentication
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +35,9 @@ import com.example.soymusicreviewapp.ui.utils.LogoSoy
 import com.example.soymusicreviewapp.ui.utils.TextSoy
 
 @Composable
-fun RegisterScreenBody(modifier: Modifier = Modifier) {
+fun RegisterScreenBody(
+    modifier: Modifier = Modifier,
+    loginCreateAccount: () -> Unit) {
 
     var nameText by remember { mutableStateOf("") }
     var userText by remember { mutableStateOf("") }
@@ -119,24 +120,25 @@ fun RegisterScreenBody(modifier: Modifier = Modifier) {
         GeneralButton(
             text = stringResource(R.string.create_account),
             onClick = {
-                Log.d("Register screen", "Name: $nameText")
-                Log.d("Register screen", "User: $userText")
-                Log.d("Register screen", "Email: $emailText")
-                Log.d("Register screen", "Password: $passwordText")
+                loginCreateAccount()
             }
         )
     }
 }
 
 @Composable
-fun RegisterScreen(modifier: Modifier = Modifier) {
+fun RegisterScreen(
+    modifier: Modifier = Modifier,
+    loginCreateAccount: () -> Unit) {
     Box(modifier = modifier) {
         PlainBackground()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ){
-            RegisterScreenBody()
+            RegisterScreenBody(
+                loginCreateAccount = loginCreateAccount
+            )
         }
     }
 }
@@ -148,6 +150,8 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
 @Preview
 fun RegisterScreenPreview(){
     CompMovilProyectoTheme {
-        RegisterScreen()
+        RegisterScreen(
+            loginCreateAccount = {}
+        )
     }
 }

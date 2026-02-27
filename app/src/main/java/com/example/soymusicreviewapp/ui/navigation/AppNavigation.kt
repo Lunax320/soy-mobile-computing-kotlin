@@ -46,25 +46,43 @@ fun AppNavigation (
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.ForYouFeedScreen.route,
+        startDestination = Screen.StartScreen.route,
         modifier = modifier
     ) {
         composable(route = Screen.StartScreen.route) {
-            StartScreen()
+            StartScreen(
+                loginButtonPressed = {
+                    navController.navigate(Screen.LoginScreen.route)
+                },
+                registerButtonPressed = {
+                    navController.navigate(Screen.RegisterScreen.route)
+                }
+            )
         }
 
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen()
+            LoginScreen(
+                loginButtonPressed = {
+                    navController.navigate(Screen.ForYouFeedScreen.route)
+                }
+            )
         }
 
         composable(route = Screen.RegisterScreen.route) {
-            RegisterScreen()
+            RegisterScreen(
+                loginCreateAccount = {
+                    navController.navigate(Screen.ForYouFeedScreen.route)
+                }
+            )
         }
 
         composable(route = Screen.ForYouFeedScreen.route) {
             ForYouFeedScreen(
                 onReviewClick = { reviewId ->
                     navController.navigate("reviewDetail/$reviewId")
+                },
+                followingButtonPressed = {
+                    navController.navigate(Screen.FollowingFeedScreen.route)
                 }
             )
         }
@@ -91,12 +109,20 @@ fun AppNavigation (
             FollowingFeedScreen(
                 onReviewClick = { reviewId ->
                     navController.navigate("reviewDetail/$reviewId")
+                },
+                latestButtonPressed = {
+                    navController.navigate(Screen.LatestFeedScreen.route)
                 }
             )
         }
 
         composable(route = Screen.LatestFeedScreen.route) {
-            LatestFeedScreen()
+            LatestFeedScreen(
+                modifier = Modifier,
+                latestCreateAccount = {
+                    navController.navigate(Screen.ForYouFeedScreen.route)
+                }
+            )
         }
 
         composable(route = Screen.ExploreScreen.route) {

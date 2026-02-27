@@ -34,6 +34,7 @@ fun FollowingFeedScreenBody(
 
 @Composable
 fun FollowingFeedScreen(
+    latestButtonPressed: () -> Unit,
     onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +42,8 @@ fun FollowingFeedScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        FeedScreenHeader(1)
+        FeedScreenHeader(1,
+            HeaderButtonPressed = latestButtonPressed)
         FollowingFeedScreenBody(
             onReviewClick = onReviewClick,
             modifier = Modifier
@@ -58,6 +60,7 @@ fun FollowingFeedScreen(
 @Composable
 fun FollowingFeedScreenPreview() {
     FollowingFeedScreen(
-        onReviewClick = {}
+        onReviewClick = {},
+        latestButtonPressed = {}
     )
 }

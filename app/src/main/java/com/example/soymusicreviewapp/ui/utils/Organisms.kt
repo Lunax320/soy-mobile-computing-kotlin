@@ -37,6 +37,7 @@ import kotlin.Boolean
 @Composable
 fun FeedScreenHeader(
     currentTab: Int,
+    HeaderButtonPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colorForYou: Int
@@ -85,7 +86,10 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorForYou)
+                    color = colorResource(colorForYou),
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
                 )
                 GeneralButton(
                     text = "Social",
@@ -93,7 +97,10 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorFollowing)
+                    color = colorResource(colorFollowing),
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
                 )
                 GeneralButton(
                     text = "Latest",
@@ -101,7 +108,10 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorLatest)
+                    color = colorResource(colorLatest),
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
                 )
             }
         }
@@ -118,9 +128,9 @@ fun ReviewCard(
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
+        /*colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.vclaro)
-        ),
+        ),*/
         onClick = { onReviewClick(review.usernameId) },
         modifier = modifier
             .fillMaxWidth()
@@ -177,9 +187,9 @@ fun SongCard(
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
+        /*colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.vclaro)
-        ),
+        )*/
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp)

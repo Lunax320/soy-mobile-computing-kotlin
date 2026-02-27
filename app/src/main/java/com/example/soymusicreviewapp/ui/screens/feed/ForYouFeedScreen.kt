@@ -38,12 +38,15 @@ fun ForYouScreenBody(
 @Composable
 fun ForYouFeedScreen(
     onReviewClick: (Int) -> Unit,
+    followingButtonPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        FeedScreenHeader(0)
+        FeedScreenHeader(
+            currentTab = 0,
+            HeaderButtonPressed = followingButtonPressed)
         ForYouScreenBody(
             onReviewClick = onReviewClick,
             modifier = Modifier
@@ -60,7 +63,8 @@ fun ForYouFeedScreen(
 @Composable
 fun ForYouFeedScreenPreview() {
     ForYouFeedScreen(
-        onReviewClick = {}
+        onReviewClick = {},
+        followingButtonPressed = {}
     )
 }
 

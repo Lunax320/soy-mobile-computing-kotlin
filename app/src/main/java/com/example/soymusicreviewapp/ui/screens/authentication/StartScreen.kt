@@ -27,7 +27,9 @@ import com.example.soymusicreviewapp.ui.utils.LogoSoy
 
 @Composable
 fun StartScreenBody(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loginButtonPressed: () -> Unit,
+    registerButtonPressed: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,20 +65,30 @@ fun StartScreenBody(
 
         Spacer(modifier = Modifier.height(50.dp))
 
-        GeneralButton(text = stringResource(R.string.login))
+        GeneralButton(
+            text = stringResource(R.string.login),
+            onClick = {
+                loginButtonPressed()
+            }
+        )
 
         Spacer(modifier = Modifier.height(4.dp))
 
         GeneralButton(
             text = stringResource(R.string.register),
-            color = colorResource(R.color.violetaApagado)
+            color = colorResource(R.color.violetaApagado),
+            onClick = {
+                registerButtonPressed()
+            }
         )
     }
 }
 
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    loginButtonPressed: () -> Unit,
+    registerButtonPressed: () -> Unit
 ){
     Box(modifier = modifier.fillMaxSize()){
         PlainBackground()
@@ -84,7 +96,10 @@ fun StartScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ){
-            StartScreenBody()
+            StartScreenBody(
+                loginButtonPressed = loginButtonPressed,
+                registerButtonPressed = registerButtonPressed
+            )
         }
     }
 }
@@ -96,6 +111,9 @@ fun StartScreen(
 @Preview
 fun StartScreenPreview(){
     CompMovilProyectoTheme {
-        StartScreen()
+        StartScreen(
+            loginButtonPressed = {},
+            registerButtonPressed = {}
+        )
     }
 }
