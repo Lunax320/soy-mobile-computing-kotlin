@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -20,7 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.ui.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
 import com.example.soymusicreviewapp.ui.utils.SearchBar
@@ -89,6 +94,8 @@ fun GenresFilter(
 fun ExploreScreenHeader(
     modifier: Modifier = Modifier
 ) {
+    var searchValue by remember { mutableStateOf("") }
+
     Box(modifier = modifier) {
         TopPlainBackground()
         Column(
@@ -124,8 +131,10 @@ fun ExploreScreenHeader(
 
             SearchBar(
                 modifier = Modifier,
-                currentValue = "",
-                onValueChanged = {}
+                currentValue = searchValue,
+                onValueChanged = {
+                    searchValue = it
+                }
             )
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -225,8 +234,8 @@ fun ExploreScreenBodyPreview() {
     ExploreScreenBody()
 }
 
-@Composable
 @Preview
+@Composable
 fun ExploreScreenPreview() {
     ExploreScreen()
 }
