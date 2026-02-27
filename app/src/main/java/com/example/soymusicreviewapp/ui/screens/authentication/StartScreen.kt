@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
+import com.example.soymusicreviewapp.ui.theme.soyLogoFont
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.LogoSoy
@@ -44,6 +45,10 @@ fun StartScreenBody(
         Spacer(modifier = Modifier.height(6.dp))
 
         LogoSoy()
+        Text(
+            " Song Of The Year",
+            fontFamily = soyLogoFont
+        )
 
         Spacer(modifier = Modifier.height(6.dp))
 
@@ -69,7 +74,7 @@ fun StartScreenBody(
 
         GeneralButton(
             text = stringResource(R.string.register),
-            color = R.color.violetaApagado
+            color = colorResource(R.color.violetaClaro)
         )
     }
 }
