@@ -59,4 +59,5 @@
     <string name="profile_icon">Profile icon</string>
     <string name="profile">Profile</string>
     <string name="app_name">NuevoMovil</string>
+    <string name="drawable_bg_plain_bottom">drawable.bg_plain_bottom</string>
 </resources>

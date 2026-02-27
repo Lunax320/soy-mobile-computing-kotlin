@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList

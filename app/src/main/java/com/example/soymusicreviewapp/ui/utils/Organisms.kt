@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,8 +30,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Review
-import com.example.soymusicreviewapp.ui.data.Song
+import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.data.Song
 import kotlin.Boolean
 
 @Composable
@@ -112,6 +111,7 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
+    onReviewClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false
 ) {
@@ -120,94 +120,21 @@ fun ReviewCard(
         colors = CardDefaults.cardColors(
             containerColor = colorResource(id = R.color.vclaro)
         ),
+        onClick = { onReviewClick(review.usernameId) },
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-
-                Image(
-                    painter = painterResource(id = review.userImageId),
-                    contentDescription = "User image",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column {
-                    UserText(user = review.userName)
-                    Spacer(modifier = Modifier.height(5.dp))
-                    DateText(date = review.date)
-                }
-            }
-
-            if (isProfileView) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_edit),
-                        contentDescription = "Edit review",
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = "Delete review",
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-        }
-
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            SongText(songName = review.songName)
-            ArtistText(artistName = review.userName)
-            Spacer(modifier = Modifier.height(10.dp))
-            RatingText(rating = review.rating)
-            Spacer(modifier = Modifier.height(10.dp))
-            ReviewText(review = review.reviewText)
-            Spacer(modifier = Modifier.height(7.dp))
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_heart),
-                contentDescription = "Like",
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "42", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_comment),
-                contentDescription = "Comment",
-                modifier = Modifier.size(18.dp)
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "Comment", color = Color.White, fontSize = 14.sp)
-        }
+        ReviewInfo(
+            review = review,
+            isProfileView = isProfileView
+        )
     }
 }
 
 @Composable
 fun ReviewList(
+    onReviewClick: (Int) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
@@ -234,7 +161,8 @@ fun ReviewList(
             ReviewCard(
                 review = reviews[index],
                 modifier = Modifier.fillMaxWidth(),
-                isProfileView = isProfileView
+                isProfileView = isProfileView,
+                onReviewClick = onReviewClick
             )
         }
     }
@@ -318,65 +246,6 @@ fun SongList(
                 song = songs[index],
                 modifier = Modifier.fillMaxWidth(),
                 isNewRelease = isNewRelease
-            )
-        }
-    }
-}
-
-@Composable
-fun FooterScreen(){
-    Box(
-        modifier = Modifier
-    ){
-        Image(
-            painter = painterResource(R.drawable.bg_plain_bottom),
-            contentDescription = stringResource(R.string.bottom_background),
-            modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.Crop
-        )
-        Row (modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp, horizontal = 20.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            BottomIcon(
-                modifier = Modifier,
-                imageId = R.drawable.ic_home,
-                descriptionId = (R.string.home_icon),
-                iconNameId = (R.string.home)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-
-            BottomIcon(
-                modifier = Modifier,
-                imageId = R.drawable.ic_search,
-                descriptionId = (R.string.search_icon),
-                iconNameId = (R.string.explore)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-
-            BottomIcon(
-                modifier = Modifier,
-                imageId = R.drawable.ic_create,
-                descriptionId = (R.string.create_icon),
-                iconNameId = (R.string.create)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-
-            BottomIcon(
-                modifier = Modifier,
-                imageId = R.drawable.ic_notification,
-                descriptionId = R.string.notification_icon,
-                iconNameId = R.string.notifications
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-
-            BottomIcon(
-                modifier = Modifier,
-                imageId = R.drawable.ic_profile,
-                descriptionId = R.string.profile_icon,
-                iconNameId = R.string.profile
             )
         }
     }

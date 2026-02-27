@@ -26,7 +26,7 @@ import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.LogoSoy
 
 @Composable
-fun HomeScreenBody(
+fun StartScreenBody(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -75,7 +75,7 @@ fun HomeScreenBody(
 }
 
 @Composable
-fun HomeScreen(
+fun StartScreen(
     modifier: Modifier = Modifier
 ){
     Box(modifier = modifier.fillMaxSize()){
@@ -84,7 +84,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize()
         ){
-            HomeScreenBody()
+            StartScreenBody()
         }
     }
 }
@@ -94,8 +94,8 @@ fun HomeScreen(
 //--------------------------------------------------------------------------------------------------
 @Composable
 @Preview
-fun HomeScreenPreview(){
+fun StartScreenPreview(){
     CompMovilProyectoTheme {
-        HomeScreen()
+        StartScreen()
     }
 }

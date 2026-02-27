@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.Notification
-import com.example.soymusicreviewapp.ui.data.local.LocalNotificationProvider
+import com.example.soymusicreviewapp.data.Notification
+import com.example.soymusicreviewapp.data.local.LocalNotificationProvider
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 
 @Composable
