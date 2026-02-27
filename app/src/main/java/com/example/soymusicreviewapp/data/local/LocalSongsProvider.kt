@@ -6,6 +6,7 @@ import com.example.soymusicreviewapp.data.Song
 object LocalSongsProvider {
     val songs = listOf(
         Song(
+            songId = 1,
             imageId = R.drawable.img_the_mother_we_share,
             name = "The Mother We Share",
             artist = "CHVRCHES",
@@ -13,6 +14,7 @@ object LocalSongsProvider {
             duration = "3:14"
         ),
         Song(
+            songId = 2,
             imageId = R.drawable.img_oblivion,
             name = "Oblivion",
             artist = "Grimes",
@@ -20,6 +22,7 @@ object LocalSongsProvider {
             duration = "3:05"
         ),
         Song(
+            songId = 3,
             imageId = R.drawable.img_sunset,
             name = "Sunset",
             artist = "The Midnight",
@@ -27,6 +30,7 @@ object LocalSongsProvider {
             duration = "4:03"
         ),
         Song(
+            songId = 4,
             imageId = R.drawable.img_runaway,
             name = "Runaway",
             artist = "AURORA",
@@ -34,6 +38,7 @@ object LocalSongsProvider {
             duration = "4:10"
         ),
         Song(
+            songId = 5,
             imageId = R.drawable.img_something_comforting,
             name = "Something Comforting",
             artist = "Porter Robinson",
@@ -41,6 +46,7 @@ object LocalSongsProvider {
             duration = "3:30"
         ),
         Song(
+            songId = 6,
             imageId = R.drawable.img_midnight_city,
             name = "Midnight City",
             artist = "M83",
@@ -48,6 +54,7 @@ object LocalSongsProvider {
             duration = "4:04"
         ),
         Song(
+            songId = 7,
             imageId = R.drawable.img_clearest_blue,
             name = "Clearest Blue",
             artist = "CHVRCHES",
@@ -55,6 +62,7 @@ object LocalSongsProvider {
             duration = "5:43"
         ),
         Song(
+            songId = 8,
             imageId = R.drawable.img_genesis,
             name = "Genesis",
             artist = "Grimes",
@@ -62,6 +70,7 @@ object LocalSongsProvider {
             duration = "4:19"
         ),
         Song(
+            songId = 9,
             imageId = R.drawable.img_player_of_games,
             name = "Player of Games",
             artist = "Grimes",
@@ -69,6 +78,7 @@ object LocalSongsProvider {
             duration = "3:25"
         ),
         Song(
+            songId = 10,
             imageId = R.drawable.img_electricity,
             name = "Electricity",
             artist = "The Midnight",
@@ -76,6 +86,7 @@ object LocalSongsProvider {
             duration = "4:12"
         ),
         Song(
+            songId = 11,
             imageId = R.drawable.img_neon_dreams,
             name = "Neon Dreams",
             artist = "CHVRCHES",
