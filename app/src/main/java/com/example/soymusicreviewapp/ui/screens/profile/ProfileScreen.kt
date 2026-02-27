@@ -36,7 +36,14 @@ fun ProfileScreenHeader(){
         contentAlignment = Alignment.Center
     ) {
         TopPlainBackground()
-
+        Image(
+            painter = painterResource(R.drawable.settings),
+            contentDescription = "Settings",
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .size(40.dp)
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
@@ -44,6 +51,7 @@ fun ProfileScreenHeader(){
                 imageId = R.drawable.img_avatar_penguin,
                 descriptionId = (R.string.profile_photo)
             )
+
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 text = stringResource(R.string.music_lover),
@@ -135,6 +143,7 @@ fun ProfileImage(
             )
     )
 }
+
 
 
 @Composable
