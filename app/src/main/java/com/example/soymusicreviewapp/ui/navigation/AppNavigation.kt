@@ -79,8 +79,6 @@ fun AppNavigation (
             if (review != null) {
                 ReviewDetailScreen(
                     reviewInfo = review,
-                    // CORRECCIÓN: Cambia 'responseReview' por 'responseReviews' (en plural)
-                    // para que coincida con la definición de tu función
                     responseReviews = LocalReviewProvider.reviews,
                     modifier = Modifier.padding(12.dp)
                 )
