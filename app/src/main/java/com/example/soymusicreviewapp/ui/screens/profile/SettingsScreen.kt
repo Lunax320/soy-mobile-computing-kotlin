@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.utils.BackButton
-import com.example.soymusicreviewapp.ui.utils.CloseButton
-import com.example.soymusicreviewapp.ui.utils.DeleteButton
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
+import com.example.soymusicreviewapp.ui.utils.SettingsOption
+import com.example.soymusicreviewapp.ui.utils.SoyBackground
 
 
 @Composable
@@ -37,8 +40,8 @@ fun SettingsScreenHeader(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(colorResource(R.color.violetaClaro))
-                .padding(horizontal = 24.dp, vertical = 20.dp)
+                .background(colorResource(R.color.violetaApagado))
+                .padding(horizontal = 20.dp, vertical = 5.dp)
         ) {
             Column {
                 Row(
@@ -51,11 +54,11 @@ fun SettingsScreenHeader(
                             .padding(10.dp),
                         onBack = {}
                     )
-                    Spacer(modifier = Modifier.width(50.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
                     Text(
-                        text = stringResource(R.string.configuracion),
+                        text = stringResource(R.string.configuration),
                         color = Color.White,
-                        fontSize = 28.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
 
@@ -66,68 +69,35 @@ fun SettingsScreenHeader(
 
 @Composable
 fun SettingsScreenBody(
-    onClosesClick: () -> Unit,
-    onDeletesClick: () -> Unit,
+    onLogoutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-    Box(
-        modifier = modifier.fillMaxSize()
-    ) {
-        PlainBackground()
+    Box(modifier = modifier.fillMaxSize()) {
+        SoyBackground()
 
         Column(
             modifier = Modifier
+                .padding(18.dp)
                 .fillMaxSize()
-                .padding(top = 120.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            SettingsOption(
+                title = stringResource(R.string.cerrar_sesion),
+                subtitle = "Salir de tu cuenta",
+                icon = Icons.AutoMirrored.Filled.ExitToApp,
+                containerColor = colorResource(R.color.azul2),
+                onClick = onLogoutClick
+            )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
+            Spacer(modifier = Modifier.height(16.dp))
 
-                GeneralButton(
-                    text = stringResource(R.string.cerrar_sesion),
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(72.dp),
-                    color = colorResource(R.color.magentaOscuro)
-                )
-
-                CloseButton(
-                    onClose = onClosesClick,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(8.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.9f)
-            ) {
-
-                GeneralButton(
-                    text = stringResource(R.string.eliminar_cuenta),
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(72.dp),
-                    color = colorResource(R.color.Burdeos)
-                )
-
-                DeleteButton(
-                    onDelete = onDeletesClick,
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(8.dp)
-                )
-            }
+            SettingsOption(
+                title = stringResource(R.string.eliminar_cuenta),
+                subtitle = "Eliminar permanentemente tu cuenta",
+                icon = Icons.Filled.Delete,
+                containerColor = colorResource(R.color.rojo),
+                onClick = onDeleteAccountClick
+            )
         }
     }
 }
@@ -139,9 +109,8 @@ fun SettingsScreen() {
     ) {
         SettingsScreenHeader()
         SettingsScreenBody(
-            modifier = Modifier.fillMaxSize(),
-            onClosesClick = {},
-            onDeletesClick = {}
+            onLogoutClick = {},
+            onDeleteAccountClick = {}
         )
     }
 }
@@ -166,10 +135,17 @@ fun SettingsScreenPreview(){
 @Preview
 fun SettingScreenBodyPreview() {
     SettingsScreenBody(
-        onClosesClick = {},
-        onDeletesClick = {},
-        modifier = Modifier
+        onLogoutClick = {},
+        onDeleteAccountClick = {}
     )
 }
 
+@Composable
+@Preview
+fun GeneralButtonPreview(){
+    GeneralButton(
+        text = "Login",
+        fontSize = 20.sp
+    )
+}
 

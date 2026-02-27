@@ -63,8 +63,8 @@ fun FeedScreenHeader(
     Box() {
         Image(
             painter = painterResource(R.drawable.bg_plain_top_v3),
-            contentDescription = stringResource(R.string.top_background))
-
+            contentDescription = stringResource(R.string.top_background)
+        )
         Column(
             modifier = modifier.padding(horizontal = 16.dp, vertical = 10.dp)
         ) {
@@ -80,12 +80,12 @@ fun FeedScreenHeader(
             Row(modifier = Modifier.fillMaxWidth()) {
 
                 GeneralButton(
-                    text = "For you",
+                    text = "For You",
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorForYou
+                    color = colorResource(colorForYou)
                 )
                 GeneralButton(
                     text = "Social",
@@ -93,7 +93,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorFollowing
+                    color = colorResource(colorFollowing)
                 )
                 GeneralButton(
                     text = "Latest",
@@ -101,12 +101,13 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorLatest
+                    color = colorResource(colorLatest)
                 )
             }
         }
     }
 }
+
 
 @Composable
 fun ReviewCard(

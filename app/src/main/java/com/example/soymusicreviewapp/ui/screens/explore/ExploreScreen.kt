@@ -18,13 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.ui.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
@@ -51,7 +52,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.electropop),
-                color = R.color.violetaApagado,
+                color = colorResource(R.color.azulcal),
                 fontSize = 14.sp
             )
         }
@@ -59,7 +60,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.synth_pop),
-                color = R.color.violetaApagado,
+                color = colorResource(R.color.azulcal),
                 fontSize = 14.sp
             )
         }
@@ -67,7 +68,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.synthwave),
-                color = R.color.violetaApagado,
+                color = colorResource(R.color.azulcal),
                 fontSize = 14.sp
             )
         }
@@ -75,7 +76,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.dream_pop),
-                color = R.color.violetaApagado,
+                color = colorResource(R.color.azulcal),
                 fontSize = 14.sp
             )
         }
@@ -83,7 +84,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.indie_pop),
-                color = R.color.violetaApagado,
+                color = colorResource(R.color.azulcal),
                 fontSize = 14.sp
             )
         }
@@ -115,14 +116,14 @@ fun ExploreScreenHeader(
                 GeneralButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.songs),
-                    color = R.color.azulcal,
+                    color = colorResource(R.color.azulcal),
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 GeneralButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.artists),
-                    color = R.color.violetaClaro,
+                    color = colorResource(R.color.violetaClaro),
                     fontSize = 16.sp
                 )
             }
@@ -193,7 +194,7 @@ fun TopBackgroundPreview() {
 fun GeneralButtonPreview() {
     GeneralButton(
         modifier = Modifier, text = "Artist",
-        color = R.color.violetaApagado
+        color = colorResource(R.color.azulcal)
     )
 }
 
