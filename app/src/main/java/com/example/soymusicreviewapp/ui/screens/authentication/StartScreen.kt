@@ -69,7 +69,7 @@ fun StartScreenBody(
 
         GeneralButton(
             text = stringResource(R.string.register),
-            color = R.color.violetaApagado
+            color = colorResource(R.color.violetaApagado)
         )
     }
 }

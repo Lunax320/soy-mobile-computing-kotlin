@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,7 +80,7 @@ fun GeneralButton(
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(R.color.violetaClaro),
+            containerColor = color,
         ),
         shape = shape
     ) {
@@ -88,6 +89,12 @@ fun GeneralButton(
             fontSize = fontSize
         )
     }
+}
+
+@Composable
+@Preview
+fun GeneralButtonPreview() {
+    GeneralButton(text = "Login")
 }
 
 @Composable
@@ -347,34 +354,6 @@ fun BackButton(
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = "Arrow back",
-            tint = Color.White
-        )
-    }
-}
-
-@Composable
-fun CloseButton(
-    onClose: () -> Unit,
-    modifier: Modifier
-) {
-    IconButton(modifier = modifier,onClick = onClose) {
-        Icon(
-            imageVector = Icons.Filled.ExitToApp,
-            contentDescription = "Close session",
-            tint = Color.White
-        )
-    }
-}
-
-@Composable
-fun DeleteButton(
-    onDelete: () -> Unit,
-    modifier: Modifier
-) {
-    IconButton(modifier = modifier,onClick = onDelete) {
-        Icon(
-            imageVector = Icons.Filled.Delete,
-            contentDescription = "Delete profile",
             tint = Color.White
         )
     }

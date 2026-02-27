@@ -64,4 +64,5 @@
     <string name="eliminar_cuenta">Eliminar Cuenta</string>
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
     <string name="cerrar_sesion">Cerrar sesion</string>
+    <string name="configuration">Configuration</string>
 </resources>

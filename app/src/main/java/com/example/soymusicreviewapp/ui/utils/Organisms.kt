@@ -85,7 +85,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorForYou
+                    color = colorResource(R.color.vclaroletra)
                 )
                 GeneralButton(
                     text = "Social",
@@ -93,7 +93,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorFollowing
+                    color = colorResource(R.color.violetaClaro)
                 )
                 GeneralButton(
                     text = "Latest",
@@ -101,7 +101,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorLatest
+                    color = colorResource(R.color.violetaClaro)
                 )
             }
         }
