@@ -1,5 +1,5 @@
 package com.example.soymusicreviewapp.ui.utils
-
+import androidx.compose.material3.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,8 +9,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -65,15 +71,15 @@ fun GeneralButton(
         .padding(vertical = 8.dp),
     text: String,
     fontSize: TextUnit = 20.sp,
-    color: Int = R.color.violetaClaro,
+    color: Color = colorResource(R.color.violetaClaro),
     shape: Shape = RoundedCornerShape(8.dp),
-    onClick : () -> Unit = {}
+    onClick: () -> Unit = {}
 ) {
     Button(
         onClick = onClick,
         modifier = modifier,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorResource(color),
+            containerColor = colorResource(R.color.violetaClaro),
         ),
         shape = shape
     ) {
@@ -312,6 +318,64 @@ fun GenreTag(
             color = Color.White,
             fontSize = 12.sp,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+        )
+    }
+}
+
+@Composable
+fun SettingsButton(
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    IconButton(
+        modifier = modifier,
+        onClick = onClick) {
+        Icon(
+            imageVector = Icons.Filled.Settings,
+            contentDescription = "Settings",
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+fun BackButton(
+    onBack: () -> Unit,
+    modifier: Modifier
+) {
+    IconButton( modifier = modifier,onClick = onBack) {
+        Icon(
+            imageVector = Icons.Filled.ArrowBack,
+            contentDescription = "Arrow back",
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+fun CloseButton(
+    onClose: () -> Unit,
+    modifier: Modifier
+) {
+    IconButton(modifier = modifier,onClick = onClose) {
+        Icon(
+            imageVector = Icons.Filled.ExitToApp,
+            contentDescription = "Close session",
+            tint = Color.White
+        )
+    }
+}
+
+@Composable
+fun DeleteButton(
+    onDelete: () -> Unit,
+    modifier: Modifier
+) {
+    IconButton(modifier = modifier,onClick = onDelete) {
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = "Delete profile",
+            tint = Color.White
         )
     }
 }

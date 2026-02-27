@@ -29,24 +29,27 @@ import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
+import com.example.soymusicreviewapp.ui.utils.SettingsButton
 
 @Composable
-fun ProfileScreenHeader(){
+fun ProfileScreenHeader(
+    modifier: Modifier = Modifier,
+    settingsButtonPressed: () -> Unit
+){
     Box(
         contentAlignment = Alignment.Center
     ) {
         TopPlainBackground()
-        Image(
-            painter = painterResource(R.drawable.settings),
-            contentDescription = "Settings",
+        SettingsButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(40.dp)
+                .padding(16.dp),
+            onClick = settingsButtonPressed
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
+
             ProfileImage(
                 imageId = R.drawable.img_avatar_penguin,
                 descriptionId = (R.string.profile_photo)
@@ -60,13 +63,13 @@ fun ProfileScreenHeader(){
                 fontWeight = FontWeight.Bold
             )
             Text(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier.padding(top = 15.dp),
                 text = stringResource(R.string.musiclover),
                 color = Color.White,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
             )
-            Row(){
+            Row{
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(R.string._2),
@@ -92,8 +95,8 @@ fun ProfileScreenHeader(){
                 )
 
             }
-            Column(){
-                Row(){
+            Column{
+                Row{
                     Text(
                         modifier = Modifier.padding(top = 12.dp),
                         text = stringResource(R.string.reviews),
@@ -168,18 +171,24 @@ fun ProfileScreenBody(
 
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    settingsButtonPressed: () -> Unit
+                 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        ProfileScreenHeader()
+        ProfileScreenHeader(
+            settingsButtonPressed = settingsButtonPressed
+        )
         ProfileScreenBody(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
         )
     }
 }
+
 
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
@@ -196,11 +205,21 @@ fun ProfileImagePreview() {
 @Composable
 @Preview
 fun ProfileScreenHeaderPreview() {
-    ProfileScreenHeader()
+    ProfileScreenHeader(
+        settingsButtonPressed = {}
+    )
 }
 
 @Composable
 @Preview
 fun ProfileScreenPreview() {
-    ProfileScreen()
+    ProfileScreen(
+        settingsButtonPressed = {}
+    )
+}
+
+@Composable
+@Preview
+fun ProfileScreenBodyPreview() {
+    ProfileScreenBody()
 }

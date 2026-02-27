@@ -60,4 +60,8 @@
     <string name="profile">Profile</string>
     <string name="app_name">NuevoMovil</string>
     <string name="drawable_bg_plain_bottom">drawable.bg_plain_bottom</string>
+    <string name="configuracion">Configuracion</string>
+    <string name="eliminar_cuenta">Eliminar Cuenta</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
+    <string name="cerrar_sesion">Cerrar sesion</string>
 </resources>
