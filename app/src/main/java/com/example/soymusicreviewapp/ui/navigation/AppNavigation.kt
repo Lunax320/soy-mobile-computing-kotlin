@@ -177,7 +177,11 @@ fun AppNavigation (
         }
 
         composable(route = Screen.SettingsScreen.route) {
-            SettingsScreen()
+            SettingsScreen(
+                onBackClick = {
+                    navController.navigate(Screen.ProfileScreen.route)
+                }
+            )
         }
 
 
