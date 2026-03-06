@@ -65,4 +65,5 @@
     <string name="sign_out">sign out</string>
     <string name="log_out_of_your_account">Log out of your account</string>
     <string name="delete_account">Delete account</string>
+    <string name="songs_reviews">songs_reviews</string>
 </resources>

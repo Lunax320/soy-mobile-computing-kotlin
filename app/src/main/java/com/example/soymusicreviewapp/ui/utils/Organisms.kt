@@ -218,50 +218,9 @@ fun SongCard(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
-        Row(
-            modifier = Modifier.padding(18.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-
-            Image(
-                painter = painterResource(id = song.imageId),
-                contentDescription = "Song cover",
-                modifier = Modifier
-                    .size(70.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )
-
-            Spacer(modifier = Modifier.width(15.dp))
-
-            Column {
-                SongText(songName = song.name)
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                ArtistText(artistName = song.artist)
-
-                Spacer(modifier = Modifier.height(5.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 4.dp)
-                ) {
-                    if (isNewRelease) {
-                        GenreTag("New", backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.onSurface)
-                    } else {
-                        GenreTag(song.genre)
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Text(
-                        text = song.duration,
-                        color = MaterialTheme.colorScheme.surfaceBright,
-                        fontSize = 12.sp
-                    )
-                }
-            }
-        }
+        SongInfo(
+            song = song,
+        )
     }
 }
 

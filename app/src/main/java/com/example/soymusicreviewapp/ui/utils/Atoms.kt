@@ -256,13 +256,14 @@ fun DateText(
 @Composable
 fun SongText(
     modifier: Modifier = Modifier,
-    songName: String
+    songName: String,
+    fontSize: TextUnit = 16.sp
 ) {
     Text(
         text = songName,
         color = MaterialTheme.colorScheme.onPrimary,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontSize = fontSize,
         modifier = modifier
     )
 }
@@ -270,11 +271,13 @@ fun SongText(
 @Composable
 fun ArtistText(
     modifier: Modifier = Modifier,
-    artistName: String
+    artistName: String,
+    fontSize: TextUnit = 14.sp
 ) {
     Text(
         text = artistName,
         color = MaterialTheme.colorScheme.onPrimaryContainer,
+        fontSize = fontSize,
         modifier = modifier
     )
 }
@@ -309,6 +312,7 @@ fun GenreTag(
     name: String,
     borderColor: Color = MaterialTheme.colorScheme.secondary,
     backgroundColor: Color = MaterialTheme.colorScheme.tertiary,
+    tagSize: TextUnit = 12.sp,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -324,7 +328,7 @@ fun GenreTag(
         Text(
             text = name,
             color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = 12.sp,
+            fontSize = tagSize,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
         )
     }

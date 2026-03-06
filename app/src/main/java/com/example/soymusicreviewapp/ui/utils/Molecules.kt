@@ -32,10 +32,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.data.Song
 
 
 @Composable
@@ -121,6 +124,68 @@ fun ReviewInfo(
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(text = "Comment", color = MaterialTheme.colorScheme.onPrimary, fontSize = 14.sp)
+        }
+    }
+}
+
+@Composable
+fun SongInfo(
+    song: Song,
+    modifier: Modifier = Modifier,
+    isNewRelease: Boolean = false,
+    imageSize: Dp = 70.dp,
+    titleSize: TextUnit = 16.sp,
+    artistSize: TextUnit = 14.sp,
+    tagSize: TextUnit = 12.sp,
+    timeSize: TextUnit = 12.sp
+){
+    Row(
+        modifier = Modifier.padding(18.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Image(
+            painter = painterResource(id = song.imageId),
+            contentDescription = "Song cover",
+            modifier = Modifier
+                .size(imageSize)
+                .clip(RoundedCornerShape(8.dp))
+        )
+
+        Spacer(modifier = Modifier.width(15.dp))
+
+        Column {
+            SongText(
+                songName = song.name,
+                fontSize = titleSize
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            ArtistText(
+                artistName = song.artist,
+                fontSize = artistSize
+            )
+
+            Spacer(modifier = Modifier.height(5.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(top = 4.dp)
+            ) {
+                if (isNewRelease) {
+                    GenreTag("New", backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.onSurface, tagSize= tagSize)
+                } else {
+                    GenreTag(song.genre, tagSize= tagSize)
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Text(
+                    text = song.duration,
+                    color = MaterialTheme.colorScheme.surfaceBright,
+                    fontSize = timeSize
+                )
+            }
         }
     }
 }

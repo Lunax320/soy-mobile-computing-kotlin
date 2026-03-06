@@ -26,6 +26,7 @@ import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SongInfo
@@ -100,10 +101,12 @@ fun SongsDetailScreen(
 @Composable
 @Preview
 fun SongsDetailScreenPreview(){
-    SongsDetailScreen(
-        songInfo = LocalSongsProvider.songs[0],
-        onBack = {},
-        responseReviews = LocalReviewProvider.reviews,
-        onReviewClick = {}
-    )
+    CompMovilProyectoTheme {
+        SongsDetailScreen(
+            songInfo = LocalSongsProvider.songs[0],
+            onBack = {},
+            responseReviews = LocalReviewProvider.reviews,
+            onReviewClick = {}
+        )
+    }
 }
