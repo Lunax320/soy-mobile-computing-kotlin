@@ -24,6 +24,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,9 +37,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Notification
-import com.example.soymusicreviewapp.data.local.LocalNotificationProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 
@@ -45,7 +47,6 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 fun NotificationScreenHeader(
     modifier: Modifier = Modifier
 ) {
-
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -100,12 +101,12 @@ fun NotificationScreenHeader(
     }
 }
 
+// Card component for a single notification item
 @Composable
 fun NotificationCard(
     modifier: Modifier = Modifier,
     data: Notification
 ) {
-
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -167,9 +168,12 @@ fun NotificationCard(
     }
 }
 
+// Main screen composable
 @Composable
-fun NotificationScreen() {
-    val basicList = LocalNotificationProvider.notifications
+fun NotificationScreen(
+    viewModel: NotificationViewModel = viewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
 
     Box(
         modifier = Modifier
@@ -181,12 +185,13 @@ fun NotificationScreen() {
         ) {
             NotificationScreenHeader()
 
+            // Display list using data from state
             LazyColumn(
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(basicList) { item ->
+                items(state.notifications) { item ->
                     NotificationCard(data = item)
                 }
             }

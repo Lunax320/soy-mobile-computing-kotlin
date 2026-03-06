@@ -94,17 +94,10 @@ fun AppNavigation (
             arguments = listOf(navArgument("reviewId") { type = NavType.IntType })
         ) { backStackEntry ->
             val reviewId = backStackEntry.arguments?.getInt("reviewId") ?: 0
-            val review = LocalReviewProvider.reviews.find { it.usernameId == reviewId }
-
-            if (review != null) {
-                ReviewDetailScreen(
-                    reviewInfo = review,
-                    responseReviews = LocalReviewProvider.reviews,
-                    modifier = Modifier.padding(12.dp)
-                )
-            } else {
-                Text(text = "Review not found", color = Color.White)
-            }
+            ReviewDetailScreen(
+                reviewId = reviewId,
+                modifier = Modifier.padding(12.dp)
+            )
         }
 
         composable(route = Screen.FollowingFeedScreen.route) {
