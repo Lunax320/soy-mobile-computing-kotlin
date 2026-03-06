@@ -18,7 +18,7 @@ import com.example.soymusicreviewapp.ui.screens.authentication.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.authentication.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.create.CreateReviewScreen
-import com.example.soymusicreviewapp.ui.screens.explore.SongsDetailScreen
+import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
 import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedScreen
 import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedScreen
@@ -133,20 +133,13 @@ fun AppNavigation (
             arguments = listOf(navArgument("songId") { type = NavType.IntType })
         ) { backStackEntry ->
             val songId = backStackEntry.arguments?.getInt("songId") ?: 0
-            val song = LocalSongsProvider.songs.find { it.songId == songId }
-
-            if (song != null) {
-                SongsDetailScreen(
-                    songInfo = song,
-                    onBack = { navController.popBackStack() },
-                    responseReviews = LocalReviewProvider.reviews,
-                    onReviewClick = { reviewId ->
-                        navController.navigate("reviewDetail/$reviewId")
-                    }
-                )
-            } else {
-                Text(text = "Song not found", color = Color.White)
-            }
+            SongsDetailScreen(
+                songId = songId,
+                onBack = { navController.popBackStack() },
+                onReviewClick = { reviewId ->
+                    navController.navigate("reviewDetail/$reviewId")
+                }
+            )
         }
 
         composable(route = Screen.CreateReviewScreen.route) {

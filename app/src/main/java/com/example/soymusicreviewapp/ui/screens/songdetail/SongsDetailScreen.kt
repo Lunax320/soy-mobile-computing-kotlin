@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.explore
+package com.example.soymusicreviewapp.ui.screens.songdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -12,6 +12,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -19,16 +22,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SongInfo
-
 
 @Composable
 fun SongsDetailScreenHeader(
@@ -67,44 +67,47 @@ fun SongsDetailScreenHeader(
     }
 }
 
-
-
+// Main Screen Composable
 @Composable
 fun SongsDetailScreen(
-    songInfo: Song,
+    songId: Int,
     onBack: () -> Unit,
-    responseReviews: List<Review>,
     onReviewClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    // Inject ViewModel
+    viewModel: SongsDetailViewModel = viewModel()
 ) {
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(songId) {
+        viewModel.loadData(songId)
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         PlainBackground()
-        Column(modifier = Modifier.fillMaxSize()) {
-            SongsDetailScreenHeader(
-                onBack = onBack,
-                songInfo = songInfo
-            )
 
-            ReviewList(
-                onReviewClick = onReviewClick,
-                reviews = responseReviews,
-                title = stringResource(R.string.songs_reviews),
-                modifier = Modifier.weight(1f)
-            )
+        // Only render content if the song is loaded
+        if (state.selectedSong != null) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                SongsDetailScreenHeader(
+                    onBack = onBack,
+                    songInfo = state.selectedSong!!
+                )
+
+                ReviewList(
+                    onReviewClick = onReviewClick,
+                    reviews = state.reviews,
+                    title = stringResource(R.string.songs_reviews),
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }
-
 
 @Composable
 @Preview
 fun SongsDetailScreenPreview(){
     CompMovilProyectoTheme {
-        SongsDetailScreen(
-            songInfo = LocalSongsProvider.songs[0],
-            onBack = {},
-            responseReviews = LocalReviewProvider.reviews,
-            onReviewClick = {}
-        )
     }
 }
