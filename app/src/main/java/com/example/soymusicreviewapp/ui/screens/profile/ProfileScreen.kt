@@ -14,10 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -25,7 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
+import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
@@ -36,9 +39,16 @@ import com.example.soymusicreviewapp.ui.utils.SettingsButton
 @Composable
 fun ProfileScreenHeader(
     modifier: Modifier = Modifier,
+    profileImageId: Int,
+    name: String,
+    username: String,
+    reviewCount: Int,
+    followersCount: Int,
+    followingCount: Int,
     settingsButtonPressed: () -> Unit
 ){
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         TopPlainBackground()
@@ -53,20 +63,20 @@ fun ProfileScreenHeader(
         ){
 
             ProfileImage(
-                imageId = R.drawable.img_avatar_penguin,
+                imageId = profileImageId,
                 descriptionId = (R.string.profile_photo)
             )
 
             Text(
                 modifier = Modifier.padding(top = 12.dp),
-                text = stringResource(R.string.music_lover),
+                text = name,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 modifier = Modifier.padding(top = 15.dp),
-                text = stringResource(R.string.musiclover),
+                text = username,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
@@ -74,7 +84,7 @@ fun ProfileScreenHeader(
             Row{
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = stringResource(R.string._2),
+                    text = reviewCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -82,7 +92,7 @@ fun ProfileScreenHeader(
                 Spacer(modifier = Modifier.width(55.dp))
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = stringResource(R.string._234),
+                    text = followersCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -90,7 +100,7 @@ fun ProfileScreenHeader(
                 Spacer(modifier = Modifier.width(50.dp))
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
-                    text = stringResource(R.string._189),
+                    text = followingCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
@@ -136,7 +146,7 @@ fun ProfileImage(
     descriptionId: Int,
 ) {
     Image(
-        painter = painterResource(imageId),
+        painter = painterResource(if (imageId != 0) imageId else R.drawable.img_avatar_penguin),
         contentDescription = stringResource(descriptionId),
         modifier = modifier
             .size(125.dp)
@@ -153,6 +163,7 @@ fun ProfileImage(
 
 @Composable
 fun ProfileScreenBody(
+    userReviews: List<Review>,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -160,9 +171,8 @@ fun ProfileScreenBody(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            val allReviews = LocalReviewProvider.reviews
             ReviewList(
-                reviews = allReviews,
+                reviews = userReviews,
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.my_reviews),
                 isProfileView = true
@@ -175,16 +185,26 @@ fun ProfileScreenBody(
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = viewModel(),
     settingsButtonPressed: () -> Unit
-                 ) {
+) {
+    val state by viewModel.uiState.collectAsState()
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         ProfileScreenHeader(
+            profileImageId = state.profileImageId,
+            name = state.name,
+            username = state.username,
+            reviewCount = state.reviewCount,
+            followersCount = state.followersCount,
+            followingCount = state.followingCount,
             settingsButtonPressed = settingsButtonPressed
         )
         ProfileScreenBody(
+            userReviews = state.userReviews,
             modifier = Modifier
                 .fillMaxSize()
         )
@@ -211,6 +231,12 @@ fun ProfileImagePreview() {
 fun ProfileScreenHeaderPreview() {
     CompMovilProyectoTheme() {
         ProfileScreenHeader(
+            profileImageId = R.drawable.img_avatar_penguin,
+            name = "Music Lover",
+            username = "@musiclover",
+            reviewCount = 2,
+            followersCount = 234,
+            followingCount = 189,
             settingsButtonPressed = {}
         )
     }
@@ -230,6 +256,8 @@ fun ProfileScreenPreview() {
 @Preview
 fun ProfileScreenBodyPreview() {
     CompMovilProyectoTheme() {
-        ProfileScreenBody()
+        ProfileScreenBody(
+            userReviews = LocalReviewProvider.reviews
+        )
     }
 }

@@ -3,6 +3,7 @@ package com.example.soymusicreviewapp.ui.utils
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -57,11 +59,15 @@ fun TextSoy(
 fun LogoSoy(
     modifier: Modifier = Modifier.size(250.dp)
 ) {
-    Image(
-        painter = painterResource(R.drawable.img_logo_soy),
-        contentDescription = stringResource(R.string.logo_soy),
-        modifier = modifier
-    )
+    if (LocalInspectionMode.current) {
+        Box(modifier = modifier.background(Color.Gray.copy(alpha = 0.2f)))
+    } else {
+        Image(
+            painter = painterResource(R.drawable.img_logo_soy),
+            contentDescription = stringResource(R.string.logo_soy),
+            modifier = modifier
+        )
+    }
 }
 
 @Composable
@@ -144,12 +150,16 @@ fun GeneralForm(
 fun PlainBackground(
     modifier: Modifier = Modifier,
 ) {
-    Image(
-        painter = painterResource(R.drawable.bg_plain),
-        contentDescription = stringResource(R.string.main_screen_background),
-        modifier = modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
+    if (LocalInspectionMode.current) {
+        Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
+    } else {
+        Image(
+            painter = painterResource(R.drawable.bg_plain),
+            contentDescription = stringResource(R.string.main_screen_background),
+            modifier = modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+    }
 }
 
 @Composable

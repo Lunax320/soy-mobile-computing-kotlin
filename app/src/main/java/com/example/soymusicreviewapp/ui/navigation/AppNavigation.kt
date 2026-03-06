@@ -21,7 +21,7 @@ import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedScreen
 import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileScreen
-import com.example.soymusicreviewapp.ui.screens.profile.SettingsScreen
+import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
 
 sealed class Screen (val route: String) {
     object StartScreen : Screen("start")

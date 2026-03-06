@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.profile
+package com.example.soymusicreviewapp.ui.screens.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +14,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -24,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.BackButton
@@ -101,20 +106,68 @@ fun SettingsScreenBody(
         }
     }
 }
+
 @Composable
 fun SettingsScreen(
-    onBackClick: () -> Unit = {}
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = viewModel(),
+    onBackClick: () -> Unit = {},
+    onConfirmLogout: () -> Unit = {}
 ) {
+    val state by viewModel.uiState.collectAsState()
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
     ) {
         SettingsScreenHeader(
             onBackClick = onBackClick
         )
         SettingsScreenBody(
-            onLogoutClick = {},
-            onDeleteAccountClick = {}
+            onLogoutClick = { viewModel.onLogoutClicked() },
+            onDeleteAccountClick = { viewModel.onDeleteAccountClicked() }
+        )
+    }
+
+    if (state.showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissLogoutDialog() },
+            title = { Text(text = stringResource(R.string.sign_out)) },
+            text = { Text(text = "¿Estás seguro de que quieres cerrar sesión?") },
+            confirmButton = {
+                TextButton(onClick = { 
+                    viewModel.confirmLogout()
+                    onConfirmLogout() 
+                }) {
+                    Text(text = "Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissLogoutDialog() }) {
+                    Text(text = "Cancelar")
+                }
+            }
+        )
+    }
+
+    if (state.showDeleteAccountDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissDeleteAccountDialog() },
+            title = { Text(text = stringResource(R.string.delete_account)) },
+            text = { Text(text = "¿Estás seguro de que quieres eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = { viewModel.confirmDeleteAccount() },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(text = "Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissDeleteAccountDialog() }) {
+                    Text(text = "Cancelar")
+                }
+            }
         )
     }
 }
@@ -160,4 +213,3 @@ fun GeneralButtonPreview(){
         )
     }
 }
-
