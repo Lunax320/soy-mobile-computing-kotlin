@@ -20,7 +20,7 @@ import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.create.CreateReviewScreen
 import com.example.soymusicreviewapp.ui.screens.explore.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.feed.ForYouFeedScreen
-import com.example.soymusicreviewapp.ui.screens.feed.FollowingFeedScreen
+import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedScreen
 import com.example.soymusicreviewapp.ui.screens.feed.LatestFeedScreen
 import com.example.soymusicreviewapp.ui.screens.feed.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
