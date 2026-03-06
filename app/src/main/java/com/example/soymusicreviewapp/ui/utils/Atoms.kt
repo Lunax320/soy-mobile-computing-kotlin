@@ -1,5 +1,5 @@
 package com.example.soymusicreviewapp.ui.utils
-import androidx.compose.material3.Icon
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,10 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -44,7 +45,7 @@ fun TextSoy(
     size: TextUnit
 ) {
     Text(
-        text = stringResource(R.string.soy),
+        text = stringResource(R.string.user),
         fontSize = size,
         fontFamily = FontFamily.Cursive,
         color = MaterialTheme.colorScheme.onPrimary,
@@ -332,7 +333,7 @@ fun GenreTag(
 @Composable
 fun SettingsButton(
     onClick: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     IconButton(
         modifier = modifier,
@@ -348,11 +349,11 @@ fun SettingsButton(
 @Composable
 fun BackButton(
     onBack: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     IconButton( modifier = modifier,onClick = onBack) {
         Icon(
-            imageVector = Icons.Filled.ArrowBack,
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
             contentDescription = "Arrow back",
             tint = MaterialTheme.colorScheme.onPrimary
         )
