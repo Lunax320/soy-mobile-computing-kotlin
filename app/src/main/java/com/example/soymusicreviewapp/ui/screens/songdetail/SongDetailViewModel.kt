@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.update
 
 class SongsDetailViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SongsDetailState())
+    private val _uiState = MutableStateFlow(SongDetailState())
 
-    val uiState: StateFlow<SongsDetailState> = _uiState.asStateFlow()
+    val uiState: StateFlow<SongDetailState> = _uiState.asStateFlow()
 
     // Function to load song and reviews data based on the provided ID
     fun loadData(songId: Int) {
