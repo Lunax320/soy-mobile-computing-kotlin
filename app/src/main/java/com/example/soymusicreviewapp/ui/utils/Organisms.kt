@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -206,20 +207,22 @@ fun ReviewList(
 @Composable
 fun SongCard(
     song: Song,
-    modifier: Modifier = Modifier,
-    isNewRelease: Boolean = false
+    onClick: () -> Unit,
+    isNewRelease: Boolean = false,
+    modifier: Modifier = Modifier
+
 ) {
-    Card(
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surfaceDim,
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceDim
-        ),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .padding(vertical = 4.dp, horizontal = 16.dp)
     ) {
         SongInfo(
             song = song,
+            isNewRelease = isNewRelease
         )
     }
 }
@@ -227,19 +230,15 @@ fun SongCard(
 @Composable
 fun SongList(
     songs: List<Song>,
+    onSongClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     isNewRelease: Boolean = false
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
+    LazyColumn(modifier = modifier) {
         items(songs.size) { index ->
             SongCard(
                 song = songs[index],
-                modifier = Modifier.fillMaxWidth(),
-                isNewRelease = isNewRelease
+                onClick = { onSongClick(songs[index].songId) }
             )
         }
     }

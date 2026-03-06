@@ -45,7 +45,7 @@ fun TextSoy(
     size: TextUnit
 ) {
     Text(
-        text = stringResource(R.string.user),
+        text = stringResource(R.string.soy),
         fontSize = size,
         fontFamily = FontFamily.Cursive,
         color = MaterialTheme.colorScheme.onPrimary,

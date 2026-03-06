@@ -58,6 +58,7 @@ fun LatestFeedList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
+                onClick = {},
                 isNewRelease = true
             )
             Spacer(modifier = Modifier.height(8.dp))

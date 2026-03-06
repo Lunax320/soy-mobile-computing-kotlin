@@ -42,18 +42,3 @@ fun SOYApp() {
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-fun GreetingPreview2() {
-    CompMovilProyectoTheme {
-        Scaffold(
-            bottomBar = {
-
-            }
-        ){
-            ExploreScreen(Modifier.padding(it))
-        }
-    }
-}

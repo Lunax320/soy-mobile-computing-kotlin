@@ -147,6 +147,7 @@ fun ExploreScreenHeader(
 
 @Composable
 fun ExploreScreenBody(
+    onSongClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val allSongs = LocalSongsProvider.songs
@@ -157,7 +158,8 @@ fun ExploreScreenBody(
         SongList(
             songs = allSongs,
             modifier = Modifier.fillMaxSize(),
-            isNewRelease = false // For the exploration, the musical genre is shown
+            isNewRelease = false, // For the exploration, the musical genre is shown
+            onSongClick = onSongClick
         )
     }
 }
@@ -165,12 +167,14 @@ fun ExploreScreenBody(
 @Composable
 fun ExploreScreen(
     modifier: Modifier = Modifier,
+    onSongClick: (Int) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         ExploreScreenHeader()
         ExploreScreenBody(
+            onSongClick = onSongClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -218,6 +222,8 @@ fun SongCardPreview() {
     CompMovilProyectoTheme {
         val example = LocalSongsProvider.songs[0]
         SongCard(
+            modifier = Modifier,
+            onClick = {},
             song = example
         )
     }
@@ -243,7 +249,9 @@ fun ExploreScreenHeaderPreview() {
 @Preview
 fun ExploreScreenBodyPreview() {
     CompMovilProyectoTheme {
-        ExploreScreenBody()
+        ExploreScreenBody(
+            onSongClick = {}
+        )
     }
 }
 
@@ -251,6 +259,8 @@ fun ExploreScreenBodyPreview() {
 @Composable
 fun ExploreScreenPreview() {
     CompMovilProyectoTheme {
-        ExploreScreen()
+        ExploreScreen(
+            onSongClick = {}
+        )
     }
 }

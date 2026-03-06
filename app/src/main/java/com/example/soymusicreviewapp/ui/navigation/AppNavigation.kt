@@ -12,11 +12,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.screens.authentication.StartScreen
 import com.example.soymusicreviewapp.ui.screens.authentication.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.authentication.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.create.CreateReviewScreen
+import com.example.soymusicreviewapp.ui.screens.explore.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.feed.ForYouFeedScreen
 import com.example.soymusicreviewapp.ui.screens.feed.FollowingFeedScreen
 import com.example.soymusicreviewapp.ui.screens.feed.LatestFeedScreen
@@ -126,11 +128,40 @@ fun AppNavigation (
         }
 
         composable(route = Screen.ExploreScreen.route) {
-            ExploreScreen()
+            ExploreScreen(
+                onSongClick = { songId ->
+                    navController.navigate("songDetail/$songId")
+                }
+            )
+        }
+
+        composable(
+            route = "songDetail/{songId}",
+            arguments = listOf(navArgument("songId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val songId = backStackEntry.arguments?.getInt("songId") ?: 0
+            val song = LocalSongsProvider.songs.find { it.songId == songId }
+
+            if (song != null) {
+                SongsDetailScreen(
+                    songInfo = song,
+                    onBack = { navController.popBackStack() },
+                    responseReviews = LocalReviewProvider.reviews,
+                    onReviewClick = { reviewId ->
+                        navController.navigate("reviewDetail/$reviewId")
+                    }
+                )
+            } else {
+                Text(text = "Song not found", color = Color.White)
+            }
         }
 
         composable(route = Screen.CreateReviewScreen.route) {
-            CreateReviewScreen()
+            CreateReviewScreen(
+                onSongClick = { songId ->
+                    navController.navigate("songDetail/$songId")
+                }
+            )
         }
 
         composable(route = Screen.NotificationScreen.route) {

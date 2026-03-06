@@ -2,8 +2,10 @@ package com.example.soymusicreviewapp.ui.screens.create
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,15 +29,13 @@ fun CreateReviewScreenHeader(
             painter = painterResource(R.drawable.bg_plain_top_v2),
             contentDescription = stringResource(R.string.background_plain_top_type_2))
 
-        Column {
-            Image(
-                painter = painterResource(R.drawable.ic_arrow_back),
-                contentDescription = stringResource(R.string.left_arrow),
-                modifier = Modifier.size(50.dp)
-            )
+        Column (
+            modifier = Modifier
+                .fillMaxWidth().padding(top = 40.dp, bottom = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
 
-            Spacer(modifier = Modifier.height(10.dp))
-
+        ) {
             Text(
                 text = stringResource(R.string.create_review),
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -49,50 +49,42 @@ fun CreateReviewScreenHeader(
 
 @Composable
 fun CreateReviewScreenBody(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSongClick: (Int) -> Unit,
 ) {
     val allSongs = LocalSongsProvider.songs
     var searchText by remember { mutableStateOf("")}
-    Box(modifier = modifier) {
-        Image(
-            painter = painterResource(R.drawable.bg_soy_top),
-            contentDescription = "Top background",
-            modifier = Modifier.fillMaxWidth()
-        )
 
+    Box(modifier = modifier) {
+        SoyBackground()
         Column {
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(R.string.search_song),
-                color = MaterialTheme.colorScheme.onPrimary,
+                color = MaterialTheme.colorScheme.onPrimary, 
                 fontSize = 16.sp,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 25.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
-
             SearchBar(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 currentValue =searchText,
                 onValueChanged = { searchText = it}
             )
-
-            Box(modifier = modifier) {
-                SoyBackground()
-
-                SongList(
-                    songs = allSongs,
-                    modifier = Modifier.fillMaxSize(),
-                    isNewRelease = false // For the review, the musical genre is shown
-                )
-            }
-
+            SongList(
+                songs = allSongs, 
+                onSongClick = onSongClick,
+                modifier = Modifier.fillMaxSize(),
+                isNewRelease = false // For the review, the musical genre is shown
+            )
         }
     }
 }
 
 @Composable
 fun CreateReviewScreen(
+    onSongClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -100,6 +92,7 @@ fun CreateReviewScreen(
     ) {
         CreateReviewScreenHeader()
         CreateReviewScreenBody(
+            onSongClick = onSongClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -114,6 +107,8 @@ fun CreateReviewScreen(
 @Composable
 fun CreateReviewScreenPreview() {
     CompMovilProyectoTheme {
-        CreateReviewScreen()
+        CreateReviewScreen(
+            onSongClick = {}
+        )
     }
 }
