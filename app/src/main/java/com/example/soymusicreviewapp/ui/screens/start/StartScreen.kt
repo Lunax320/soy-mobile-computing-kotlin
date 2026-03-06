@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.authentication
+package com.example.soymusicreviewapp.ui.screens.start
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
@@ -68,9 +69,7 @@ fun StartScreenBody(
 
         GeneralButton(
             text = stringResource(R.string.login),
-            onClick = {
-                loginButtonPressed()
-            }
+            onClick = loginButtonPressed
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -78,19 +77,20 @@ fun StartScreenBody(
         GeneralButton(
             text = stringResource(R.string.register),
             color = MaterialTheme.colorScheme.tertiaryContainer,
-            onClick = {
-                registerButtonPressed()
-            }
+            onClick = registerButtonPressed
         )
     }
 }
 
 @Composable
 fun StartScreen(
-    modifier: Modifier = Modifier,
     loginButtonPressed: () -> Unit,
-    registerButtonPressed: () -> Unit
+    registerButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: StartViewModel = viewModel()
 ){
+    val state by viewModel.uiState.collectAsState()
+
     Box(modifier = modifier.fillMaxSize()){
         PlainBackground()
         Column(

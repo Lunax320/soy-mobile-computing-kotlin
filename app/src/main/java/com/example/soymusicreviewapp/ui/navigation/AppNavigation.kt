@@ -9,7 +9,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.soymusicreviewapp.ui.screens.authentication.StartScreen
+import com.example.soymusicreviewapp.ui.screens.start.StartScreen
 import com.example.soymusicreviewapp.ui.screens.login.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.register.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
