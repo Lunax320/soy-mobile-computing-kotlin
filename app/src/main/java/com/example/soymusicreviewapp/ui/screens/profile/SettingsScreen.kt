@@ -34,7 +34,8 @@ import com.example.soymusicreviewapp.ui.utils.SoyBackground
 
 @Composable
 fun SettingsScreenHeader(
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        onBackClick: () -> Unit = {}
     ){
         Box(
             modifier = modifier
@@ -51,7 +52,7 @@ fun SettingsScreenHeader(
                     BackButton(
                         modifier = Modifier
                             .padding(10.dp),
-                        onBack = {}
+                        onBack = onBackClick
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     Text(
@@ -101,12 +102,16 @@ fun SettingsScreenBody(
     }
 }
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    onBackClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        SettingsScreenHeader()
+        SettingsScreenHeader(
+            onBackClick = onBackClick
+        )
         SettingsScreenBody(
             onLogoutClick = {},
             onDeleteAccountClick = {}
