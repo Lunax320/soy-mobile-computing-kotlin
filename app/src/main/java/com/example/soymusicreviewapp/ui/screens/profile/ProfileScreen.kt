@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
@@ -58,14 +60,14 @@ fun ProfileScreenHeader(
             Text(
                 modifier = Modifier.padding(top = 12.dp),
                 text = stringResource(R.string.music_lover),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 modifier = Modifier.padding(top = 15.dp),
                 text = stringResource(R.string.musiclover),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -73,7 +75,7 @@ fun ProfileScreenHeader(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(R.string._2),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -81,7 +83,7 @@ fun ProfileScreenHeader(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(R.string._234),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -89,7 +91,7 @@ fun ProfileScreenHeader(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = stringResource(R.string._189),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -100,7 +102,7 @@ fun ProfileScreenHeader(
                     Text(
                         modifier = Modifier.padding(top = 12.dp),
                         text = stringResource(R.string.reviews),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -108,7 +110,7 @@ fun ProfileScreenHeader(
                     Text(
                         modifier = Modifier.padding(top = 12.dp),
                         text = stringResource(R.string.followers),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -116,7 +118,7 @@ fun ProfileScreenHeader(
                     Text(
                         modifier = Modifier.padding(top = 12.dp),
                         text = stringResource(R.string.following),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -196,30 +198,38 @@ fun ProfileScreen(
 @Composable
 @Preview
 fun ProfileImagePreview() {
-    ProfileImage(
-        imageId = R.drawable.img_avatar_penguin,
-        descriptionId = R.string.profile_photo
-    )
+    CompMovilProyectoTheme() {
+        ProfileImage(
+            imageId = R.drawable.img_avatar_penguin,
+            descriptionId = R.string.profile_photo
+        )
+    }
 }
 
 @Composable
 @Preview
 fun ProfileScreenHeaderPreview() {
-    ProfileScreenHeader(
-        settingsButtonPressed = {}
-    )
+    CompMovilProyectoTheme() {
+        ProfileScreenHeader(
+            settingsButtonPressed = {}
+        )
+    }
 }
 
 @Composable
 @Preview
 fun ProfileScreenPreview() {
-    ProfileScreen(
-        settingsButtonPressed = {}
-    )
+    CompMovilProyectoTheme() {
+        ProfileScreen(
+            settingsButtonPressed = {}
+        )
+    }
 }
 
 @Composable
 @Preview
 fun ProfileScreenBodyPreview() {
-    ProfileScreenBody()
+    CompMovilProyectoTheme() {
+        ProfileScreenBody()
+    }
 }

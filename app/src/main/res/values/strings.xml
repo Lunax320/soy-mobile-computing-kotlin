@@ -65,4 +65,8 @@
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
     <string name="cerrar_sesion">Cerrar sesion</string>
     <string name="configuration">Configuration</string>
+    <string name="delete_your_account_permantly">Delete your account permantly</string>
+    <string name="sign_out">sign out</string>
+    <string name="log_out_of_your_account">Log out of your account</string>
+    <string name="delete_account">Delete account</string>
 </resources>

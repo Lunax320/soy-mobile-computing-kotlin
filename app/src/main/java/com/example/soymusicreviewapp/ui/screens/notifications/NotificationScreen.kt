@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Notification
 import com.example.soymusicreviewapp.data.local.LocalNotificationProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 
 @Composable
@@ -47,7 +49,7 @@ fun NotificationScreenHeader(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(colorResource(R.color.violetaClaro))
+            .background(MaterialTheme.colorScheme.secondary)
             .padding(horizontal = 24.dp, vertical = 20.dp)
     ) {
         Column {
@@ -58,14 +60,14 @@ fun NotificationScreenHeader(
             ) {
                 Text(
                     text = stringResource(R.string.notifications),
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold
                 )
 
                 Box(
                     modifier = Modifier
-                        .border(1.dp, Color.White, RoundedCornerShape(20.dp))
+                        .border(1.dp, MaterialTheme.colorScheme.onPrimary , RoundedCornerShape(20.dp))
                         .padding(horizontal = 12.dp, vertical = 4.dp)
                 ) {
                     Text(
@@ -198,5 +200,7 @@ fun NotificationScreen() {
 @Preview(showBackground = true)
 @Composable
 fun NotificationScreenPreview() {
-    NotificationScreen()
+    CompMovilProyectoTheme {
+        NotificationScreen()
+    }
 }

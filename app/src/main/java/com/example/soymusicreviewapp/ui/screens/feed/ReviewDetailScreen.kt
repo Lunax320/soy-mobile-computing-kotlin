@@ -16,6 +16,7 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
@@ -47,7 +49,7 @@ fun ReviewDetailScreen(
                     isProfileView = true
                 )
 
-                HorizontalDivider(thickness = 1.dp, color = Color.Gray)
+                HorizontalDivider(thickness = 1.dp, color =  MaterialTheme.colorScheme.tertiary)
 
                 ReviewActionBar(
                     onLike = { /*  */ },
@@ -57,11 +59,11 @@ fun ReviewDetailScreen(
                     isLiked = false
                 )
 
-                HorizontalDivider(thickness = 1.dp, color = Color.Gray)
+                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
                 Text(
                     text = "Most relevant reviews",
-                    color = Color.White,
+                    color =  MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp)
                 )
             }
@@ -71,7 +73,7 @@ fun ReviewDetailScreen(
                     review = responseReviews[index],
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
-                HorizontalDivider(thickness = 0.5.dp, color = Color.DarkGray)
+                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onTertiary)
             }
         }
     }
@@ -97,7 +99,7 @@ fun ReviewActionBar(
             Icon(
                 imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Like",
-                tint = if (isLiked) Color.Red else Color.White
+                tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -105,7 +107,7 @@ fun ReviewActionBar(
             Icon(
                 imageVector = Icons.Outlined.Send,
                 contentDescription = "Comment",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -113,7 +115,7 @@ fun ReviewActionBar(
             Icon(
                 imageVector = Icons.Outlined.Star,
                 contentDescription = "Comment",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -121,20 +123,20 @@ fun ReviewActionBar(
             Icon(
                 imageVector = Icons.Outlined.Share,
                 contentDescription = "Share",
-                tint = Color.White
+                tint = MaterialTheme.colorScheme.onPrimary
             )
         }
     }
 }
-
+/*
 @Composable
 @Preview
-fun ReviewActionBarPreview() {
-    ReviewActionBar(
-        onLike = {},
-        onComment = {},
-        onShare = {},
-        onFavorite = {},
-        isLiked = false
-    )
-}
+fun ReviewDetailScreenPreview() {
+    CompMovilProyectoTheme {
+        ReviewDetailScreen(
+            reviewInfo = TODO(),
+            responseReviews = TODO(),
+            modifier = TODO()
+        )
+    }
+}*/

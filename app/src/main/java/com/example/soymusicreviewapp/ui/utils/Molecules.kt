@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -109,7 +110,7 @@ fun ReviewInfo(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "42", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+            Text(text = "42", color = MaterialTheme.colorScheme.onPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -119,7 +120,7 @@ fun ReviewInfo(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "Comment", color = Color.White, fontSize = 14.sp)
+            Text(text = "Comment", color = MaterialTheme.colorScheme.onPrimary, fontSize = 14.sp)
         }
     }
 }
@@ -151,7 +152,7 @@ fun SettingsOption(
                 modifier = Modifier
                     .size(45.dp)
                     .background(
-                        color = Color.White.copy(alpha = 0.15f),
+                        color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.15f),
                         shape = RoundedCornerShape(12.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -159,7 +160,7 @@ fun SettingsOption(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -171,14 +172,14 @@ fun SettingsOption(
             ) {
                 Text(
                     text = title,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
                     text = subtitle,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 13.sp
                 )
             }
@@ -189,30 +190,30 @@ fun SettingsOption(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 fun SettingOptionsPreview() {
-    // Es necesario un contenedor (Column) para que los elementos se posicionen uno debajo de otro
+    //It is neccesary a container (Column) to place the elements one under the other
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        // Probamos la opción de Cerrar Sesión
+        // Option to log out
         SettingsOption(
-            title = stringResource(R.string.cerrar_sesion),
-            subtitle = "Salir de tu cuenta",
+            title = stringResource(R.string.sign_out),
+            subtitle = stringResource(R.string.log_out_of_your_account),
             icon = Icons.AutoMirrored.Filled.ExitToApp,
-            containerColor = colorResource(R.color.violetaApagado),
-            // Pasamos una función vacía para la prueba visual
+            containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            // Empty function to test the visual
             onClick = { }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Probamos la opción de Eliminar Cuenta
+        // Option to delete account
         SettingsOption(
-            title = stringResource(R.string.eliminar_cuenta),
-            subtitle = "Eliminar permanentemente tu cuenta",
+            title = stringResource(R.string.delete_account),
+            subtitle = stringResource(R.string.delete_your_account_permantly),
             icon = Icons.Filled.Delete,
-            containerColor = colorResource(R.color.rojo),
+            containerColor = MaterialTheme.colorScheme.error,
             onClick = { }
         )
     }

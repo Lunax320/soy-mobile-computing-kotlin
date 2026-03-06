@@ -17,21 +17,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
+
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
+import com.example.soymusicreviewapp.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import kotlin.Boolean
 
 @Composable
@@ -40,25 +43,25 @@ fun FeedScreenHeader(
     HeaderButtonPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val colorForYou: Int
+    val colorForYou =
     if (currentTab == 0) {
-        colorForYou = R.color.azulcal
+         MaterialTheme.colorScheme.surface
     } else {
-        colorForYou = R.color.violetaClaro
+        MaterialTheme.colorScheme.secondary
     }
 
-    val colorFollowing: Int
+    val colorFollowing =
     if (currentTab == 1) {
-        colorFollowing = R.color.azulcal
+        MaterialTheme.colorScheme.surface
     } else {
-        colorFollowing = R.color.violetaClaro
+        MaterialTheme.colorScheme.secondary
     }
 
-    val colorLatest: Int
+    val colorLatest =
     if (currentTab == 2) {
-        colorLatest = R.color.azulcal
+        MaterialTheme.colorScheme.surface
     } else {
-        colorLatest = R.color.violetaClaro
+        MaterialTheme.colorScheme.secondary
     }
 
     Box() {
@@ -86,7 +89,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorForYou),
+                    color = colorForYou,
                     onClick = {
                         HeaderButtonPressed()
                     }
@@ -97,7 +100,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorFollowing),
+                    color = colorFollowing,
                     onClick = {
                         HeaderButtonPressed()
                     }
@@ -108,7 +111,7 @@ fun FeedScreenHeader(
                         .weight(1f)
                         .padding(horizontal = 6.dp),
                     fontSize = 14.sp,
-                    color = colorResource(colorLatest),
+                    color = colorLatest,
                     onClick = {
                         HeaderButtonPressed()
                     }
@@ -128,9 +131,9 @@ fun ReviewCard(
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
-        /*colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.vclaro)
-        ),*/
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
         onClick = { onReviewClick(review.usernameId) },
         modifier = modifier
             .fillMaxWidth()
@@ -142,7 +145,28 @@ fun ReviewCard(
         )
     }
 }
-
+@Preview
+@Composable
+fun ReviewCardpreview() {
+    CompMovilProyectoTheme {
+        ReviewCard(
+            review = LocalReviewProvider.reviews[0],
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+@Preview
+@Composable
+fun ReviewListpreview(){
+    CompMovilProyectoTheme {
+        ReviewList(
+            onReviewClick = {},
+            reviews = LocalReviewProvider.reviews,
+            title = stringResource(R.string.recommended_reviews_for_you),
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
 @Composable
 fun ReviewList(
     onReviewClick: (Int) -> Unit = {},
@@ -161,7 +185,7 @@ fun ReviewList(
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = title,
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                 fontWeight = FontWeight.Bold
@@ -187,9 +211,9 @@ fun SongCard(
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        /*colors = CardDefaults.cardColors(
-            containerColor = colorResource(id = R.color.vclaro)
-        )*/
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp)
@@ -223,7 +247,7 @@ fun SongCard(
                     modifier = Modifier.padding(top = 4.dp)
                 ) {
                     if (isNewRelease) {
-                        GenreTag("New", backgroundColor = R.color.amarilloOscuro, borderColor = R.color.amarilloClaro)
+                        GenreTag("New", backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.onSurface)
                     } else {
                         GenreTag(song.genre)
                     }
@@ -232,7 +256,7 @@ fun SongCard(
 
                     Text(
                         text = song.duration,
-                        color = colorResource(R.color.vclaroletra),
+                        color = MaterialTheme.colorScheme.surfaceBright,
                         fontSize = 12.sp
                     )
                 }

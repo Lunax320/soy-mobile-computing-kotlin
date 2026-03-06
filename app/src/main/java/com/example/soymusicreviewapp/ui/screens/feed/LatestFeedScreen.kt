@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,6 +24,7 @@ import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewCard
@@ -43,7 +45,7 @@ fun LatestFeedList(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.new_releases),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 27.dp, vertical = 15.dp)
@@ -64,7 +66,7 @@ fun LatestFeedList(
         item {
             Text(
                 text = stringResource(R.string.recent_reviews),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 27.dp, vertical = 15.dp)
@@ -115,8 +117,10 @@ fun LatestFeedScreen(
 @Preview(showBackground = true)
 @Composable
 fun LatestFeedPreview() {
-    LatestFeedScreen(
-        modifier = Modifier,
-        latestCreateAccount = {}
-    )
+    CompMovilProyectoTheme {
+        LatestFeedScreen(
+            modifier = Modifier,
+            latestCreateAccount = {}
+        )
+    }
 }

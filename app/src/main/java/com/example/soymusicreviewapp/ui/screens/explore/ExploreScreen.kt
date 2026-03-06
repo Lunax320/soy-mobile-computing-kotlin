@@ -131,11 +131,10 @@ fun ExploreScreenHeader(
             Spacer(modifier = Modifier.height(9.dp))
 
             SearchBar(
-                modifier = Modifier,
                 currentValue = searchValue,
                 onValueChanged = {
                     searchValue = it
-                }
+                },
             )
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -186,57 +185,72 @@ fun ExploreScreen(
 @Composable
 @Preview
 fun TopBackgroundPreview() {
-    TopPlainBackground()
+    CompMovilProyectoTheme {
+        TopPlainBackground()
+    }
 }
 
 @Composable
 @Preview
 fun GeneralButtonPreview() {
-    GeneralButton(
-        modifier = Modifier, text = "Artist",
-        color = colorResource(R.color.azulcal)
-    )
+    CompMovilProyectoTheme {
+        GeneralButton(
+            modifier = Modifier, text = "Artist",
+            color = colorResource(R.color.azulcal)
+        )
+    }
 }
 
 @Composable
 @Preview
 fun SearchBarPreview() {
-    SearchBar(
-        modifier = Modifier,
-        currentValue = "",
-        onValueChanged = {}
-    )
+    CompMovilProyectoTheme {
+        SearchBar(
+            currentValue = "",
+            onValueChanged = {},
+        )
+    }
 }
 
 @Composable
 @Preview
 fun SongCardPreview() {
-    val example = LocalSongsProvider.songs[0]
-    SongCard(
-        song = example
-    )
+    CompMovilProyectoTheme {
+        val example = LocalSongsProvider.songs[0]
+        SongCard(
+            song = example
+        )
+    }
 }
 
 @Composable
 @Preview
 fun GenresFilterPreview() {
-    GenresFilter(modifier = Modifier)
+    CompMovilProyectoTheme {
+        GenresFilter(modifier = Modifier)
+    }
 }
 
 @Composable
 @Preview
 fun ExploreScreenHeaderPreview() {
-    ExploreScreenHeader()
+    CompMovilProyectoTheme {
+        ExploreScreenHeader()
+    }
 }
 
 @Composable
 @Preview
 fun ExploreScreenBodyPreview() {
-    ExploreScreenBody()
+    CompMovilProyectoTheme {
+        ExploreScreenBody()
+    }
 }
 
 @Preview
 @Composable
 fun ExploreScreenPreview() {
-    ExploreScreen()
+    CompMovilProyectoTheme {
+        ExploreScreen()
+    }
 }

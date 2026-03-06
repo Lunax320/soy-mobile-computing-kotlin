@@ -11,12 +11,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -26,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -38,6 +36,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 
 @Composable
 fun TextSoy(
@@ -48,7 +47,7 @@ fun TextSoy(
         text = stringResource(R.string.soy),
         fontSize = size,
         fontFamily = FontFamily.Cursive,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.onPrimary,
         modifier = modifier
     )
 }
@@ -72,7 +71,7 @@ fun GeneralButton(
         .padding(vertical = 8.dp),
     text: String,
     fontSize: TextUnit = 20.sp,
-    color: Color = colorResource(R.color.violetaClaro),
+    color: Color = MaterialTheme.colorScheme.secondary,
     shape: Shape = RoundedCornerShape(8.dp),
     onClick: () -> Unit = {}
 ) {
@@ -91,11 +90,6 @@ fun GeneralButton(
     }
 }
 
-@Composable
-@Preview
-fun GeneralButtonPreview() {
-    GeneralButton(text = "Login")
-}
 
 @Composable
 fun GeneralForm(
@@ -116,7 +110,7 @@ fun GeneralForm(
     TextField(
         value = textValue,
         onValueChange = onValueChanged,
-        label = { Text(text = stringResource(id = labelId), color = Color.White) },
+        label = { Text(text = stringResource(id = labelId), color = MaterialTheme.colorScheme.onPrimary) },
         visualTransformation = visualTransformation,
         modifier = modifier
             .fillMaxWidth()
@@ -124,11 +118,11 @@ fun GeneralForm(
             .padding(vertical = 8.dp)
             .border(
                 width = 2.dp,
-                color = colorResource(R.color.violetaApagado),
+                color = MaterialTheme.colorScheme.secondary,
                 shape = shape
             )
             .background(
-                color = colorResource(R.color.azul2),
+                color = MaterialTheme.colorScheme.background,
                 shape = shape
             ),
         shape = shape,
@@ -139,8 +133,8 @@ fun GeneralForm(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            focusedTextColor = colorResource(R.color.vclaroletra),
-            unfocusedTextColor = colorResource(R.color.vclaroletra),
+            focusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            unfocusedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
         )
     )
 }
@@ -186,42 +180,48 @@ fun SearchBar(
     modifier: Modifier = Modifier,
     currentValue: String,
     onValueChanged: (String) -> Unit,
-    placeholderId: Int = (R.string.search_placeholder),
+    placeholderId: Int = R.string.search_placeholder,
     shape: Shape = RoundedCornerShape(8.dp)
 ) {
+
     TextField(
         value = currentValue,
         onValueChange = onValueChanged,
+
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
             .padding(vertical = 8.dp)
             .border(
                 width = 1.dp,
-                color = colorResource(R.color.violetaClaro),
+                color = MaterialTheme.colorScheme.secondary,
                 shape = shape
             )
             .background(
-                color = colorResource(R.color.azul2),
+                color = MaterialTheme.colorScheme.background,
                 shape = shape
             ),
 
         placeholder = {
             Text(
                 text = stringResource(placeholderId),
-                color = Color.White.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f)
             )
         },
 
         shape = shape,
+
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,
             unfocusedContainerColor = Color.Transparent,
             disabledContainerColor = Color.Transparent,
+
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedTextColor = Color.White,
-            unfocusedTextColor = Color.White
+            disabledIndicatorColor = Color.Transparent,
+
+            focusedTextColor = MaterialTheme.colorScheme.onBackground,
+            unfocusedTextColor = MaterialTheme.colorScheme.onBackground
         )
     )
 }
@@ -233,7 +233,7 @@ fun UserText(
 ) {
     Text(
         text = user,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.onPrimary,
         fontWeight = FontWeight.Bold,
         modifier = modifier
     )
@@ -246,7 +246,7 @@ fun DateText(
 ) {
     Text(
         text = date,
-        color = colorResource(R.color.vclaroletra),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
         fontSize = 14.sp,
         modifier = modifier
     )
@@ -259,7 +259,7 @@ fun SongText(
 ) {
     Text(
         text = songName,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.onPrimary,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         modifier = modifier
@@ -273,7 +273,7 @@ fun ArtistText(
 ) {
     Text(
         text = artistName,
-        color = colorResource(R.color.vclaroletra),
+        color = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = modifier
     )
 }
@@ -285,7 +285,7 @@ fun RatingText(
 ) {
     Text(
         text = "⭐".repeat(rating) + " $rating/5",
-        color = Color.Yellow,
+        color = MaterialTheme.colorScheme.surfaceContainerHighest,
         modifier = modifier
     )
 }
@@ -297,7 +297,7 @@ fun ReviewText(
 ) {
     Text(
         text = review,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.onPrimary,
         fontSize = 14.sp,
         modifier = modifier
     )
@@ -306,23 +306,23 @@ fun ReviewText(
 @Composable
 fun GenreTag(
     name: String,
-    borderColor: Int = R.color.violetaClaro,
-    backgroundColor: Int = R.color.grisClaro,
+    borderColor: Color = MaterialTheme.colorScheme.secondary,
+    backgroundColor: Color = MaterialTheme.colorScheme.tertiary,
     modifier: Modifier = Modifier
 ) {
     Surface(
-        color = colorResource(backgroundColor),
+        color = backgroundColor,
         shape = RoundedCornerShape(50.dp),
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = colorResource(borderColor),
+                color = borderColor,
                 shape = RoundedCornerShape(50.dp),
             )
     ) {
         Text(
             text = name,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 12.sp,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
         )
@@ -340,7 +340,7 @@ fun SettingsButton(
         Icon(
             imageVector = Icons.Filled.Settings,
             contentDescription = "Settings",
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onPrimary
         )
     }
 }
@@ -354,7 +354,43 @@ fun BackButton(
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = "Arrow back",
-            tint = Color.White
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+// Preview
+
+
+@Composable
+@Preview
+fun GeneralButtonPreview() {
+    CompMovilProyectoTheme {
+        GeneralButton(
+            text = "Login",
+            onClick = {}
+        )
+    }
+}
+
+@Composable
+@Preview
+fun GeneralFormPreview() {
+    CompMovilProyectoTheme {
+        GeneralForm(
+            labelId = R.string.user,
+            textValue = "",
+            onValueChanged = {}
+        )
+    }
+}
+@Preview
+@Composable
+fun SearchBarPreview(){
+    CompMovilProyectoTheme {
+        SearchBar(
+            currentValue = "",
+            onValueChanged = {}
         )
     }
 }

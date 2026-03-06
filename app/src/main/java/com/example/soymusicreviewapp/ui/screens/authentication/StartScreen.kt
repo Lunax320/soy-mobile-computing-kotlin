@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +40,7 @@ fun StartScreenBody(
 
         Text(
             text = stringResource(R.string.soy),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             style = TextStyle(fontSize = 90.sp, fontFamily = FontFamily.Cursive)
         )
 
@@ -51,7 +52,7 @@ fun StartScreenBody(
 
         Text(
             text = stringResource(R.string.live_a_life_you_will_remember),
-            color = Color.White,
+            color = MaterialTheme.colorScheme.onPrimary,
             style = TextStyle(fontSize = 22.sp, fontStyle = FontStyle.Italic)
         )
 
@@ -59,7 +60,7 @@ fun StartScreenBody(
 
         Text(
             text = stringResource(R.string.avicii_the_nights),
-            color = colorResource(R.color.violetaClaro),
+            color = MaterialTheme.colorScheme.secondary,
             style = TextStyle(fontSize = 18.sp)
         )
 
@@ -76,7 +77,7 @@ fun StartScreenBody(
 
         GeneralButton(
             text = stringResource(R.string.register),
-            color = colorResource(R.color.violetaApagado),
+            color = MaterialTheme.colorScheme.tertiaryContainer,
             onClick = {
                 registerButtonPressed()
             }

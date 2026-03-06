@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -14,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
 import com.example.soymusicreviewapp.ui.utils.SearchBar
 import com.example.soymusicreviewapp.ui.utils.SongList
@@ -38,7 +38,7 @@ fun CreateReviewScreenHeader(
 
             Text(
                 text = stringResource(R.string.create_review),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
@@ -49,11 +49,10 @@ fun CreateReviewScreenHeader(
 
 @Composable
 fun CreateReviewScreenBody(
-    onBack: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val allSongs = LocalSongsProvider.songs
-
+    var searchText by remember { mutableStateOf("")}
     Box(modifier = modifier) {
         Image(
             painter = painterResource(R.drawable.bg_soy_top),
@@ -65,17 +64,17 @@ fun CreateReviewScreenBody(
             Spacer(modifier = Modifier.height(20.dp))
             Text(
                 text = stringResource(R.string.search_song),
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(horizontal = 25.dp)
             )
             Spacer(modifier = Modifier.height(10.dp))
 
             SearchBar(
                 modifier = Modifier.padding(horizontal = 24.dp),
-                currentValue = "",
-                onValueChanged = {}
+                currentValue =searchText,
+                onValueChanged = { searchText = it}
             )
 
             Box(modifier = modifier) {
@@ -114,5 +113,7 @@ fun CreateReviewScreen(
 @Preview(showBackground = true)
 @Composable
 fun CreateReviewScreenPreview() {
-    CreateReviewScreen()
+    CompMovilProyectoTheme {
+        CreateReviewScreen()
+    }
 }

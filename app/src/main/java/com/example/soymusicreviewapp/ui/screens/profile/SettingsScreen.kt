@@ -14,21 +14,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.BackButton
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
-import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.SettingsOption
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
 
@@ -40,7 +39,7 @@ fun SettingsScreenHeader(
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(colorResource(R.color.violetaApagado))
+                .background(MaterialTheme.colorScheme.tertiaryContainer)
                 .padding(horizontal = 20.dp, vertical = 5.dp)
         ) {
             Column {
@@ -57,7 +56,7 @@ fun SettingsScreenHeader(
                     Spacer(modifier = Modifier.width(20.dp))
                     Text(
                         text = stringResource(R.string.configuration),
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -82,20 +81,20 @@ fun SettingsScreenBody(
                 .fillMaxSize()
         ) {
             SettingsOption(
-                title = stringResource(R.string.cerrar_sesion),
-                subtitle = "Salir de tu cuenta",
+                title = stringResource(R.string.sign_out),
+                subtitle = stringResource(R.string.log_out_of_your_account),
                 icon = Icons.AutoMirrored.Filled.ExitToApp,
-                containerColor = colorResource(R.color.azul2),
+                containerColor = MaterialTheme.colorScheme.background,
                 onClick = onLogoutClick
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             SettingsOption(
-                title = stringResource(R.string.eliminar_cuenta),
-                subtitle = "Eliminar permanentemente tu cuenta",
+                title = stringResource(R.string.delete_account),
+                subtitle = stringResource(R.string.delete_your_account_permantly),
                 icon = Icons.Filled.Delete,
-                containerColor = colorResource(R.color.rojo),
+                containerColor = MaterialTheme.colorScheme.error,
                 onClick = onDeleteAccountClick
             )
         }
@@ -121,31 +120,39 @@ fun SettingsScreen() {
 @Composable
 @Preview
 fun SettingsScreenHeaderPreview() {
-    SettingsScreenHeader()
+    CompMovilProyectoTheme {
+        SettingsScreenHeader()
+    }
 }
 
 
 @Composable
 @Preview
 fun SettingsScreenPreview(){
-    SettingsScreen()
+    CompMovilProyectoTheme {
+        SettingsScreen()
+    }
 }
 
 @Composable
 @Preview
 fun SettingScreenBodyPreview() {
-    SettingsScreenBody(
-        onLogoutClick = {},
-        onDeleteAccountClick = {}
-    )
+    CompMovilProyectoTheme {
+        SettingsScreenBody(
+            onLogoutClick = {},
+            onDeleteAccountClick = {}
+        )
+    }
 }
 
 @Composable
 @Preview
 fun GeneralButtonPreview(){
-    GeneralButton(
-        text = "Login",
-        fontSize = 20.sp
-    )
+    CompMovilProyectoTheme {
+        GeneralButton(
+            text = "Login",
+            fontSize = 20.sp
+        )
+    }
 }
 

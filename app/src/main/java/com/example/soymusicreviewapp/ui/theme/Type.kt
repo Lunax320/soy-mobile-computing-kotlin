@@ -18,20 +18,15 @@ val provider = GoogleFont.Provider(
     providerPackage = "com.google.android.gms",
     certificates = R.array.com_google_android_gms_fonts_certs
 )
-
+// Font "inter" will be used for normal text
 val bodyFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Actor"),
-        fontProvider = provider,
-    )
+    Font(R.font.inter)
 )
-
+//Font "crete_round" will be used for titles
 val displayFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Abhaya Libre"),
-        fontProvider = provider,
-    )
+    Font(R.font.crete_round)
 )
+//Font "cedarville" will be used for the Logo text
 
 val soyLogoFont = FontFamily (
     androidx.compose.ui.text.font.Font(R.font.cedarville)
@@ -40,6 +35,7 @@ val soyLogoFont = FontFamily (
 
 val baseline = Typography()
 val Typography = Typography(
+    //These are for titles
     displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
     displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
     displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
@@ -49,6 +45,7 @@ val Typography = Typography(
     titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
     titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
     titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
+    // These are for normal text
     bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
     bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
     bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
