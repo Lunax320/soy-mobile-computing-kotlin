@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.feed
+package com.example.soymusicreviewapp.ui.screens.reviewdetail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,67 +19,78 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
-
+// Main screen composable
 @Composable
 fun ReviewDetailScreen(
-    reviewInfo: Review,
-    responseReviews: List<Review>,
-    modifier: Modifier = Modifier
+    reviewId: Int,
+    modifier: Modifier = Modifier,
+    viewModel: ReviewDetailViewModel = viewModel()
 ) {
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(reviewId) {
+        viewModel.loadReview(reviewId)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
         PlainBackground()
 
-        LazyColumn(
-            modifier = modifier.fillMaxSize()
-        ) {
-            item {
-                ReviewInfo(
-                    review = reviewInfo,
-                    isProfileView = true
-                )
+        // Only show content if the review was found
+        if (state.selectedReview != null) {
+            LazyColumn(
+                modifier = modifier.fillMaxSize()
+            ) {
+                item {
+                    // Use the review from the state
+                    ReviewInfo(
+                        review = state.selectedReview!!,
+                        isProfileView = true
+                    )
 
-                HorizontalDivider(thickness = 1.dp, color =  MaterialTheme.colorScheme.tertiary)
+                    HorizontalDivider(thickness = 1.dp, color =  MaterialTheme.colorScheme.tertiary)
 
-                ReviewActionBar(
-                    onLike = { /*  */ },
-                    onComment = { /*  */ },
-                    onShare = { /*  */ },
-                    onFavorite = { /*  */ },
-                    isLiked = false
-                )
+                    ReviewActionBar(
+                        onLike = { /* */ },
+                        onComment = { /* */ },
+                        onShare = { /* */ },
+                        onFavorite = { /* */ },
+                        isLiked = false
+                    )
 
-                HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
+                    HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
-                Text(
-                    text = "Most relevant reviews",
-                    color =  MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp)
-                )
+                    Text(
+                        text = "Most relevant reviews",
+                        color =  MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp)
+                    )
+                }
+
+                items(state.responseReviews.size) { index ->
+                    ReviewInfo(
+                        review = state.responseReviews[index],
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onTertiary)
+                }
             }
-
-            items(responseReviews.size) { index ->
-                ReviewInfo(
-                    review = responseReviews[index],
-                    modifier = Modifier.padding(vertical = 4.dp)
-                )
-                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onTertiary)
-            }
+        } else {
         }
     }
 }
 
-
+// Action bar component
 @Composable
 fun ReviewActionBar(
     onLike: () -> Unit,
@@ -128,15 +139,3 @@ fun ReviewActionBar(
         }
     }
 }
-/*
-@Composable
-@Preview
-fun ReviewDetailScreenPreview() {
-    CompMovilProyectoTheme {
-        ReviewDetailScreen(
-            reviewInfo = TODO(),
-            responseReviews = TODO(),
-            modifier = TODO()
-        )
-    }
-}*/
