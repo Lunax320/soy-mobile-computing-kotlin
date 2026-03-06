@@ -1,29 +1,24 @@
 package com.example.soymusicreviewapp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.screens.authentication.StartScreen
-import com.example.soymusicreviewapp.ui.screens.authentication.LoginScreen
+import com.example.soymusicreviewapp.ui.screens.login.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.authentication.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.create.CreateReviewScreen
-import com.example.soymusicreviewapp.ui.screens.explore.SongsDetailScreen
+import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
 import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedScreen
-import com.example.soymusicreviewapp.ui.screens.feed.LatestFeedScreen
-import com.example.soymusicreviewapp.ui.screens.feed.ReviewDetailScreen
+import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedScreen
+import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileScreen
 import com.example.soymusicreviewapp.ui.screens.profile.SettingsScreen
@@ -95,17 +90,10 @@ fun AppNavigation (
             arguments = listOf(navArgument("reviewId") { type = NavType.IntType })
         ) { backStackEntry ->
             val reviewId = backStackEntry.arguments?.getInt("reviewId") ?: 0
-            val review = LocalReviewProvider.reviews.find { it.usernameId == reviewId }
-
-            if (review != null) {
-                ReviewDetailScreen(
-                    reviewInfo = review,
-                    responseReviews = LocalReviewProvider.reviews,
-                    modifier = Modifier.padding(12.dp)
-                )
-            } else {
-                Text(text = "Review not found", color = MaterialTheme.colorScheme.onPrimary)
-            }
+            ReviewDetailScreen(
+                reviewId = reviewId,
+                modifier = Modifier.padding(12.dp),
+            )
         }
 
         composable(route = Screen.FollowingFeedScreen.route) {
@@ -141,20 +129,13 @@ fun AppNavigation (
             arguments = listOf(navArgument("songId") { type = NavType.IntType })
         ) { backStackEntry ->
             val songId = backStackEntry.arguments?.getInt("songId") ?: 0
-            val song = LocalSongsProvider.songs.find { it.songId == songId }
-
-            if (song != null) {
-                SongsDetailScreen(
-                    songInfo = song,
-                    onBack = { navController.popBackStack() },
-                    responseReviews = LocalReviewProvider.reviews,
-                    onReviewClick = { reviewId ->
-                        navController.navigate("reviewDetail/$reviewId")
-                    }
-                )
-            } else {
-                Text(text = "Song not found", color = MaterialTheme.colorScheme.onPrimary)
-            }
+            SongsDetailScreen(
+                songId = songId,
+                onBack = { navController.popBackStack() },
+                onReviewClick = { reviewId ->
+                    navController.navigate("reviewDetail/$reviewId")
+                }
+            )
         }
 
         composable(route = Screen.CreateReviewScreen.route) {

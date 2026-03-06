@@ -1,6 +1,5 @@
-package com.example.soymusicreviewapp.ui.screens.authentication
+package com.example.soymusicreviewapp.ui.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,19 +14,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
@@ -38,12 +35,12 @@ import com.example.soymusicreviewapp.ui.utils.TextSoy
 
 @Composable
 fun LoginScreenBody(
-    modifier: Modifier = Modifier,
-    loginButtonPressed: () -> Unit) {
-
-    var userText by remember { mutableStateOf("") }
-    var passwordText by remember { mutableStateOf("") }
-
+    state: LoginState,
+    onUserChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    loginButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.padding(horizontal = 35.dp)
     ){
@@ -68,8 +65,8 @@ fun LoginScreenBody(
 
         GeneralForm(
             labelId = R.string.user,
-            textValue = userText,
-            onValueChanged = { newText -> userText = newText }
+            textValue = state.userText,
+            onValueChanged = onUserChange
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -82,8 +79,9 @@ fun LoginScreenBody(
 
         GeneralForm(
             labelId = R.string.password,
-            textValue = passwordText,
-            onValueChanged = { newText -> passwordText = newText }
+            textValue = state.passwordText,
+            onValueChanged = onPasswordChange,
+            isPassword = true
         )
         Spacer(modifier = Modifier.height(50.dp))
         GeneralButton(
@@ -97,8 +95,12 @@ fun LoginScreenBody(
 
 @Composable
 fun LoginScreen(
+    loginButtonPressed: () -> Unit,
     modifier: Modifier = Modifier,
-    loginButtonPressed: () -> Unit) {
+    viewModel: LoginViewModel = viewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+
     Box(modifier = modifier) {
         PlainBackground()
         Column(
@@ -106,6 +108,9 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize()
         ){
             LoginScreenBody(
+                state = state,
+                onUserChange = { viewModel.onUserChange(it) },
+                onPasswordChange = { viewModel.onPasswordChange(it) },
                 loginButtonPressed = loginButtonPressed
             )
         }
