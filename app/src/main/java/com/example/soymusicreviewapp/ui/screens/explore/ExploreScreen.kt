@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -24,8 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
@@ -34,6 +33,7 @@ import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SongCard
 import com.example.soymusicreviewapp.ui.utils.SongList
 
+// Component for filtering genres (kept as is)
 @Composable
 fun GenresFilter(
     modifier: Modifier = Modifier
@@ -91,12 +91,13 @@ fun GenresFilter(
     }
 }
 
+// Header component receiving state and event handler
 @Composable
 fun ExploreScreenHeader(
+    searchValue: String,
+    onSearchChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var searchValue by remember { mutableStateOf("") }
-
     Box(modifier = modifier) {
         TopPlainBackground()
         Column(
@@ -130,11 +131,10 @@ fun ExploreScreenHeader(
 
             Spacer(modifier = Modifier.height(9.dp))
 
+            // SearchBar now controlled by parameters
             SearchBar(
                 currentValue = searchValue,
-                onValueChanged = {
-                    searchValue = it
-                },
+                onValueChanged = onSearchChange,
             )
 
             Spacer(modifier = Modifier.height(9.dp))
@@ -145,20 +145,20 @@ fun ExploreScreenHeader(
     }
 }
 
+// Body component displaying the song list from state
 @Composable
 fun ExploreScreenBody(
+    songs: List<Song>,
     onSongClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val allSongs = LocalSongsProvider.songs
-
     Box(modifier = modifier) {
         SoyBackground()
 
         SongList(
-            songs = allSongs,
+            songs = songs,
             modifier = Modifier.fillMaxSize(),
-            isNewRelease = false, // For the exploration, the musical genre is shown
+            isNewRelease = false,
             onSongClick = onSongClick
         )
     }
@@ -167,13 +167,22 @@ fun ExploreScreenBody(
 @Composable
 fun ExploreScreen(
     modifier: Modifier = Modifier,
-    onSongClick: (Int) -> Unit
+    onSongClick: (Int) -> Unit,
+    viewModel: ExploreViewModel = viewModel()
 ) {
+    val state by viewModel.uiState.collectAsState()
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        ExploreScreenHeader()
+        // Pass search state to header
+        ExploreScreenHeader(
+            searchValue = state.searchText,
+            onSearchChange = { viewModel.onSearchChange(it) }
+        )
+        // Pass songs list to body
         ExploreScreenBody(
+            songs = state.songs,
             onSongClick = onSongClick,
             modifier = Modifier
                 .fillMaxWidth()
@@ -218,19 +227,6 @@ fun SearchBarPreview() {
 
 @Composable
 @Preview
-fun SongCardPreview() {
-    CompMovilProyectoTheme {
-        val example = LocalSongsProvider.songs[0]
-        SongCard(
-            modifier = Modifier,
-            onClick = {},
-            song = example
-        )
-    }
-}
-
-@Composable
-@Preview
 fun GenresFilterPreview() {
     CompMovilProyectoTheme {
         GenresFilter(modifier = Modifier)
@@ -241,7 +237,10 @@ fun GenresFilterPreview() {
 @Preview
 fun ExploreScreenHeaderPreview() {
     CompMovilProyectoTheme {
-        ExploreScreenHeader()
+        ExploreScreenHeader(
+            searchValue = "",
+            onSearchChange = {}
+        )
     }
 }
 
@@ -250,6 +249,7 @@ fun ExploreScreenHeaderPreview() {
 fun ExploreScreenBodyPreview() {
     CompMovilProyectoTheme {
         ExploreScreenBody(
+            songs = emptyList(),
             onSongClick = {}
         )
     }
