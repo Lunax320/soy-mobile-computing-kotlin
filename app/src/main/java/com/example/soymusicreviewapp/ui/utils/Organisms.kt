@@ -1,0 +1,245 @@
+package com.example.soymusicreviewapp.ui.utils
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.soymusicreviewapp.R
+import com.example.soymusicreviewapp.data.Review
+import com.example.soymusicreviewapp.data.Song
+import com.example.soymusicreviewapp.data.local.LocalReviewProvider
+import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
+import kotlin.Boolean
+
+@Composable
+fun FeedScreenHeader(
+    currentTab: Int,
+    HeaderButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val colorForYou =
+    if (currentTab == 0) {
+         MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.secondary
+    }
+
+    val colorFollowing =
+    if (currentTab == 1) {
+        MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.secondary
+    }
+
+    val colorLatest =
+    if (currentTab == 2) {
+        MaterialTheme.colorScheme.surface
+    } else {
+        MaterialTheme.colorScheme.secondary
+    }
+
+    Box() {
+        Image(
+            painter = painterResource(R.drawable.bg_plain_top_v3),
+            contentDescription = stringResource(R.string.top_background)
+        )
+        Column(
+            modifier = modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+        ) {
+            Spacer(modifier = Modifier.height(15.dp))
+            Row() {
+                Spacer(modifier = Modifier.width(9.dp))
+                LogoSoy(modifier = Modifier.size(57.dp))
+                Spacer(modifier = Modifier.width(12.dp))
+                TextSoy(size = 45.sp)
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(modifier = Modifier.fillMaxWidth()) {
+
+                GeneralButton(
+                    text = "For You",
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 6.dp),
+                    fontSize = 14.sp,
+                    color = colorForYou,
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
+                )
+                GeneralButton(
+                    text = "Social",
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 6.dp),
+                    fontSize = 14.sp,
+                    color = colorFollowing,
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
+                )
+                GeneralButton(
+                    text = "Latest",
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(horizontal = 6.dp),
+                    fontSize = 14.sp,
+                    color = colorLatest,
+                    onClick = {
+                        HeaderButtonPressed()
+                    }
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun ReviewCard(
+    review: Review,
+    onReviewClick: (Int) -> Unit = {},
+    modifier: Modifier = Modifier,
+    isProfileView: Boolean = false
+) {
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceDim
+        ),
+        onClick = { onReviewClick(review.usernameId) },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+        ReviewInfo(
+            review = review,
+            isProfileView = isProfileView
+        )
+    }
+}
+@Preview
+@Composable
+fun ReviewCardpreview() {
+    CompMovilProyectoTheme {
+        ReviewCard(
+            review = LocalReviewProvider.reviews[0],
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+@Preview
+@Composable
+fun ReviewListpreview(){
+    CompMovilProyectoTheme {
+        ReviewList(
+            onReviewClick = {},
+            reviews = LocalReviewProvider.reviews,
+            title = stringResource(R.string.recommended_reviews_for_you),
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+@Composable
+fun ReviewList(
+    onReviewClick: (Int) -> Unit = {},
+    reviews: List<Review>,
+    title: String,
+    modifier: Modifier = Modifier,
+    isProfileView: Boolean = false
+
+) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = title,
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                fontWeight = FontWeight.Bold
+            )
+        }
+
+        items(reviews.size) { index ->
+            ReviewCard(
+                review = reviews[index],
+                modifier = Modifier.fillMaxWidth(),
+                isProfileView = isProfileView,
+                onReviewClick = onReviewClick
+            )
+        }
+    }
+}
+
+@Composable
+fun SongCard(
+    song: Song,
+    onClick: () -> Unit,
+    isNewRelease: Boolean = false,
+    modifier: Modifier = Modifier
+
+) {
+    Surface(
+        onClick = onClick,
+        color = MaterialTheme.colorScheme.surfaceDim,
+        shape = RoundedCornerShape(12.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp, horizontal = 16.dp)
+    ) {
+        SongInfo(
+            song = song,
+            isNewRelease = isNewRelease
+        )
+    }
+}
+
+@Composable
+fun SongList(
+    songs: List<Song>,
+    onSongClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    isNewRelease: Boolean = false
+) {
+    LazyColumn(modifier = modifier) {
+        items(songs.size) { index ->
+            SongCard(
+                song = songs[index],
+                onClick = { onSongClick(songs[index].songId) }
+            )
+        }
+    }
+}
