@@ -14,6 +14,7 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
@@ -77,7 +78,7 @@ fun SOYBottomNavigationBar(
                         Icon(
                             imageVector = if (isSelected) item.filledIcon else item.outlineIcon,
                             contentDescription = item.route,
-                            tint = if (isSelected) colorResource(R.color.violetaClaro) else colorResource(R.color.violetaIcono)
+                            tint = if (isSelected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.surfaceContainer
                         )
                     }
                 )

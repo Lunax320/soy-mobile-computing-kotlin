@@ -1,6 +1,7 @@
 package com.example.soymusicreviewapp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -103,7 +104,7 @@ fun AppNavigation (
                     modifier = Modifier.padding(12.dp)
                 )
             } else {
-                Text(text = "Review not found", color = Color.White)
+                Text(text = "Review not found", color = MaterialTheme.colorScheme.onPrimary)
             }
         }
 
@@ -152,7 +153,7 @@ fun AppNavigation (
                     }
                 )
             } else {
-                Text(text = "Song not found", color = Color.White)
+                Text(text = "Song not found", color = MaterialTheme.colorScheme.onPrimary)
             }
         }
 
