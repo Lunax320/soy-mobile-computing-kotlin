@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.feed
+package com.example.soymusicreviewapp.ui.screens.latest
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,18 +12,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
@@ -52,7 +52,8 @@ fun LatestFeedList(
             )
         }
 
-        items(3) { index ->
+        // Display the top 3 songs
+        items(songs.size) { index ->
             SongCard(
                 song = songs[index],
                 modifier = Modifier
@@ -74,6 +75,7 @@ fun LatestFeedList(
             )
         }
 
+        // Display all reviews
         items(reviews.size) { index ->
             ReviewCard(
                 review = reviews[index],
@@ -87,34 +89,40 @@ fun LatestFeedList(
     }
 }
 
+// Main screen composable
 @Composable
 fun LatestFeedScreen(
-    modifier: Modifier,
-    latestCreateAccount: () -> Unit
+    modifier: Modifier = Modifier,
+    latestCreateAccount: () -> Unit,
+    viewModel: LatestFeedViewModel = viewModel()
 ) {
+    val state by viewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // Header navigation logic
         FeedScreenHeader(
             currentTab = 2,
             HeaderButtonPressed = latestCreateAccount
         )
 
         Box {
-            val allReviews = LocalReviewProvider.reviews
-            val allSongs = LocalSongsProvider.songs
-
             PlainBackground()
 
+            // Pass data from state to the list
             LatestFeedList(
-                songs = allSongs.take(3),
-                reviews = allReviews,
+                songs = state.newReleases,
+                reviews = state.recentReviews,
                 modifier = Modifier.fillMaxSize()
             )
         }
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+// PREVIEWS
+//--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun LatestFeedPreview() {
