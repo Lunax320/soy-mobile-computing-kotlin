@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -103,10 +105,12 @@ fun GeneralForm(
     onValueChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(8.dp),
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    showPassword: Boolean = false,
+    onTogglePasswordVisibility: () -> Unit = {}
 ) {
 
-    val visualTransformation = if (isPassword) {
+    val visualTransformation = if (isPassword && !showPassword) {
         PasswordVisualTransformation()
     } else {
         VisualTransformation.None
@@ -117,6 +121,16 @@ fun GeneralForm(
         onValueChange = onValueChanged,
         label = { Text(text = stringResource(id = labelId), color = MaterialTheme.colorScheme.onPrimary) },
         visualTransformation = visualTransformation,
+        trailingIcon = if (isPassword) {
+            {
+                val image = if (showPassword) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val description = if (showPassword) "Hide password" else "Show password"
+
+                IconButton(onClick = onTogglePasswordVisibility) {
+                    Icon(imageVector = image, contentDescription = description)
+                }
+            }
+        } else null,
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
@@ -155,25 +169,6 @@ fun PlainBackground(
         contentScale = ContentScale.Crop
     )
 }
-
-/*
-@Composable
-fun PlainBackground2(
-    modifier: Modifier = Modifier,
-) {
-    if (LocalInspectionMode.current) {
-        Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
-    } else {
-        Image(
-            painter = painterResource(R.drawable.bg_plain),
-            contentDescription = stringResource(R.string.main_screen_background),
-            modifier = modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
-}
-*/
-
 
 @Composable
 fun TopPlainBackground(

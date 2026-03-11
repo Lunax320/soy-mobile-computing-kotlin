@@ -1,23 +1,16 @@
 package com.example.soymusicreviewapp.ui.screens.login
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,19 +20,28 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
-import com.example.soymusicreviewapp.ui.utils.PlainBackground
-import com.example.soymusicreviewapp.ui.utils.GeneralButton
-import com.example.soymusicreviewapp.ui.utils.GeneralForm
-import com.example.soymusicreviewapp.ui.utils.LogoSoy
-import com.example.soymusicreviewapp.ui.utils.TextSoy
+import com.example.soymusicreviewapp.ui.utils.*
 
 @Composable
 fun LoginScreen(
-    loginButtonPressed: () -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = state.navigate) {
+        if (state.navigate) {
+            navigateToHome()
+        }
+    }
+
+    LaunchedEffect(key1 = state.showMessage) {
+        if (state.showMessage) {
+            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Box(modifier = modifier) {
         PlainBackground()
@@ -51,7 +53,8 @@ fun LoginScreen(
                 state = state,
                 onUserChange = { viewModel.onUserChange(it) },
                 onPasswordChange = { viewModel.onPasswordChange(it) },
-                loginButtonPressed = loginButtonPressed
+                onLoginButtonPressed = { viewModel.onLoginButtonPressed() },
+                onTogglePasswordVisibility = { viewModel.togglePasswordVisibility() }
             )
         }
     }
@@ -62,7 +65,8 @@ fun LoginScreenBody(
     state: LoginState,
     onUserChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
-    loginButtonPressed: () -> Unit,
+    onLoginButtonPressed: () -> Unit,
+    onTogglePasswordVisibility: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -74,9 +78,7 @@ fun LoginScreenBody(
             horizontalArrangement = Arrangement.Center
         ) {
             LogoSoy(modifier = Modifier.size(200.dp))
-
             Spacer(modifier = Modifier.width(14.dp))
-
             TextSoy(size = 50.sp, modifier = Modifier.padding(top = 75.dp))
         }
         Spacer(modifier = Modifier.height(60.dp))
@@ -105,13 +107,17 @@ fun LoginScreenBody(
             labelId = R.string.password,
             textValue = state.passwordText,
             onValueChanged = onPasswordChange,
-            isPassword = true
+            isPassword = true,
+            showPassword = state.showPassword,
+            onTogglePasswordVisibility = onTogglePasswordVisibility
         )
+
         Spacer(modifier = Modifier.height(50.dp))
+
         GeneralButton(
             text = stringResource(R.string.login),
             onClick = {
-                loginButtonPressed()
+                onLoginButtonPressed()
             }
         )
     }
@@ -126,7 +132,7 @@ fun LoginScreenPreview(){
     CompMovilProyectoTheme {
         LoginScreen(
             viewModel = viewModel(),
-            loginButtonPressed = {}
+            navigateToHome = {}
         )
     }
 }

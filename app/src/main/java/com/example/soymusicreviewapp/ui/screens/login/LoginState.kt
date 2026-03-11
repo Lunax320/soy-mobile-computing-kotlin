@@ -7,6 +7,9 @@ data class LoginState(
     val userText: String = "",
 
     // Stores the text entered in the password field
-    val passwordText: String = ""
-
+    val passwordText: String = "",
+    val showPassword: Boolean = false,
+    val showMessage: Boolean = false,
+    val errorMessage: String = "",
+    val navigate: Boolean = false
 )

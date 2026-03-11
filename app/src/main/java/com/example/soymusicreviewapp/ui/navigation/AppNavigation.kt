@@ -80,7 +80,7 @@ fun AppNavigation (
             val loginViewModel: LoginViewModel = hiltViewModel()
             LoginScreen(
                 viewModel = loginViewModel,
-                loginButtonPressed = {
+                navigateToHome = {
                     navController.navigate(Screen.ForYouFeedScreen.route)
                 }
             )
@@ -90,7 +90,7 @@ fun AppNavigation (
             val registerViewModel: RegisterViewModel = hiltViewModel()
             RegisterScreen(
                 viewModel = registerViewModel,
-                loginCreateAccount = {
+                navigateToHome = {
                     navController.navigate(Screen.ForYouFeedScreen.route)
                 }
             )
