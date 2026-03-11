@@ -2,14 +2,17 @@ package com.example.soymusicreviewapp.ui.screens.create
 
 import androidx.lifecycle.ViewModel
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import javax.inject.Inject
 
-class CreateReviewViewModel : ViewModel() {
+
+@HiltViewModel
+class CreateReviewViewModel @Inject constructor(): ViewModel() {
     private val _uiState = MutableStateFlow(CreateReviewState())
-
     val uiState: StateFlow<CreateReviewState> = _uiState.asStateFlow()
 
     init {
