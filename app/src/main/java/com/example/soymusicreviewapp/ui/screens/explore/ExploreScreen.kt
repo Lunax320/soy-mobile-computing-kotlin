@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,7 +53,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.electropop),
-                color = colorResource(R.color.azulcal),
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 14.sp
             )
         }
@@ -60,7 +61,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.synth_pop),
-                color = colorResource(R.color.azulcal),
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 14.sp
             )
         }
@@ -68,7 +69,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.synthwave),
-                color = colorResource(R.color.azulcal),
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 14.sp
             )
         }
@@ -76,7 +77,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.dream_pop),
-                color = colorResource(R.color.azulcal),
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 14.sp
             )
         }
@@ -84,7 +85,7 @@ fun GenresFilter(
             GeneralButton(
                 modifier = Modifier.padding(horizontal = 4.dp),
                 text = stringResource(R.string.indie_pop),
-                color = colorResource(R.color.azulcal),
+                color = MaterialTheme.colorScheme.surface,
                 fontSize = 14.sp
             )
         }
@@ -117,14 +118,14 @@ fun ExploreScreenHeader(
                 GeneralButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.songs),
-                    color = colorResource(R.color.azulcal),
+                    color = MaterialTheme.colorScheme.surface,
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 GeneralButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.artists),
-                    color = colorResource(R.color.violetaClaro),
+                    color = MaterialTheme.colorScheme.secondary,
                     fontSize = 16.sp
                 )
             }
@@ -209,7 +210,7 @@ fun GeneralButtonPreview() {
     CompMovilProyectoTheme {
         GeneralButton(
             modifier = Modifier, text = "Artist",
-            color = colorResource(R.color.azulcal)
+            color = MaterialTheme.colorScheme.surface
         )
     }
 }

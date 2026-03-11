@@ -46,7 +46,7 @@ import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 @Composable
 fun NotificationScreenHeader(
     modifier: Modifier = Modifier
-            .fillMaxWidth()
+        .fillMaxWidth()
         .height(140.dp)
 ) {
     Box(
@@ -121,13 +121,13 @@ fun NotificationCard(
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.grisClaro)
+            containerColor = MaterialTheme.colorScheme.tertiary
         ),
         modifier = modifier
             .fillMaxWidth()
             .border(
                 width = 1.dp,
-                color = colorResource(R.color.violetaClaro),
+                color = MaterialTheme.colorScheme.secondary,
                 shape = RoundedCornerShape(20.dp)
             )
     ) {
@@ -149,7 +149,7 @@ fun NotificationCard(
 
                 Text(
                     text = data.userName + " " + data.actionText,
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 14.sp
                 )
 
@@ -157,7 +157,7 @@ fun NotificationCard(
 
                 Text(
                     text = data.time,
-                    color = colorResource(R.color.vclaroletra),
+                    color = MaterialTheme.colorScheme.onSecondary,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold
                 )
