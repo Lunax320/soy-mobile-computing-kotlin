@@ -1,7 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.notifications
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,18 +41,30 @@ import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Notification
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
-
+import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
+@Preview
 @Composable
 fun NotificationScreenHeader(
     modifier: Modifier = Modifier
+            .fillMaxWidth()
+        .height(140.dp)
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.secondary)
-            .padding(horizontal = 24.dp, vertical = 20.dp)
+            .height(140.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
-        Column {
+        TopPlainBackground(
+            modifier = Modifier.fillMaxSize()
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
