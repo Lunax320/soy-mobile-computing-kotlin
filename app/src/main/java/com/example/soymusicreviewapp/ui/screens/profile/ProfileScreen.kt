@@ -36,6 +36,34 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SettingsButton
 
 @Composable
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel,
+    settingsButtonPressed: () -> Unit
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        ProfileScreenHeader(
+            profileImageId = state.profileImageId,
+            name = state.name,
+            username = state.username,
+            reviewCount = state.reviewCount,
+            followersCount = state.followersCount,
+            followingCount = state.followingCount,
+            settingsButtonPressed = settingsButtonPressed
+        )
+        ProfileScreenBody(
+            userReviews = state.userReviews,
+            modifier = Modifier
+                .fillMaxSize()
+        )
+    }
+}
+@Composable
 fun ProfileScreenHeader(
     modifier: Modifier = Modifier,
     profileImageId: Int,
@@ -180,37 +208,6 @@ fun ProfileScreenBody(
     }
 }
 
-
-@Composable
-fun ProfileScreen(
-    modifier: Modifier = Modifier,
-    viewModel: ProfileViewModel = viewModel(),
-    settingsButtonPressed: () -> Unit
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        ProfileScreenHeader(
-            profileImageId = state.profileImageId,
-            name = state.name,
-            username = state.username,
-            reviewCount = state.reviewCount,
-            followersCount = state.followersCount,
-            followingCount = state.followingCount,
-            settingsButtonPressed = settingsButtonPressed
-        )
-        ProfileScreenBody(
-            userReviews = state.userReviews,
-            modifier = Modifier
-                .fillMaxSize()
-        )
-    }
-}
-
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -246,6 +243,7 @@ fun ProfileScreenHeaderPreview() {
 fun ProfileScreenPreview() {
     CompMovilProyectoTheme() {
         ProfileScreen(
+            viewModel = viewModel(),
             settingsButtonPressed = {}
         )
     }

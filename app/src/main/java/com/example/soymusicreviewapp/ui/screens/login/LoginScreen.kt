@@ -34,6 +34,30 @@ import com.example.soymusicreviewapp.ui.utils.LogoSoy
 import com.example.soymusicreviewapp.ui.utils.TextSoy
 
 @Composable
+fun LoginScreen(
+    loginButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Box(modifier = modifier) {
+        PlainBackground()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ){
+            LoginScreenBody(
+                state = state,
+                onUserChange = { viewModel.onUserChange(it) },
+                onPasswordChange = { viewModel.onPasswordChange(it) },
+                loginButtonPressed = loginButtonPressed
+            )
+        }
+    }
+}
+
+@Composable
 fun LoginScreenBody(
     state: LoginState,
     onUserChange: (String) -> Unit,
@@ -93,30 +117,6 @@ fun LoginScreenBody(
     }
 }
 
-@Composable
-fun LoginScreen(
-    loginButtonPressed: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Box(modifier = modifier) {
-        PlainBackground()
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ){
-            LoginScreenBody(
-                state = state,
-                onUserChange = { viewModel.onUserChange(it) },
-                onPasswordChange = { viewModel.onPasswordChange(it) },
-                loginButtonPressed = loginButtonPressed
-            )
-        }
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -125,6 +125,7 @@ fun LoginScreen(
 fun LoginScreenPreview(){
     CompMovilProyectoTheme {
         LoginScreen(
+            viewModel = viewModel(),
             loginButtonPressed = {}
         )
     }

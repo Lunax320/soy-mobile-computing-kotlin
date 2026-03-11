@@ -18,6 +18,35 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 
+// Main screen composable connecting ViewModel and UI
+@Composable
+fun ForYouFeedScreen(
+    onReviewClick: (Int) -> Unit,
+    followingButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: ForYouFeedViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        // Header component with navigation callback
+        FeedScreenHeader(
+            currentTab = 0,
+            HeaderButtonPressed = followingButtonPressed)
+
+        // Body receives data from state
+        ForYouScreenBody(
+            reviews = state.reviews,
+            onReviewClick = onReviewClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        )
+    }
+}
+
 // Composable for the screen body, receiving the reviews list as parameter
 @Composable
 fun ForYouScreenBody(
@@ -41,34 +70,6 @@ fun ForYouScreenBody(
     }
 }
 
-// Main screen composable connecting ViewModel and UI
-@Composable
-fun ForYouFeedScreen(
-    onReviewClick: (Int) -> Unit,
-    followingButtonPressed: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: ForYouFeedViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        // Header component with navigation callback
-        FeedScreenHeader(
-            currentTab = 0,
-            HeaderButtonPressed = followingButtonPressed)
-
-        // Body receives data from state
-        ForYouScreenBody(
-            reviews = state.reviews,
-            onReviewClick = onReviewClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        )
-    }
-}
 
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
@@ -78,6 +79,7 @@ fun ForYouFeedScreen(
 fun ForYouFeedScreenPreview() {
     CompMovilProyectoTheme {
         ForYouFeedScreen(
+            viewModel = viewModel(),
             onReviewClick = {},
             followingButtonPressed = {}
         )

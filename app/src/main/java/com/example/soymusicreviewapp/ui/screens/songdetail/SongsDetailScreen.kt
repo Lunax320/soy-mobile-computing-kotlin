@@ -30,6 +30,43 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SongInfo
 
+// Main Screen Composable
+@Composable
+fun SongsDetailScreen(
+    songId: Int,
+    onBack: () -> Unit,
+    onReviewClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SongsDetailViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(songId) {
+        viewModel.loadData(songId)
+    }
+
+    Box(modifier = modifier.fillMaxSize()) {
+        PlainBackground()
+
+        // Only render content if the song is loaded
+        if (state.selectedSong != null) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                SongsDetailScreenHeader(
+                    onBack = onBack,
+                    songInfo = state.selectedSong!!
+                )
+
+                ReviewList(
+                    onReviewClick = onReviewClick,
+                    reviews = state.reviews,
+                    title = stringResource(R.string.songs_reviews),
+                    modifier = Modifier.weight(1f)
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun SongsDetailScreenHeader(
     onBack: () -> Unit,
@@ -67,47 +104,15 @@ fun SongsDetailScreenHeader(
     }
 }
 
-// Main Screen Composable
-@Composable
-fun SongsDetailScreen(
-    songId: Int,
-    onBack: () -> Unit,
-    onReviewClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    // Inject ViewModel
-    viewModel: SongsDetailViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(songId) {
-        viewModel.loadData(songId)
-    }
-
-    Box(modifier = modifier.fillMaxSize()) {
-        PlainBackground()
-
-        // Only render content if the song is loaded
-        if (state.selectedSong != null) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                SongsDetailScreenHeader(
-                    onBack = onBack,
-                    songInfo = state.selectedSong!!
-                )
-
-                ReviewList(
-                    onReviewClick = onReviewClick,
-                    reviews = state.reviews,
-                    title = stringResource(R.string.songs_reviews),
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-    }
-}
-
 @Composable
 @Preview
 fun SongsDetailScreenPreview(){
     CompMovilProyectoTheme {
+        SongsDetailScreen(
+            viewModel = viewModel(),
+            songId = 1,
+            onBack = {},
+            onReviewClick = {},
+        )
     }
 }

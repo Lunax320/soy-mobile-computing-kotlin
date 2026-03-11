@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableTargetMarker
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -59,16 +60,13 @@ fun TextSoy(
 fun LogoSoy(
     modifier: Modifier = Modifier.size(250.dp)
 ) {
-    if (LocalInspectionMode.current) {
-        Box(modifier = modifier.background(Color.Gray.copy(alpha = 0.2f)))
-    } else {
         Image(
             painter = painterResource(R.drawable.img_logo_soy),
             contentDescription = stringResource(R.string.logo_soy),
             modifier = modifier
         )
     }
-}
+
 
 @Composable
 fun GeneralButton(
@@ -150,6 +148,19 @@ fun GeneralForm(
 fun PlainBackground(
     modifier: Modifier = Modifier,
 ) {
+    Image(
+        painter = painterResource(R.drawable.bg_plain),
+        contentDescription = stringResource(R.string.main_screen_background),
+        modifier = modifier.fillMaxSize(),
+        contentScale = ContentScale.Crop
+    )
+}
+
+/*
+@Composable
+fun PlainBackground2(
+    modifier: Modifier = Modifier,
+) {
     if (LocalInspectionMode.current) {
         Box(modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
     } else {
@@ -161,6 +172,8 @@ fun PlainBackground(
         )
     }
 }
+*/
+
 
 @Composable
 fun TopPlainBackground(

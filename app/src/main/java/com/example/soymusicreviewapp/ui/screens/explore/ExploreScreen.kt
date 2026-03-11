@@ -34,6 +34,34 @@ import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SongCard
 import com.example.soymusicreviewapp.ui.utils.SongList
 
+@Composable
+fun ExploreScreen(
+    modifier: Modifier = Modifier,
+    onSongClick: (Int) -> Unit,
+    viewModel: ExploreViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        // Pass search state to header
+        ExploreScreenHeader(
+            searchValue = state.searchText,
+            onSearchChange = { viewModel.onSearchChange(it) }
+        )
+        // Pass songs list to body
+        ExploreScreenBody(
+            songs = state.songs,
+            onSongClick = onSongClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
+    }
+}
+
+
 // Component for filtering genres (kept as is)
 @Composable
 fun GenresFilter(
@@ -164,34 +192,6 @@ fun ExploreScreenBody(
         )
     }
 }
-
-@Composable
-fun ExploreScreen(
-    modifier: Modifier = Modifier,
-    onSongClick: (Int) -> Unit,
-    viewModel: ExploreViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        // Pass search state to header
-        ExploreScreenHeader(
-            searchValue = state.searchText,
-            onSearchChange = { viewModel.onSearchChange(it) }
-        )
-        // Pass songs list to body
-        ExploreScreenBody(
-            songs = state.songs,
-            onSongClick = onSongClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        )
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -261,6 +261,7 @@ fun ExploreScreenBodyPreview() {
 fun ExploreScreenPreview() {
     CompMovilProyectoTheme {
         ExploreScreen(
+            viewModel = viewModel(),
             onSongClick = {}
         )
     }

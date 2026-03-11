@@ -20,6 +20,32 @@ import com.example.soymusicreviewapp.ui.utils.SoyBackground
 import com.example.soymusicreviewapp.ui.utils.SearchBar
 import com.example.soymusicreviewapp.ui.utils.SongList
 
+// Main screen composable connecting ViewModel
+@Composable
+fun CreateReviewScreen(
+    onSongClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: CreateReviewViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        CreateReviewScreenHeader()
+        // Pass state and events to Body
+        CreateReviewScreenBody(
+            searchText = state.searchText,
+            songs = state.songs,
+            onSearchChange = { viewModel.onSearchChange(it) },
+            onSongClick = onSongClick,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        )
+    }
+}
+
 // Composable for the screen header
 @Composable
 fun CreateReviewScreenHeader(
@@ -88,32 +114,6 @@ fun CreateReviewScreenBody(
     }
 }
 
-// Main screen composable connecting ViewModel
-@Composable
-fun CreateReviewScreen(
-    onSongClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: CreateReviewViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        CreateReviewScreenHeader()
-        // Pass state and events to Body
-        CreateReviewScreenBody(
-            searchText = state.searchText,
-            songs = state.songs,
-            onSearchChange = { viewModel.onSearchChange(it) },
-            onSongClick = onSongClick,
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        )
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -122,6 +122,7 @@ fun CreateReviewScreen(
 fun CreateReviewScreenPreview() {
     CompMovilProyectoTheme {
         CreateReviewScreen(
+            viewModel = viewModel(),
             onSongClick = {}
         )
     }

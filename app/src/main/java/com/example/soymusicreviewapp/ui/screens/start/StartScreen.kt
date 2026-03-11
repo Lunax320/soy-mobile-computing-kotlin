@@ -28,6 +28,29 @@ import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.LogoSoy
 
 @Composable
+fun StartScreen(
+    loginButtonPressed: () -> Unit,
+    registerButtonPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: StartViewModel
+){
+    val state by viewModel.uiState.collectAsState()
+
+    Box(modifier = modifier.fillMaxSize()){
+        PlainBackground()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ){
+            StartScreenBody(
+                loginButtonPressed = loginButtonPressed,
+                registerButtonPressed = registerButtonPressed
+            )
+        }
+    }
+}
+
+@Composable
 fun StartScreenBody(
     modifier: Modifier = Modifier,
     loginButtonPressed: () -> Unit,
@@ -82,29 +105,6 @@ fun StartScreenBody(
     }
 }
 
-@Composable
-fun StartScreen(
-    loginButtonPressed: () -> Unit,
-    registerButtonPressed: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: StartViewModel = viewModel()
-){
-    val state by viewModel.uiState.collectAsState()
-
-    Box(modifier = modifier.fillMaxSize()){
-        PlainBackground()
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ){
-            StartScreenBody(
-                loginButtonPressed = loginButtonPressed,
-                registerButtonPressed = registerButtonPressed
-            )
-        }
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -113,6 +113,7 @@ fun StartScreen(
 fun StartScreenPreview(){
     CompMovilProyectoTheme {
         StartScreen(
+            viewModel = viewModel(),
             loginButtonPressed = {},
             registerButtonPressed = {}
         )

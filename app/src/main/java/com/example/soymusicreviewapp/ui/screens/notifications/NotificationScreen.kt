@@ -42,6 +42,39 @@ import com.example.soymusicreviewapp.data.Notification
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
+
+// Main screen composable
+@Composable
+fun NotificationScreen(
+    modifier: Modifier = Modifier,
+    viewModel: NotificationViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        PlainBackground()
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            NotificationScreenHeader()
+
+            // Display list using data from state
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(state.notifications) { item ->
+                    NotificationCard(data = item)
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 fun NotificationScreenHeader(
@@ -179,37 +212,6 @@ fun NotificationCard(
     }
 }
 
-// Main screen composable
-@Composable
-fun NotificationScreen(
-    viewModel: NotificationViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        PlainBackground()
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            NotificationScreenHeader()
-
-            // Display list using data from state
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(state.notifications) { item ->
-                    NotificationCard(data = item)
-                }
-            }
-        }
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -217,6 +219,8 @@ fun NotificationScreen(
 @Composable
 fun NotificationScreenPreview() {
     CompMovilProyectoTheme {
-        NotificationScreen()
+        NotificationScreen(
+            viewModel = viewModel()
+        )
     }
 }

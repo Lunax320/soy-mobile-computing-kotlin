@@ -36,6 +36,70 @@ import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SettingsOption
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
 
+@Composable
+fun SettingsScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel,
+    onBackClick: () -> Unit = {},
+    onConfirmLogout: () -> Unit = {}
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        SettingsScreenHeader(
+            onBackClick = onBackClick
+        )
+        SettingsScreenBody(
+            onLogoutClick = { viewModel.onLogoutClicked() },
+            onDeleteAccountClick = { viewModel.onDeleteAccountClicked() }
+        )
+    }
+
+    if (state.showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissLogoutDialog() },
+            title = { Text(text = stringResource(R.string.sign_out)) },
+            text = { Text(text = "¿Estás seguro de que quieres cerrar sesión?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.confirmLogout()
+                    onConfirmLogout()
+                }) {
+                    Text(text = "Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissLogoutDialog() }) {
+                    Text(text = "Cancelar")
+                }
+            }
+        )
+    }
+
+    if (state.showDeleteAccountDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.dismissDeleteAccountDialog() },
+            title = { Text(text = stringResource(R.string.delete_account)) },
+            text = { Text(text = "¿Estás seguro de que quieres eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.") },
+            confirmButton = {
+                TextButton(
+                    onClick = { viewModel.confirmDeleteAccount() },
+                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(text = "Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.dismissDeleteAccountDialog() }) {
+                    Text(text = "Cancelar")
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun SettingsScreenHeader(
@@ -107,70 +171,6 @@ fun SettingsScreenBody(
     }
 }
 
-@Composable
-fun SettingsScreen(
-    modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel = viewModel(),
-    onBackClick: () -> Unit = {},
-    onConfirmLogout: () -> Unit = {}
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        SettingsScreenHeader(
-            onBackClick = onBackClick
-        )
-        SettingsScreenBody(
-            onLogoutClick = { viewModel.onLogoutClicked() },
-            onDeleteAccountClick = { viewModel.onDeleteAccountClicked() }
-        )
-    }
-
-    if (state.showLogoutDialog) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissLogoutDialog() },
-            title = { Text(text = stringResource(R.string.sign_out)) },
-            text = { Text(text = "¿Estás seguro de que quieres cerrar sesión?") },
-            confirmButton = {
-                TextButton(onClick = { 
-                    viewModel.confirmLogout()
-                    onConfirmLogout() 
-                }) {
-                    Text(text = "Confirmar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.dismissLogoutDialog() }) {
-                    Text(text = "Cancelar")
-                }
-            }
-        )
-    }
-
-    if (state.showDeleteAccountDialog) {
-        AlertDialog(
-            onDismissRequest = { viewModel.dismissDeleteAccountDialog() },
-            title = { Text(text = stringResource(R.string.delete_account)) },
-            text = { Text(text = "¿Estás seguro de que quieres eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.") },
-            confirmButton = {
-                TextButton(
-                    onClick = { viewModel.confirmDeleteAccount() },
-                    colors = androidx.compose.material3.ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
-                ) {
-                    Text(text = "Eliminar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.dismissDeleteAccountDialog() }) {
-                    Text(text = "Cancelar")
-                }
-            }
-        )
-    }
-}
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -188,7 +188,9 @@ fun SettingsScreenHeaderPreview() {
 @Preview
 fun SettingsScreenPreview(){
     CompMovilProyectoTheme {
-        SettingsScreen()
+        SettingsScreen(
+            viewModel = viewModel()
+        )
     }
 }
 

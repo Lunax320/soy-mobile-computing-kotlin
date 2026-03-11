@@ -34,6 +34,32 @@ import com.example.soymusicreviewapp.ui.utils.LogoSoy
 import com.example.soymusicreviewapp.ui.utils.TextSoy
 
 @Composable
+fun RegisterScreen(
+    loginCreateAccount: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: RegisterViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Box(modifier = modifier) {
+        PlainBackground()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ){
+            RegisterScreenBody(
+                state = state,
+                onNameChange = { viewModel.onNameChange(it) },
+                onUserChange = { viewModel.onUserChange(it) },
+                onEmailChange = { viewModel.onEmailChange(it) },
+                onPasswordChange = { viewModel.onPasswordChange(it) },
+                loginCreateAccount = loginCreateAccount
+            )
+        }
+    }
+}
+
+@Composable
 fun RegisterScreenBody(
     state: RegisterState,
     onNameChange: (String) -> Unit,
@@ -43,9 +69,9 @@ fun RegisterScreenBody(
     loginCreateAccount: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column (
+    Column(
         modifier = modifier.padding(horizontal = 35.dp)
-    ){
+    ) {
         Spacer(modifier = Modifier.height(60.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,32 +151,6 @@ fun RegisterScreenBody(
     }
 }
 
-@Composable
-fun RegisterScreen(
-    loginCreateAccount: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: RegisterViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Box(modifier = modifier) {
-        PlainBackground()
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize()
-        ){
-            RegisterScreenBody(
-                state = state,
-                onNameChange = { viewModel.onNameChange(it) },
-                onUserChange = { viewModel.onUserChange(it) },
-                onEmailChange = { viewModel.onEmailChange(it) },
-                onPasswordChange = { viewModel.onPasswordChange(it) },
-                loginCreateAccount = loginCreateAccount
-            )
-        }
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -159,6 +159,7 @@ fun RegisterScreen(
 fun RegisterScreenPreview(){
     CompMovilProyectoTheme {
         RegisterScreen(
+            viewModel = viewModel(),
             loginCreateAccount = {}
         )
     }

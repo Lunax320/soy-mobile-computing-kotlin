@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.data.Review
@@ -34,7 +35,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 fun ReviewDetailScreen(
     reviewId: Int,
     modifier: Modifier = Modifier,
-    viewModel: ReviewDetailViewModel = viewModel()
+    viewModel: ReviewDetailViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -138,4 +139,13 @@ fun ReviewActionBar(
             )
         }
     }
+}
+
+@Composable
+@Preview
+fun reviewDetailScreenPreview() {
+    ReviewDetailScreen(
+        reviewId = 1,
+        viewModel = viewModel()
+    )
 }

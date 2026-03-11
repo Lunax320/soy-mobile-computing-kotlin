@@ -30,6 +30,37 @@ import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewCard
 import com.example.soymusicreviewapp.ui.utils.SongCard
 
+// Main screen composable
+@Composable
+fun LatestFeedScreen(
+    modifier: Modifier = Modifier,
+    latestCreateAccount: () -> Unit,
+    viewModel: LatestFeedViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        // Header navigation logic
+        FeedScreenHeader(
+            currentTab = 2,
+            HeaderButtonPressed = latestCreateAccount
+        )
+
+        Box {
+            PlainBackground()
+
+            // Pass data from state to the list
+            LatestFeedList(
+                songs = state.newReleases,
+                reviews = state.recentReviews,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+    }
+}
+
 @Composable
 fun LatestFeedList(
     songs: List<Song>,
@@ -89,37 +120,6 @@ fun LatestFeedList(
     }
 }
 
-// Main screen composable
-@Composable
-fun LatestFeedScreen(
-    modifier: Modifier = Modifier,
-    latestCreateAccount: () -> Unit,
-    viewModel: LatestFeedViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Header navigation logic
-        FeedScreenHeader(
-            currentTab = 2,
-            HeaderButtonPressed = latestCreateAccount
-        )
-
-        Box {
-            PlainBackground()
-
-            // Pass data from state to the list
-            LatestFeedList(
-                songs = state.newReleases,
-                reviews = state.recentReviews,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-    }
-}
-
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
@@ -128,6 +128,7 @@ fun LatestFeedScreen(
 fun LatestFeedPreview() {
     CompMovilProyectoTheme {
         LatestFeedScreen(
+            viewModel = viewModel(),
             modifier = Modifier,
             latestCreateAccount = {}
         )

@@ -18,6 +18,35 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 
+// Main screen composable that integrates ViewModel and Navigation
+@Composable
+fun FollowingFeedScreen(
+    latestButtonPressed: () -> Unit,
+    onReviewClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: FollowingFeedViewModel
+) {
+    val state by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        // Header with navigation logic maintained
+        FeedScreenHeader(1,
+            HeaderButtonPressed = latestButtonPressed)
+
+        // Body receives the data from the state
+        FollowingFeedScreenBody(
+            reviews = state.reviews,
+            onReviewClick = onReviewClick,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f)
+        )
+    }
+}
+
 // Composable for the screen body, receiving the list of reviews as a parameter
 @Composable
 fun FollowingFeedScreenBody(
@@ -41,34 +70,7 @@ fun FollowingFeedScreenBody(
     }
 }
 
-// Main screen composable that integrates ViewModel and Navigation
-@Composable
-fun FollowingFeedScreen(
-    latestButtonPressed: () -> Unit,
-    onReviewClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: FollowingFeedViewModel = viewModel()
-) {
-    val state by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        // Header with navigation logic maintained
-        FeedScreenHeader(1,
-            HeaderButtonPressed = latestButtonPressed)
-
-        // Body receives the data from the state
-        FollowingFeedScreenBody(
-            reviews = state.reviews,
-            onReviewClick = onReviewClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
-        )
-    }
-}
 
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
@@ -78,6 +80,7 @@ fun FollowingFeedScreen(
 fun FollowingFeedScreenPreview() {
     CompMovilProyectoTheme {
         FollowingFeedScreen(
+            viewModel= viewModel(),
             onReviewClick = {},
             latestButtonPressed = {}
         )
