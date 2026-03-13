@@ -44,6 +44,9 @@ fun SettingsScreen(
     onConfirmLogout: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
+    if (state.navigate){
+        onConfirmLogout()
+    }
 
     Column(
         modifier = modifier
@@ -66,8 +69,7 @@ fun SettingsScreen(
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.confirmLogout()
-                    onConfirmLogout()
-                }) {
+                    }) {
                     Text(text = "Confirmar")
                 }
             },

@@ -1,7 +1,7 @@
 package com.example.soymusicreviewapp.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.example.soymusicreviewapp.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(): ViewModel() {
+class SettingsViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsState())
     val uiState: StateFlow<SettingsState> = _uiState.asStateFlow()
@@ -35,8 +37,8 @@ class SettingsViewModel @Inject constructor(): ViewModel() {
 
     fun confirmLogout() {
         // Actual logout logic here
-        FirebaseAuth.getInstance().signOut()
-        _uiState.update { it.copy(showLogoutDialog = false) }
+        authRepository.signOut()
+        _uiState.update { it.copy(showLogoutDialog = false, navigate = true) }
     }
 
     fun confirmDeleteAccount() {
