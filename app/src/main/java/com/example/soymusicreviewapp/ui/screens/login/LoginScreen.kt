@@ -84,13 +84,13 @@ fun LoginScreenBody(
         Spacer(modifier = Modifier.height(60.dp))
 
         Text(
-            text = stringResource(R.string.user),
+            text = stringResource(R.string.email),
             color = MaterialTheme.colorScheme.onPrimary,
             style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Bold)
         )
 
         GeneralForm(
-            labelId = R.string.user,
+            labelId = R.string.email,
             textValue = state.userText,
             onValueChanged = onUserChange
         )
