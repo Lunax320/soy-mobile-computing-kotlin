@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
@@ -35,4 +36,6 @@ class ProfileViewModel @Inject constructor(): ViewModel() {
             )
         }
     }
+
+    fun updateProfileImageUrl(profileImageUrl: Uri) = _uiState.update { it.copy(profileImageUrl = profileImageUrl) }
 }

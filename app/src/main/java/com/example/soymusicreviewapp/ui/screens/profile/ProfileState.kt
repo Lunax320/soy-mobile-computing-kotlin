@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
+import android.net.Uri
 import com.example.soymusicreviewapp.data.Review
 
 data class ProfileState(
@@ -9,5 +10,6 @@ data class ProfileState(
     val reviewCount: Int = 0,
     val followersCount: Int = 0,
     val followingCount: Int = 0,
-    val userReviews: List<Review> = emptyList()
+    val userReviews: List<Review> = emptyList(),
+    val profileImageUrl: Uri? = null
 )

@@ -1,16 +1,26 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
-import androidx.compose.foundation.Image
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,13 +29,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
@@ -43,18 +58,31 @@ fun ProfileScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            Log.d("ProfileScreen", uri.toString())
+            viewModel.updateProfileImageUrl(uri)
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
     ) {
         ProfileScreenHeader(
             profileImageId = state.profileImageId,
+            profileImageUrl = state.profileImageUrl,
             name = state.name,
             username = state.username,
             reviewCount = state.reviewCount,
             followersCount = state.followersCount,
             followingCount = state.followingCount,
-            settingsButtonPressed = settingsButtonPressed
+            settingsButtonPressed = settingsButtonPressed,
+            editProfileClick = {
+                launcher.launch("image/*")
+            }
         )
         ProfileScreenBody(
             userReviews = state.userReviews,
@@ -63,16 +91,19 @@ fun ProfileScreen(
         )
     }
 }
+
 @Composable
 fun ProfileScreenHeader(
     modifier: Modifier = Modifier,
     profileImageId: Int,
+    profileImageUrl: Uri?,
     name: String,
     username: String,
     reviewCount: Int,
     followersCount: Int,
     followingCount: Int,
-    settingsButtonPressed: () -> Unit
+    settingsButtonPressed: () -> Unit,
+    editProfileClick: () -> Unit
 ){
     Box(
         modifier = modifier,
@@ -89,9 +120,10 @@ fun ProfileScreenHeader(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
 
-            ProfileImage(
-                imageId = profileImageId,
-                descriptionId = (R.string.profile_photo)
+            EditableProfilePicture(
+                model = profileImageUrl,
+                onEditClick = editProfileClick,
+                modifier = Modifier.padding(top = 20.dp)
             )
 
             Text(
@@ -165,28 +197,52 @@ fun ProfileScreenHeader(
     }
 }
 
-
 @Composable
-fun ProfileImage(
+fun EditableProfilePicture(
+    model: Uri?,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
-    imageId: Int,
-    descriptionId: Int,
+    avatarSize: Dp = 125.dp,
+    buttonSize: Dp = 40.dp
 ) {
-    Image(
-        painter = painterResource(if (imageId != 0) imageId else R.drawable.img_avatar_penguin),
-        contentDescription = stringResource(descriptionId),
-        modifier = modifier
-            .size(125.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.secondary,
-                shape = RoundedCornerShape(20.dp)
+    Box(
+        modifier = modifier.size(avatarSize),
+        contentAlignment = Alignment.Center
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(model)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.profile),
+            error = painterResource(id = R.drawable.ic_loading),
+            placeholder = painterResource(id = R.drawable.ic_profile),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(125.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.secondary,
+                    shape = RoundedCornerShape(20.dp)
+                )
+        )
+
+
+        FilledIconButton(
+            onClick = onEditClick,
+            modifier = Modifier
+                .size(buttonSize)
+                .align(Alignment.BottomEnd),
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PhotoCamera,
+                contentDescription = stringResource(R.string.change_profile_picture),
+                modifier = Modifier.size(20.dp)
             )
-    )
+        }
+    }
 }
-
-
 
 @Composable
 fun ProfileScreenBody(
@@ -213,27 +269,18 @@ fun ProfileScreenBody(
 //--------------------------------------------------------------------------------------------------
 @Composable
 @Preview
-fun ProfileImagePreview() {
-    CompMovilProyectoTheme() {
-        ProfileImage(
-            imageId = R.drawable.img_avatar_penguin,
-            descriptionId = R.string.profile_photo
-        )
-    }
-}
-
-@Composable
-@Preview
 fun ProfileScreenHeaderPreview() {
     CompMovilProyectoTheme() {
         ProfileScreenHeader(
             profileImageId = R.drawable.img_avatar_penguin,
+            profileImageUrl = null,
             name = "Music Lover",
             username = "@musiclover",
             reviewCount = 2,
             followersCount = 234,
             followingCount = 189,
-            settingsButtonPressed = {}
+            settingsButtonPressed = {},
+            editProfileClick = {}
         )
     }
 }
