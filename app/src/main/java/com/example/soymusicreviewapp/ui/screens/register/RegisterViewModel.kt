@@ -40,24 +40,36 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(showPassword = !currentValue) }
     }
 
+    fun onMessageShown() {
+        _uiState.update { it.copy(showMessage = false) }
+    }
+
     fun onRegisterButtonPressed() {
         val currentState = _uiState.value
 
         if (currentState.passwordText.isNullOrEmpty() || currentState.emailText.isNullOrEmpty() || currentState.userText.isNullOrEmpty() || currentState.nameText.isNullOrEmpty()) {
-            _uiState.update { it.copy(showMessage = true, errorMessage = "All fields are required") }
+            _uiState.update { it.copy(showMessage = true, errorMessage = "Todos los campos son necesarios") }
         } else {
             if (currentState.passwordText.length < 6) {
-                _uiState.update { it.copy(showMessage = true, errorMessage = "The password must be at least 6 characters long") }
+                _uiState.update { it.copy(showMessage = true, errorMessage = "La contraseña debe tener minimo 6 caracteres") }
             } else {
                 if (currentState.emailText == "admin@admin.com") {
-                    _uiState.update { it.copy(showMessage = true, errorMessage = "The email is already in use") }
+                    _uiState.update { it.copy(showMessage = true, errorMessage = "El email ya esta en uso") }
                 } else {
                     viewModelScope.launch {
-                        try {
-                            authRepository.signUp(currentState.emailText, currentState.passwordText)
+                        val resultado = authRepository.signUp(currentState.emailText, currentState.passwordText)
+
+                        if (resultado.isSuccess) {
                             _uiState.update { it.copy(navigate = true) }
-                        } catch (e: Exception) {
-                            _uiState.update { it.copy(errorMessage = e.message.toString(), showMessage = true) }
+                        } else {
+                            var mensajeDeError = "Error al crear la cuenta"
+                            val excepcion = resultado.exceptionOrNull()
+
+                            if (excepcion != null && excepcion.message != null) {
+                                mensajeDeError = excepcion.message.toString()
+                            }
+
+                            _uiState.update { it.copy(errorMessage = mensajeDeError, showMessage = true) }
                         }
                     }
                 }

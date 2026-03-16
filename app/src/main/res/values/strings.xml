@@ -67,4 +67,6 @@
     <string name="delete_account">Delete account</string>
     <string name="songs_reviews">songs_reviews</string>
     <string name="change_profile_picture">Change profile picture</string>
+    <string name="user_image">User Image</string>
+    <string name="song_image">Song Image</string>
 </resources>

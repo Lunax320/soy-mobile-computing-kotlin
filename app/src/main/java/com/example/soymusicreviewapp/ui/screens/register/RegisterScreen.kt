@@ -40,8 +40,10 @@ fun RegisterScreen(
     LaunchedEffect(key1 = state.showMessage) {
         if (state.showMessage) {
             Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
+            viewModel.onMessageShown()
         }
     }
+
 
     Box(modifier = modifier) {
         PlainBackground()

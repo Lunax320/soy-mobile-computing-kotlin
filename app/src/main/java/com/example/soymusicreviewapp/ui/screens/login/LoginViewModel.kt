@@ -32,6 +32,10 @@ class LoginViewModel @Inject constructor(
         _uiState.update { it.copy(showPassword = !currentValue) }
     }
 
+    fun onMessageShown() {
+        _uiState.update { it.copy(showMessage = false) }
+    }
+
     fun onLoginButtonPressed() {
         val currentState = _uiState.value
 
@@ -39,17 +43,18 @@ class LoginViewModel @Inject constructor(
             currentState.userText.isNullOrEmpty() ||
             currentState.passwordText.isNullOrEmpty()
         ) {
-            _uiState.update { it.copy(showMessage = true, errorMessage = "All fields are required") }
+            _uiState.update { it.copy(showMessage = true, errorMessage = "Todos los campos son obligatorios") }
         } else {
             viewModelScope.launch {
-                try {
-                    authRepository.singIn(
+                val result = authRepository.singIn(
                         currentState.userText,
                         currentState.passwordText
                     )
+                if (result.isSuccess) {
                     _uiState.update { it.copy(navigate = true) }
-                } catch (e: Exception) {
-                    _uiState.update { it.copy(errorMessage = "Login failed", showMessage = true) }
+                } else{
+                    val message = result.exceptionOrNull()?.message ?: "Login fallo"
+                    _uiState.update { it.copy(errorMessage = message, showMessage = true) }
                 }
             }
         }

@@ -7,7 +7,7 @@ object LocalReviewProvider {
     val reviews = listOf(
         Review(
             usernameId = 1,
-            userImageId = R.drawable.img_avatar_one,
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWti9igEtHDdFN_OVq90LY1NZKKqMGTnMDQw&s",
             userName = "MusicLover",
             date = "2023-08-01",
             songName = "Midnight City",
@@ -17,7 +17,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 2,
-            userImageId = R.drawable.img_avatar_two,
+            profileImage = "https://www.kyoceradocumentsolutions.es/content/dam/kyocera/es/images/square/Square-540x540-reclutamiento_personas_e-Recruitment.jpg.png",
             userName = "Sarah_Music",
             date = "2023-08-01",
             songName = "The Mother We Share",
@@ -27,7 +27,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 3,
-            userImageId = R.drawable.img_avatar_three,
+            profileImage = "https://www.kyoceradocumentsolutions.es/content/dam/kyocera/es/images/square/Square-540x540-tienes_tus_datos_a_salvo_en_office_365.png",
             userName = "Joselito Records",
             date = "2025-11-23",
             songName = "Sunset",
@@ -37,7 +37,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 4,
-            userImageId = R.drawable.img_avatar_four,
+            profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEpT1Dn0NCMLiH0Xi6xaxuYHqVHHn4LqJVGQ&s",
             userName = "SynthFan99",
             date = "2025-12-05",
             songName = "Oblivion",
@@ -47,7 +47,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 5,
-            userImageId = R.drawable.img_avatar_five,
+            profileImage = "https://images.squarespace-cdn.com/content/v1/5d77a7f8ad30356d21445262/1695000300830-5TKAFHC2EBYTTM2QUWUP/fotos-de-perfil-blanco-y-negro.jpg",
             userName = "AuroraBorealis",
             date = "2026-01-10",
             songName = "Runaway",
@@ -57,7 +57,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 6,
-            userImageId = R.drawable.img_avatar_six,
+            profileImage = "https://marketplace.canva.com/EAGl2WpDo0Q/1/0/1600w/canva-foto-de-perfil-de-instagram-mujer-moderno-tQ8K1dL4nno.jpg",
             userName = "NightDriver",
             date = "2026-02-14",
             songName = "Electricity",
@@ -67,7 +67,7 @@ object LocalReviewProvider {
         ),
         Review(
             usernameId = 7,
-            userImageId = R.drawable.img_avatar_one,
+            profileImage = "https://i.redd.it/qm3p4sotkjgd1.jpeg",
             userName = "PopCritic",
             date = "2026-02-19",
             songName = "Clearest Blue",

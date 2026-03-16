@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,12 +55,10 @@ fun ReviewInfo(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(id = review.userImageId),
-                    contentDescription = "User image",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(20.dp))
+
+                ReviewAsyncImage(
+                    profileImage = review.profileImage,
+                    size = 40
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -143,13 +140,9 @@ fun SongInfo(
         modifier = Modifier.padding(18.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Image(
-            painter = painterResource(id = song.imageId),
-            contentDescription = "Song cover",
-            modifier = Modifier
-                .size(imageSize)
-                .clip(RoundedCornerShape(8.dp))
+        SongAsyncImage(
+            profileImage = song.songImage,
+            size = imageSize
         )
 
         Spacer(modifier = Modifier.width(15.dp))
