@@ -233,7 +233,7 @@ fun EditableProfilePicture(
             onClick = onEditClick,
             modifier = Modifier
                 .size(buttonSize)
-                .align(Alignment.BottomEnd),
+                 .align(Alignment.BottomEnd),
         ) {
             Icon(
                 imageVector = Icons.Filled.PhotoCamera,

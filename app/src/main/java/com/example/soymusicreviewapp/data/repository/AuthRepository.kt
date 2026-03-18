@@ -11,8 +11,7 @@ class AuthRepository @Inject constructor(
 ){
 
     val currentUser = authDataSource.currentUser
-
-    suspend fun singIn(email: String, password: String): Result<Unit> {
+    suspend fun signIn(email: String, password: String): Result<Unit> {
         try {
             authDataSource.singIn(email, password)
             return Result.success(Unit)

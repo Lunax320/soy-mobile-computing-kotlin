@@ -46,7 +46,7 @@ class LoginViewModel @Inject constructor(
             _uiState.update { it.copy(showMessage = true, errorMessage = "Todos los campos son obligatorios") }
         } else {
             viewModelScope.launch {
-                val result = authRepository.singIn(
+                val result = authRepository.signIn(
                         currentState.userText,
                         currentState.passwordText
                     )
