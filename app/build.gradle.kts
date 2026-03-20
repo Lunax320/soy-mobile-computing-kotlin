@@ -69,6 +69,8 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.4.0")
 
+    implementation("com.google.firebase:firebase-storage-ktx")
+
         //Hilt
         implementation(libs.dagger.hilt)
         implementation(libs.hilt.compose.navigation)

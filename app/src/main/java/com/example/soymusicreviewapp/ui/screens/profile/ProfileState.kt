@@ -11,5 +11,5 @@ data class ProfileState(
     val followersCount: Int = 0,
     val followingCount: Int = 0,
     val userReviews: List<Review> = emptyList(),
-    val profileImageUrl: Uri? = null
+    val profileImageUrl: String? = null
 )

@@ -63,7 +63,7 @@ fun ProfileScreen(
     ) { uri: Uri? ->
         uri?.let {
             Log.d("ProfileScreen", uri.toString())
-            viewModel.updateProfileImageUrl(uri)
+            viewModel.uploadImageToFirebase(uri)
         }
     }
 
@@ -96,7 +96,7 @@ fun ProfileScreen(
 fun ProfileScreenHeader(
     modifier: Modifier = Modifier,
     profileImageId: Int,
-    profileImageUrl: Uri?,
+    profileImageUrl: String?,
     name: String,
     username: String,
     reviewCount: Int,
@@ -199,7 +199,7 @@ fun ProfileScreenHeader(
 
 @Composable
 fun EditableProfilePicture(
-    model: Uri?,
+    model: String?,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier,
     avatarSize: Dp = 125.dp,
