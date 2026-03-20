@@ -42,7 +42,7 @@ object LocalReviewProvider {
             date = "2025-12-05",
             songName = "Oblivion",
             artistName = "Grimes",
-            reviewText = "A gem of dark electropop, the bassline is spectacular. The synths create an immersive atmosphere that grabs you from the first second. It has that perfect balance between mystery and energy that makes it impossible to ignore. Every listen reveals new details.",
+            reviewText = "A gem of dark electropop, the bassline is spectacular. The synths searchsong an immersive atmosphere that grabs you from the first second. It has that perfect balance between mystery and energy that makes it impossible to ignore. Every listen reveals new details.",
             rating = 4
         ),
         Review(

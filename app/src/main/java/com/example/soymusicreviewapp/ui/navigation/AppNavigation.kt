@@ -5,20 +5,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.soymusicreviewapp.ui.Splash.SplashScreen
-import com.example.soymusicreviewapp.ui.Splash.SplashViewModel
 import com.example.soymusicreviewapp.ui.screens.start.StartScreen
 import com.example.soymusicreviewapp.ui.screens.login.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.register.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
-import com.example.soymusicreviewapp.ui.screens.create.CreateReviewScreen
-import com.example.soymusicreviewapp.ui.screens.create.CreateReviewViewModel
+import com.example.soymusicreviewapp.ui.screens.searchsong.CreateReviewScreen
+import com.example.soymusicreviewapp.ui.screens.searchsong.SearchSongModel
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreViewModel
 import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
@@ -50,7 +48,7 @@ sealed class Screen (val route: String) {
     object FollowingFeedScreen : Screen("followingFeed")
     object LatestFeedScreen : Screen("latestFeed")
     object ExploreScreen : Screen("explore")
-    object CreateReviewScreen : Screen("create")
+    object CreateReviewScreen : Screen("searchsong")
     object NotificationScreen : Screen("notification")
     object ProfileScreen : Screen("profile")
     object SettingsScreen : Screen("settings")
@@ -192,9 +190,9 @@ fun AppNavigation (
         }
 
         composable(route = Screen.CreateReviewScreen.route) {
-            val createReviewViewModel: CreateReviewViewModel = hiltViewModel()
+            val searchSongModel: SearchSongModel = hiltViewModel()
             CreateReviewScreen(
-                viewModel = createReviewViewModel,
+                viewModel = searchSongModel,
                 onSongClick = { songId ->
                     navController.navigate("songDetail/$songId")
                 }

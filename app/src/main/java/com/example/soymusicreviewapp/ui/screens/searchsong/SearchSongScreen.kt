@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.create
+package com.example.soymusicreviewapp.ui.screens.searchsong
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -25,7 +25,7 @@ import com.example.soymusicreviewapp.ui.utils.SongList
 fun CreateReviewScreen(
     onSongClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: CreateReviewViewModel
+    viewModel: SearchSongModel
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -99,7 +99,7 @@ fun CreateReviewScreenBody(
             Spacer(modifier = Modifier.height(10.dp))
             // SearchBar using state value and event handler
             SearchBar(
-                modifier = Modifier.padding(horizontal = 24.dp),
+                modifier = Modifier.padding(horizontal = 18.dp),
                 currentValue = searchText,
                 onValueChanged = onSearchChange
             )

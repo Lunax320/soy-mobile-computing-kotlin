@@ -1,6 +1,7 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.R
@@ -22,9 +23,11 @@ class ProfileViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileState(
-        profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: ""
-    ))
+    private val _uiState = MutableStateFlow(
+        ProfileState(
+            profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: ""
+        )
+    )
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
@@ -56,6 +59,11 @@ class ProfileViewModel @Inject constructor(
             if (result.isSuccess) {
                 _uiState.update {
                     it.copy(profileImageUrl = result.getOrNull())
+                }
+            } else {
+                val error = result.exceptionOrNull()
+                _uiState.update {
+                    it.copy(errorMessage = error?.message ?: "Error al cargar la imagen")
                 }
             }
         }

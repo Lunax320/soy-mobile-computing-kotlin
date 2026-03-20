@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.screens.create
+package com.example.soymusicreviewapp.ui.screens.searchsong
 
 import androidx.lifecycle.ViewModel
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CreateReviewViewModel @Inject constructor(): ViewModel() {
-    private val _uiState = MutableStateFlow(CreateReviewState())
-    val uiState: StateFlow<CreateReviewState> = _uiState.asStateFlow()
+class SearchSongModel @Inject constructor(): ViewModel() {
+    private val _uiState = MutableStateFlow(SearchSongState())
+    val uiState: StateFlow<SearchSongState> = _uiState.asStateFlow()
 
     init {
         loadSongs()

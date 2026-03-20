@@ -1,7 +1,7 @@
-package com.example.soymusicreviewapp.ui.screens.create
+package com.example.soymusicreviewapp.ui.screens.searchsong
 
 import com.example.soymusicreviewapp.data.Song
-data class CreateReviewState(
+data class SearchSongState(
     // Stores the text input from SearchBar
     val searchText: String = "",
     val songs: List<Song> = emptyList()
