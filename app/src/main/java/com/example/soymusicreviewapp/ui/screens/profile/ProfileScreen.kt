@@ -71,15 +71,6 @@ fun ProfileScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        //MENSAJE ERROR INTERNET
-        state.errorMessage?.let { error ->
-            Text(
-                text = error,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
-
         ProfileScreenHeader(
             profileImageId = state.profileImageId,
             profileImageUrl = state.profileImageUrl,
