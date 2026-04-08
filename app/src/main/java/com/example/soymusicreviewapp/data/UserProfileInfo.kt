@@ -1,7 +1,7 @@
 package com.example.soymusicreviewapp.data
 
 data class UserProfileInfo(
-    val id: Int,
+    val id: String,
     val name: String,
     val username: String,
     val email: String,

@@ -30,7 +30,8 @@ class CreateReviewViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun getSong(songId: Int): Song? {
+    // CAMBIO AQUÍ: songId ahora es String
+    fun getSong(songId: String): Song? {
         return LocalSongsProvider.songs.find { it.songId == songId }
     }
 }

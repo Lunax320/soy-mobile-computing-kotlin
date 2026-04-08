@@ -17,8 +17,8 @@ class SongsDetailViewModel @Inject constructor(): ViewModel() {
 
     val uiState: StateFlow<SongDetailState> = _uiState.asStateFlow()
 
-    // Function to load song and reviews data based on the provided ID
-    fun loadData(songId: Int) {
+    // Function to load song and reviews data based on the provided ID (ahora String)
+    fun loadData(songId: String) {
         // Find the song by ID
         val song = LocalSongsProvider.songs.find { it.songId == songId }
         val reviews = LocalReviewProvider.reviews

@@ -1,12 +1,11 @@
 package com.example.soymusicreviewapp.data.local
 
-import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 
 object LocalReviewProvider {
     val reviews = listOf(
         Review(
-            usernameId = 1,
+            usernameId = "1",
             profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWti9igEtHDdFN_OVq90LY1NZKKqMGTnMDQw&s",
             userName = "MusicLover",
             date = "2023-08-01",
@@ -16,7 +15,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
-            usernameId = 2,
+            usernameId = "2",
             profileImage = "https://www.kyoceradocumentsolutions.es/content/dam/kyocera/es/images/square/Square-540x540-reclutamiento_personas_e-Recruitment.jpg.png",
             userName = "Sarah_Music",
             date = "2023-08-01",
@@ -26,7 +25,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
-            usernameId = 3,
+            usernameId = "3",
             profileImage = "https://www.kyoceradocumentsolutions.es/content/dam/kyocera/es/images/square/Square-540x540-tienes_tus_datos_a_salvo_en_office_365.png",
             userName = "Joselito Records",
             date = "2025-11-23",
@@ -36,7 +35,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
-            usernameId = 4,
+            usernameId = "4",
             profileImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEpT1Dn0NCMLiH0Xi6xaxuYHqVHHn4LqJVGQ&s",
             userName = "SynthFan99",
             date = "2025-12-05",
@@ -46,7 +45,7 @@ object LocalReviewProvider {
             rating = 4
         ),
         Review(
-            usernameId = 5,
+            usernameId = "5",
             profileImage = "https://images.squarespace-cdn.com/content/v1/5d77a7f8ad30356d21445262/1695000300830-5TKAFHC2EBYTTM2QUWUP/fotos-de-perfil-blanco-y-negro.jpg",
             userName = "AuroraBorealis",
             date = "2026-01-10",
@@ -56,7 +55,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
-            usernameId = 6,
+            usernameId = "6",
             profileImage = "https://marketplace.canva.com/EAGl2WpDo0Q/1/0/1600w/canva-foto-de-perfil-de-instagram-mujer-moderno-tQ8K1dL4nno.jpg",
             userName = "NightDriver",
             date = "2026-02-14",
@@ -66,7 +65,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
-            usernameId = 7,
+            usernameId = "7",
             profileImage = "https://i.redd.it/qm3p4sotkjgd1.jpeg",
             userName = "PopCritic",
             date = "2026-02-19",

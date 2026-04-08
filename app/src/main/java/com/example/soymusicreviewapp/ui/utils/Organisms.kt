@@ -45,25 +45,25 @@ fun FeedScreenHeader(
     modifier: Modifier = Modifier
 ) {
     val colorForYou =
-    if (currentTab == 0) {
-         MaterialTheme.colorScheme.surface
-    } else {
-        MaterialTheme.colorScheme.secondary
-    }
+        if (currentTab == 0) {
+            MaterialTheme.colorScheme.surface
+        } else {
+            MaterialTheme.colorScheme.secondary
+        }
 
     val colorFollowing =
-    if (currentTab == 1) {
-        MaterialTheme.colorScheme.surface
-    } else {
-        MaterialTheme.colorScheme.secondary
-    }
+        if (currentTab == 1) {
+            MaterialTheme.colorScheme.surface
+        } else {
+            MaterialTheme.colorScheme.secondary
+        }
 
     val colorLatest =
-    if (currentTab == 2) {
-        MaterialTheme.colorScheme.surface
-    } else {
-        MaterialTheme.colorScheme.secondary
-    }
+        if (currentTab == 2) {
+            MaterialTheme.colorScheme.surface
+        } else {
+            MaterialTheme.colorScheme.secondary
+        }
 
     Box() {
         Image(
@@ -126,7 +126,8 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
-    onReviewClick: (Int) -> Unit = {},
+    // CAMBIO AQUÍ: de (Int) a (String)
+    onReviewClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false
 ) {
@@ -170,7 +171,8 @@ fun ReviewListpreview(){
 }
 @Composable
 fun ReviewList(
-    onReviewClick: (Int) -> Unit = {},
+    // CAMBIO AQUÍ: de (Int) a (String)
+    onReviewClick: (String) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
@@ -230,7 +232,8 @@ fun SongCard(
 @Composable
 fun SongList(
     songs: List<Song>,
-    onSongClick: (Int) -> Unit,
+    // CAMBIO AQUÍ: de (Int) a (String)
+    onSongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     isNewRelease: Boolean = false
 ) {

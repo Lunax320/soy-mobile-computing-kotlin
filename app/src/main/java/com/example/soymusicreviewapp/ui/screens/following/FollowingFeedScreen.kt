@@ -22,7 +22,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 @Composable
 fun FollowingFeedScreen(
     latestButtonPressed: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FollowingFeedViewModel
 ) {
@@ -51,7 +51,7 @@ fun FollowingFeedScreen(
 @Composable
 fun FollowingFeedScreenBody(
     reviews: List<Review>,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -69,8 +69,6 @@ fun FollowingFeedScreenBody(
         }
     }
 }
-
-
 
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS

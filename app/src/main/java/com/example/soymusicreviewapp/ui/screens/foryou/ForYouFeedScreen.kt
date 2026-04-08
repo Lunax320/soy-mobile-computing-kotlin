@@ -21,7 +21,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 // Main screen composable connecting ViewModel and UI
 @Composable
 fun ForYouFeedScreen(
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     followingButtonPressed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ForYouFeedViewModel
@@ -51,7 +51,7 @@ fun ForYouFeedScreen(
 @Composable
 fun ForYouScreenBody(
     reviews: List<Review>,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {

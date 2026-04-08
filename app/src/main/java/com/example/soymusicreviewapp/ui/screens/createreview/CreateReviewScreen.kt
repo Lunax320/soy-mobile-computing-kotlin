@@ -25,11 +25,10 @@ import com.example.soymusicreviewapp.ui.utils.BackButton
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SongCard
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
-import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 
 @Composable
 fun CreateReviewScreen(
-    songId: Int,
+    songId: String,
     onBackClick: () -> Unit,
     viewModel: CreateReviewViewModel,
     modifier: Modifier = Modifier

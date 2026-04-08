@@ -33,7 +33,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 // Main screen composable
 @Composable
 fun ReviewDetailScreen(
-    reviewId: Int,
+    reviewId: String,
     modifier: Modifier = Modifier,
     viewModel: ReviewDetailViewModel
 ) {
@@ -145,7 +145,7 @@ fun ReviewActionBar(
 @Preview
 fun reviewDetailScreenPreview() {
     ReviewDetailScreen(
-        reviewId = 1,
+        reviewId = "1",
         viewModel = viewModel()
     )
 }

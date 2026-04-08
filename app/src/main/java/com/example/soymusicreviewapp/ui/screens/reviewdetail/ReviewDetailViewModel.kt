@@ -16,7 +16,7 @@ class ReviewDetailViewModel @Inject constructor(): ViewModel() {
     val uiState: StateFlow<ReviewDetailState> = _uiState.asStateFlow()
 
     // Function to load a specific review by its ID
-    fun loadReview(reviewId: Int) {
+    fun loadReview(reviewId: String) {
         val foundReview = LocalReviewProvider.reviews.find { it.usernameId == reviewId }
         val allReviews = LocalReviewProvider.reviews
 

@@ -26,7 +26,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
 @Composable
 fun CommentReviewScreen(
-    reviewId: Int,
+    reviewId: String,
     onCloseClick: () -> Unit,
     viewModel: CommentReviewViewModel,
     modifier: Modifier = Modifier
@@ -216,7 +216,7 @@ fun CommentInputBar(
 @Composable
 fun CommentReviewScreenPreview() {
     CompMovilProyectoTheme {
-        val dummyReviewId = LocalReviewProvider.reviews.firstOrNull()?.usernameId ?: 1
+        val dummyReviewId = LocalReviewProvider.reviews.firstOrNull()?.usernameId ?: "1"
 
         CommentReviewScreen(
             reviewId = dummyReviewId,

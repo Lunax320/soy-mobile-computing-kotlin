@@ -128,15 +128,15 @@ fun AppNavigation (
 
         composable(
             route = "reviewDetail/{reviewId}",
-            arguments = listOf(navArgument("reviewId") { type = NavType.IntType })
+            arguments = listOf(navArgument("reviewId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val reviewId = backStackEntry.arguments?.getInt("reviewId") ?: 0
+            val reviewId = backStackEntry.arguments?.getString("reviewId") ?: ""
             val reviewDetailViewModel: ReviewDetailViewModel = hiltViewModel()
             ReviewDetailScreen(
                 viewModel = reviewDetailViewModel,
                 reviewId = reviewId,
                 modifier = Modifier.padding(12.dp),
-                )
+            )
         }
 
         composable(route = Screen.FollowingFeedScreen.route) {
@@ -175,9 +175,9 @@ fun AppNavigation (
 
         composable(
             route = "songDetail/{songId}",
-            arguments = listOf(navArgument("songId") { type = NavType.IntType })
+            arguments = listOf(navArgument("songId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val songId = backStackEntry.arguments?.getInt("songId") ?: 0
+            val songId = backStackEntry.arguments?.getString("songId") ?: ""
             val songsDetailViewModel: SongsDetailViewModel = hiltViewModel()
             SongsDetailScreen(
                 viewModel = songsDetailViewModel,
@@ -230,7 +230,5 @@ fun AppNavigation (
                 }
             )
         }
-
-
     }
 }

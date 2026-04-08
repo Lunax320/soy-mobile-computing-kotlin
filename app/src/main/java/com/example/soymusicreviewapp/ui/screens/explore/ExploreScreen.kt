@@ -37,7 +37,7 @@ import com.example.soymusicreviewapp.ui.utils.SongList
 @Composable
 fun ExploreScreen(
     modifier: Modifier = Modifier,
-    onSongClick: (Int) -> Unit,
+    onSongClick: (String) -> Unit,
     viewModel: ExploreViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -178,7 +178,7 @@ fun ExploreScreenHeader(
 @Composable
 fun ExploreScreenBody(
     songs: List<Song>,
-    onSongClick: (Int) -> Unit,
+    onSongClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {

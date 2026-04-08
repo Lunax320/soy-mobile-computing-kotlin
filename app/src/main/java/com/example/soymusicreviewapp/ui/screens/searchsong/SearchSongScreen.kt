@@ -23,7 +23,7 @@ import com.example.soymusicreviewapp.ui.utils.SongList
 // Main screen composable connecting ViewModel
 @Composable
 fun CreateReviewScreen(
-    onSongClick: (Int) -> Unit,
+    onSongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SearchSongModel
 ) {
@@ -83,7 +83,7 @@ fun CreateReviewScreenBody(
     searchText: String,
     songs: List<Song>,
     onSearchChange: (String) -> Unit,
-    onSongClick: (Int) -> Unit,
+    onSongClick: (String) -> Unit,
 ) {
     Box(modifier = modifier) {
         SoyBackground()
@@ -99,7 +99,7 @@ fun CreateReviewScreenBody(
             Spacer(modifier = Modifier.height(10.dp))
             // SearchBar using state value and event handler
             SearchBar(
-                modifier = Modifier.padding(horizontal = 18.dp),
+                modifier = Modifier.padding(horizontal = 24.dp),
                 currentValue = searchText,
                 onValueChanged = onSearchChange
             )

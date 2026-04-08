@@ -3,7 +3,7 @@ package com.example.soymusicreviewapp.data
 import androidx.annotation.DrawableRes
 
 data class Review(
-    val usernameId: Int,
+    val usernameId: String,
     val profileImage: String,
     val userName: String,
     val date: String,

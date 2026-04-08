@@ -1,7 +1,7 @@
 package com.example.soymusicreviewapp.data
 
 data class Song(
-    val songId: Int,
+    val songId: String,
     val songImage: String,
     val name: String,
     val artist: String,

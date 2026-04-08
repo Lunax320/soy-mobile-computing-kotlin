@@ -25,17 +25,17 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Song
+import com.example.soymusicreviewapp.data.local.LocalSongsProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SongInfo
 
-// Main Screen Composable
 @Composable
 fun SongsDetailScreen(
-    songId: Int,
+    songId: String,
     onBack: () -> Unit,
-    onReviewClick: (Int) -> Unit,
+    onReviewClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SongsDetailViewModel
 ) {
@@ -48,7 +48,6 @@ fun SongsDetailScreen(
     Box(modifier = modifier.fillMaxSize()) {
         PlainBackground()
 
-        // Only render content if the song is loaded
         if (state.selectedSong != null) {
             Column(modifier = Modifier.fillMaxSize()) {
                 SongsDetailScreenHeader(
@@ -57,8 +56,8 @@ fun SongsDetailScreen(
                 )
 
                 ReviewList(
-                    onReviewClick = onReviewClick,
                     reviews = state.reviews,
+                    onReviewClick = onReviewClick,
                     title = stringResource(R.string.songs_reviews),
                     modifier = Modifier.weight(1f)
                 )
@@ -108,11 +107,12 @@ fun SongsDetailScreenHeader(
 @Preview
 fun SongsDetailScreenPreview(){
     CompMovilProyectoTheme {
+        val dummySongId = LocalSongsProvider.songs.firstOrNull()?.songId ?: "1"
         SongsDetailScreen(
-            viewModel = viewModel(),
-            songId = 1,
+            songId = dummySongId,
             onBack = {},
             onReviewClick = {},
+            viewModel = viewModel()
         )
     }
 }

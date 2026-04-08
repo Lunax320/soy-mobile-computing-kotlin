@@ -25,11 +25,10 @@ import com.example.soymusicreviewapp.ui.utils.BackButton
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SongCard
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
-import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 
 @Composable
 fun EditReviewScreen(
-    songId: Int,
+    songId: String,
     onBackClick: () -> Unit,
     viewModel: EditReviewViewModel,
     modifier: Modifier = Modifier
@@ -216,7 +215,7 @@ fun ReviewInputCard(reviewText: String, onReviewChange: (String) -> Unit, modifi
 @Composable
 fun EditReviewScreenPreview() {
     CompMovilProyectoTheme {
-        val songId = LocalSongsProvider.songs.first().songId
+        val songId = LocalSongsProvider.songs.firstOrNull()?.songId ?: "1"
 
         EditReviewScreen(
             songId = songId,
