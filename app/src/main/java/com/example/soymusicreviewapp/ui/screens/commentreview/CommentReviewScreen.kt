@@ -127,7 +127,6 @@ fun CommentEmptyState(modifier: Modifier = Modifier) {
     }
 }
 
-// 4. SECCIÓN DE LISTA DE COMENTARIOS
 @Composable
 fun CommentListSection(comments: List<Review>, modifier: Modifier = Modifier) {
     LazyColumn(modifier = modifier.fillMaxSize()) {

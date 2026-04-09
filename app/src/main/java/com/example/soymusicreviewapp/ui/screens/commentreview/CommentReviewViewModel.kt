@@ -23,16 +23,10 @@ class CommentReviewViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
-
-    // Busca la reseña original para sacar el nombre de la canción
     fun getParentReview(reviewId: String): Review? {
         return LocalReviewProvider.reviews.find { it.usernameId == reviewId }
     }
-
-    // Simula la búsqueda de los comentarios de esa reseña
     fun getCommentsForReview(reviewId: String): List<Review> {
-        // Por ahora devolvemos una lista vacía para mostrar el diseño de tu imagen.
-        // Cuando conectes el backend, aquí filtrarás los comentarios reales.
         return emptyList()
     }
 }
