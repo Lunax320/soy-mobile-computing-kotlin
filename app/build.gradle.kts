@@ -71,17 +71,24 @@ dependencies {
 
     implementation("com.google.firebase:firebase-storage-ktx")
 
-        //Hilt
-        implementation(libs.dagger.hilt)
-        implementation(libs.hilt.compose.navigation)
-        kapt(libs.dagger.kapt)
+    //Hilt
+    implementation(libs.dagger.hilt)
+    implementation(libs.hilt.compose.navigation)
+    kapt(libs.dagger.kapt)
 
-        //Firebase
-        implementation(platform(libs.firebase.bom))
-        implementation(libs.firebase.firestore)
-        implementation(libs.firebase.auth)
-        implementation(libs.firebase.crashlytics)
-        implementation(libs.firebase.analytics)
+    //Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    // Retrofit with Scalar Converter
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
     implementation(libs.androidx.compose.foundation.layout)
