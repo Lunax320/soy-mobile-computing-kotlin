@@ -1,6 +1,5 @@
 package com.example.soymusicreviewapp.ui.screens.commentreview
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,12 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
+import com.example.soymusicreviewapp.ui.screens.commentreview.CommentReviewHeader
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
@@ -40,12 +38,13 @@ fun CommentReviewScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             CommentReviewHeader(
                 songName = parentReview?.songName ?: "Unknown Song",
-                onCloseClick = onCloseClick
+                onCloseClick = onCloseClick,
+                profileImageId = R.drawable.img_avatar_penguin
             )
 
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
-            // POR EL MOMENTO NINGUNA, DESPUES TOCA RESCATAR LAS RESEÑAS DE CADA COMENTARIO
+
             Box(modifier = Modifier.weight(1f)) {
                 if (comments.isEmpty()) {
                     CommentEmptyState()
@@ -67,6 +66,7 @@ fun CommentReviewScreen(
 
 @Composable
 fun CommentReviewHeader(
+    profileImageId: Int,
     songName: String,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -132,7 +132,9 @@ fun CommentListSection(comments: List<Review>, modifier: Modifier = Modifier) {
         items(comments.size) { index ->
             ReviewInfo(
                 review = comments[index],
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                onDeleteClick = { },
+                onEditClick = { }
             )
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
         }

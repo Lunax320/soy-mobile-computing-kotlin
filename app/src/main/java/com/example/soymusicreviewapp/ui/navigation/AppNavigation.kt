@@ -171,7 +171,9 @@ fun AppNavigation (
             ProfileScreen(
                 viewModel = profileViewModel,
                 settingsButtonPressed = { navController.navigate(Screen.SettingsScreen.route) },
-                onEditReview = { rId, sId -> navController.navigate("editReview/$rId/$sId") }
+                onEditReview = { rId, sId ->
+                    navController.navigate("editReview/$rId/$sId")
+                }
             )
         }
 

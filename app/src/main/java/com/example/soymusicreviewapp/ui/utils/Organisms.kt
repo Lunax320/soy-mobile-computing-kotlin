@@ -1,7 +1,6 @@
 package com.example.soymusicreviewapp.ui.utils
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,9 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -126,8 +123,9 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
-    // CAMBIO AQUÍ: de (Int) a (String)
     onReviewClick: (String) -> Unit = {},
+    onDeleteClick: () -> Unit = {}, // <--- CABLE NUEVO
+    onEditClick: () -> Unit = {},   // <--- CABLE NUEVO
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false
 ) {
@@ -143,7 +141,9 @@ fun ReviewCard(
     ) {
         ReviewInfo(
             review = review,
-            isProfileView = isProfileView
+            isProfileView = isProfileView,
+            onDeleteClick = onDeleteClick,
+            onEditClick = onEditClick
         )
     }
 }
@@ -171,19 +171,18 @@ fun ReviewListpreview(){
 }
 @Composable
 fun ReviewList(
-    // CAMBIO AQUÍ: de (Int) a (String)
     onReviewClick: (String) -> Unit = {},
+    onDeleteClick: (String) -> Unit = {},
+    onEditClick: (String) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false
-
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
-
         item {
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -200,7 +199,9 @@ fun ReviewList(
                 review = reviews[index],
                 modifier = Modifier.fillMaxWidth(),
                 isProfileView = isProfileView,
-                onReviewClick = onReviewClick
+                onReviewClick = onReviewClick,
+                onDeleteClick = { onDeleteClick(reviews[index].usernameId) }, // <--- PASAR EL ID
+                onEditClick = { onEditClick(reviews[index].usernameId) }      // <--- PASAR EL ID
             )
         }
     }
