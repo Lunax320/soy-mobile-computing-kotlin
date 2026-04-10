@@ -126,10 +126,11 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
-    // CAMBIO AQUÍ: de (Int) a (String)
     onReviewClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
-    isProfileView: Boolean = false
+    isProfileView: Boolean = false,
+    onDeleteClick: (() -> Unit)? = null,
+    onEditClick: (() -> Unit)? = null
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
@@ -143,7 +144,9 @@ fun ReviewCard(
     ) {
         ReviewInfo(
             review = review,
-            isProfileView = isProfileView
+            isProfileView = isProfileView,
+            onDeleteClick = onDeleteClick,
+            onEditClick = onEditClick
         )
     }
 }
@@ -171,13 +174,13 @@ fun ReviewListpreview(){
 }
 @Composable
 fun ReviewList(
-    // CAMBIO AQUÍ: de (Int) a (String)
     onReviewClick: (String) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
-    isProfileView: Boolean = false
-
+    isProfileView: Boolean = false,
+    onDeleteClick: ((String) -> Unit)? = null,
+    onEditClick: ((String) -> Unit)? = null
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -200,7 +203,17 @@ fun ReviewList(
                 review = reviews[index],
                 modifier = Modifier.fillMaxWidth(),
                 isProfileView = isProfileView,
-                onReviewClick = onReviewClick
+                onReviewClick = onReviewClick,
+                onDeleteClick = {
+                    if (onDeleteClick != null) {
+                        onDeleteClick(reviews[index].usernameId)
+                    }
+                },
+                onEditClick = {
+                    if (onEditClick != null) {
+                        onEditClick(reviews[index].usernameId)
+                    }
+                }
             )
         }
     }
@@ -232,7 +245,6 @@ fun SongCard(
 @Composable
 fun SongList(
     songs: List<Song>,
-    // CAMBIO AQUÍ: de (Int) a (String)
     onSongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     isNewRelease: Boolean = false

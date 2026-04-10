@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
@@ -56,7 +55,9 @@ fun ReviewDetailScreen(
                     // Use the review from the state
                     ReviewInfo(
                         review = state.selectedReview!!,
-                        isProfileView = true
+                        isProfileView = true,
+                        onDeleteClick = {},
+                        onEditClick = {}
                     )
 
                     HorizontalDivider(thickness = 1.dp, color =  MaterialTheme.colorScheme.tertiary)
@@ -81,7 +82,9 @@ fun ReviewDetailScreen(
                 items(state.responseReviews.size) { index ->
                     ReviewInfo(
                         review = state.responseReviews[index],
-                        modifier = Modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        onDeleteClick = {},
+                        onEditClick = {}
                     )
                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onTertiary)
                 }

@@ -1,6 +1,7 @@
 package com.example.soymusicreviewapp.data.injection
 
 import com.example.soymusicreviewapp.data.datasource.services.ReviewRetrofitService
+import com.example.soymusicreviewapp.data.datasource.services.SongRetrofitService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +29,11 @@ object AppModule {
     @Provides
     fun providesReviewRetrofitService(retrofit: Retrofit): ReviewRetrofitService{
         return retrofit.create(ReviewRetrofitService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providesSongRetrofitService(retrofit: Retrofit): SongRetrofitService {
+        return retrofit.create(SongRetrofitService::class.java)
     }
 }

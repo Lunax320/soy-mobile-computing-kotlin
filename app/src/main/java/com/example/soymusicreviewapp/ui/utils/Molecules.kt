@@ -2,6 +2,7 @@ package com.example.soymusicreviewapp.ui.utils
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,12 +40,13 @@ import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
 
-
 @Composable
 fun ReviewInfo(
     review: Review,
     isProfileView: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDeleteClick: (() -> Unit)? = null,
+    onEditClick: (() -> Unit)? = null
 ) {
     Column(modifier = modifier) {
         Row(
@@ -75,14 +77,26 @@ fun ReviewInfo(
                     Image(
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = "Edit review",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable {
+                                if (onEditClick != null) {
+                                    onEditClick()
+                                }
+                            }
                     )
                     Spacer(modifier = Modifier.width(12.dp))
 
                     Image(
                         painter = painterResource(id = R.drawable.ic_delete),
                         contentDescription = "Delete review",
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable {
+                                if (onDeleteClick != null) {
+                                    onDeleteClick()
+                                }
+                            }
                     )
                 }
             }
@@ -248,25 +262,21 @@ fun SettingsOption(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 fun SettingOptionsPreview() {
-    //It is neccesary a container (Column) to place the elements one under the other
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
     ) {
-        // Option to log out
         SettingsOption(
             title = stringResource(R.string.sign_out),
             subtitle = stringResource(R.string.log_out_of_your_account),
             icon = Icons.AutoMirrored.Filled.ExitToApp,
             containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            // Empty function to test the visual
             onClick = { }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Option to delete account
         SettingsOption(
             title = stringResource(R.string.delete_account),
             subtitle = stringResource(R.string.delete_your_account_permantly),

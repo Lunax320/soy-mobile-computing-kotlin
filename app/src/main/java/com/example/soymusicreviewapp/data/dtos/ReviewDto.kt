@@ -1,12 +1,6 @@
 package com.example.soymusicreviewapp.data.dtos
-import com.example.soymusicreviewapp.data.Review
 
-data class UserDto(
-    val id: String = "",
-    val username: String = "",
-    val name: String = "",
-    val profileImage: String? = null
-)
+import com.example.soymusicreviewapp.data.Review
 
 data class ReviewDto(
     val id: String = "",
