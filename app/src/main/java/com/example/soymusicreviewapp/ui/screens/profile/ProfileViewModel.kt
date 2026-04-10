@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.data.repository.AuthRepository
+import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import com.example.soymusicreviewapp.data.repository.StorageRepository
 import com.google.firebase.crashlytics.internal.common.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,54 +21,54 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val storageRepository: StorageRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val reviewRepository: ReviewRepository
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        ProfileState(
-            profileImageUrl = authRepository.currentUser?.photoUrl?.toString() ?: ""
-        )
-    )
+    private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
     init {
-        loadUserProfile()
+        loadUserReviews("1")
     }
 
-    private fun loadUserProfile() {
-        // Mocking user profile loading.
-        // In a real app, this would come from a Repository or a UserSession.
-        _uiState.update { currentState ->
-            currentState.copy(
-                profileImageId = R.drawable.img_avatar_penguin,
-                name = "Music Lover",
-                username = "@musiclover",
-                reviewCount = 2,
-                followersCount = 234,
-                followingCount = 189,
-                userReviews = LocalReviewProvider.reviews // Assuming all reviews in LocalReviewProvider belong to the user for now
-            )
+    fun loadUserReviews(userId: String) {
+        viewModelScope.launch {
+            val result = reviewRepository.getReviews()
+            if (result.isSuccess) {
+                val allReviews = result.getOrNull() ?: emptyList()
+
+                val myReviews = allReviews.filter { it.userId == userId || userId == "1" }
+
+                _uiState.update { it.copy(
+                    userReviews = myReviews,
+                    reviewCount = myReviews.size,
+                    name = "Music Lover",
+                    username = "@musiclover"
+                )}
+            }
         }
     }
 
-    //fun updateProfileImageUrl(profileImageUrl: Uri) = _uiState.update { it.copy(profileImageUrl = profileImageUrl) }
-
-    fun uploadImageToFirebase(uri: Uri) {
+ // Eliminar
+    fun deleteReview(reviewId: String) {
         viewModelScope.launch {
-            val result = storageRepository.uploadProfileImage(uri)
-
+            val result = reviewRepository.deleteReview(reviewId)
             if (result.isSuccess) {
-                _uiState.update {
-                    it.copy(profileImageUrl = result.getOrNull())
-                }
-            } else {
-                val error = result.exceptionOrNull()
-                _uiState.update {
-                    it.copy(errorMessage = error?.message ?: "Error al cargar la imagen")
+                // Actualización inmediata en la UI (Optimización que pide el video)
+                _uiState.update { state ->
+                    state.copy(userReviews = state.userReviews.filter { it.usernameId != reviewId })
                 }
             }
         }
     }
+
+    fun uploadImageToFirebase(uri: Uri) {
+        viewModelScope.launch {
+            val result = storageRepository.uploadProfileImage(uri)
+            if (result.isSuccess) {
+                _uiState.update { it.copy(profileImageUrl = result.getOrNull()) }
+            }
+        }
+    }
 }
-
-

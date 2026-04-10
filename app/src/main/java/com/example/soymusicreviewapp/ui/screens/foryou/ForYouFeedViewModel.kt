@@ -23,16 +23,22 @@ class ForYouFeedViewModel @Inject constructor(
         loadReviews()
     }
 
-    private fun loadReviews() {
+    fun loadReviews() {
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+
             val reviewsResult = reviewRepository.getReviews()
 
             if (reviewsResult.isSuccess) {
-                _uiState.update { currentState ->
-                    currentState.copy(reviews = reviewsResult.getOrNull() ?: emptyList())
-                }
+                _uiState.update { it.copy(isLoading = false,
+                    errorMessage = null,
+                    reviews = reviewsResult.getOrNull() ?: emptyList()
+                )}
             } else {
-                android.util.Log.e("API_ERROR", "Error al descargar reseñas For You: ${reviewsResult.exceptionOrNull()?.message}")
+                _uiState.update { it.copy(
+                    isLoading = false,
+                    errorMessage = reviewsResult.exceptionOrNull()?.message
+                )}
             }
         }
     }

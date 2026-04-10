@@ -2,6 +2,7 @@ package com.example.soymusicreviewapp.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -16,7 +17,6 @@ import com.example.soymusicreviewapp.ui.screens.login.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.register.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.searchsong.CreateReviewScreen
-import com.example.soymusicreviewapp.ui.screens.searchsong.SearchSongModel
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreViewModel
 import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
@@ -37,7 +37,7 @@ import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailViewModel
 import com.example.soymusicreviewapp.ui.screens.start.StartViewModel
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileViewModel
 import com.example.soymusicreviewapp.ui.screens.settings.SettingsViewModel
-
+import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 
 sealed class Screen (val route: String) {
     object SplashScreen : Screen("splash")
@@ -50,7 +50,7 @@ sealed class Screen (val route: String) {
     object ExploreScreen : Screen("explore")
     object CreateReviewScreen : Screen("searchsong")
     object NotificationScreen : Screen("notification")
-    object ProfileScreen : Screen("profile")
+    object ProfileScreen : Screen("profile/{userId}") // Ruta dinámica
     object SettingsScreen : Screen("settings")
 }
 
@@ -66,111 +66,50 @@ fun AppNavigation (
     ) {
         composable (route = Screen.SplashScreen.route) {
             SplashScreen(
-                navigateToHome = {
-                    navController.navigate(Screen.ForYouFeedScreen.route){
-                        popUpTo(Screen.SplashScreen.route) {
-                            inclusive = true }
-                    }
-                },
-                navigateToStart = {
-                    navController.navigate(Screen.StartScreen.route){
-                        popUpTo(Screen.SplashScreen.route) {
-                            inclusive = true }
-                    }
-                },
+                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) { popUpTo(Screen.SplashScreen.route) { inclusive = true } } },
+                navigateToStart = { navController.navigate(Screen.StartScreen.route) { popUpTo(Screen.SplashScreen.route) { inclusive = true } } },
                 splashViewModel = hiltViewModel()
             )
         }
 
         composable(route = Screen.StartScreen.route) {
-            val startViewModel: StartViewModel = hiltViewModel()
             StartScreen(
-                viewModel = startViewModel,
-                loginButtonPressed = {
-                    navController.navigate(Screen.LoginScreen.route) },
-                registerButtonPressed = {
-                    navController.navigate(Screen.RegisterScreen.route)
-                }
+                viewModel = hiltViewModel(),
+                loginButtonPressed = { navController.navigate(Screen.LoginScreen.route) },
+                registerButtonPressed = { navController.navigate(Screen.RegisterScreen.route) }
             )
         }
 
         composable(route = Screen.LoginScreen.route) {
-            val loginViewModel: LoginViewModel = hiltViewModel()
-            LoginScreen(
-                viewModel = loginViewModel,
-                navigateToHome = {
-                    navController.navigate(Screen.ForYouFeedScreen.route)
-                }
-            )
+            LoginScreen(viewModel = hiltViewModel(), navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) })
         }
 
         composable(route = Screen.RegisterScreen.route) {
-            val registerViewModel: RegisterViewModel = hiltViewModel()
-            RegisterScreen(
-                viewModel = registerViewModel,
-                navigateToHome = {
-                    navController.navigate(Screen.ForYouFeedScreen.route)
-                }
-            )
+            RegisterScreen(viewModel = hiltViewModel(), navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) })
         }
 
         composable(route = Screen.ForYouFeedScreen.route) {
-            val forYouFeedViewModel: ForYouFeedViewModel = hiltViewModel()
             ForYouFeedScreen(
-                viewModel = forYouFeedViewModel,
-                onReviewClick = { reviewId ->
-                    navController.navigate("reviewDetail/$reviewId") },
-                followingButtonPressed = {
-                    navController.navigate(Screen.FollowingFeedScreen.route)
-                }
-            )
-        }
-
-        composable(
-            route = "reviewDetail/{reviewId}",
-            arguments = listOf(navArgument("reviewId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val reviewId = backStackEntry.arguments?.getString("reviewId") ?: ""
-            val reviewDetailViewModel: ReviewDetailViewModel = hiltViewModel()
-            ReviewDetailScreen(
-                viewModel = reviewDetailViewModel,
-                reviewId = reviewId,
-                modifier = Modifier.padding(12.dp),
+                viewModel = hiltViewModel(),
+                onReviewClick = { userId -> navController.navigate("profile/$userId") },
+                followingButtonPressed = { navController.navigate(Screen.FollowingFeedScreen.route) }
             )
         }
 
         composable(route = Screen.FollowingFeedScreen.route) {
-            val followingFeedViewModel: FollowingFeedViewModel = hiltViewModel()
             FollowingFeedScreen(
-                viewModel = followingFeedViewModel,
-                onReviewClick = { reviewId ->
-                    navController.navigate("reviewDetail/$reviewId")
-                },
-                latestButtonPressed = {
-                    navController.navigate(Screen.LatestFeedScreen.route)
-                }
+                viewModel = hiltViewModel(),
+                onReviewClick = { userId -> navController.navigate("profile/$userId") },
+                latestButtonPressed = { navController.navigate(Screen.LatestFeedScreen.route) }
             )
         }
 
         composable(route = Screen.LatestFeedScreen.route) {
-            val latestFeedViewModel: LatestFeedViewModel = hiltViewModel()
-            LatestFeedScreen(
-                viewModel = latestFeedViewModel,
-                modifier = Modifier,
-                latestCreateAccount = {
-                    navController.navigate(Screen.ForYouFeedScreen.route)
-                }
-            )
+            LatestFeedScreen(viewModel = hiltViewModel(), latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) })
         }
 
         composable(route = Screen.ExploreScreen.route) {
-            val exploreViewModel: ExploreViewModel = hiltViewModel()
-            ExploreScreen(
-                viewModel = exploreViewModel,
-                onSongClick = { songId ->
-                    navController.navigate("songDetail/$songId")
-                }
-            )
+            ExploreScreen(viewModel = hiltViewModel(), onSongClick = { songId -> navController.navigate("songDetail/$songId") })
         }
 
         composable(
@@ -178,56 +117,52 @@ fun AppNavigation (
             arguments = listOf(navArgument("songId") { type = NavType.StringType })
         ) { backStackEntry ->
             val songId = backStackEntry.arguments?.getString("songId") ?: ""
-            val songsDetailViewModel: SongsDetailViewModel = hiltViewModel()
             SongsDetailScreen(
-                viewModel = songsDetailViewModel,
+                viewModel = hiltViewModel(),
                 songId = songId,
                 onBack = { navController.popBackStack() },
-                onReviewClick = { reviewId ->
-                    navController.navigate("reviewDetail/$reviewId")
-                }
+                onReviewClick = { userId -> navController.navigate("profile/$userId") }
             )
         }
 
-        composable(route = Screen.CreateReviewScreen.route) {
-            val searchSongModel: SearchSongModel = hiltViewModel()
-            CreateReviewScreen(
-                viewModel = searchSongModel,
-                onSongClick = { songId ->
-                    navController.navigate("songDetail/$songId")
-                }
+        // EDITAR (CRUD)
+        composable(
+            route = "editReview/{reviewId}/{songId}",
+            arguments = listOf(
+                navArgument("reviewId") { type = NavType.StringType },
+                navArgument("songId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val rId = backStackEntry.arguments?.getString("reviewId") ?: ""
+            val sId = backStackEntry.arguments?.getString("songId") ?: ""
+            EditReviewScreen(
+                reviewId = rId,
+                songId = sId,
+                onBackClick = { navController.popBackStack() },
+                viewModel = hiltViewModel()
             )
         }
 
-        composable(route = Screen.NotificationScreen.route) {
-            val notificationViewModel: NotificationViewModel = hiltViewModel()
-            NotificationScreen(
-                viewModel = notificationViewModel
-            )
-        }
-
-        composable(route = Screen.ProfileScreen.route) {
+        composable(route = Screen.ProfileScreen.route) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: "1"
             val profileViewModel: ProfileViewModel = hiltViewModel()
+
+            LaunchedEffect(userId) { profileViewModel.loadUserReviews(userId) }
+
             ProfileScreen(
                 viewModel = profileViewModel,
-                settingsButtonPressed = {
-                    navController.navigate(Screen.SettingsScreen.route)
-                }
+                settingsButtonPressed = { navController.navigate(Screen.SettingsScreen.route) },
+
+                onEditReview = { rId, sId -> navController.navigate("editReview/$rId/$sId") }
             )
         }
 
+        composable(route = Screen.NotificationScreen.route) { NotificationScreen(viewModel = hiltViewModel()) }
         composable(route = Screen.SettingsScreen.route) {
-            val settingsViewModel: SettingsViewModel = hiltViewModel()
             SettingsScreen(
-                viewModel = settingsViewModel,
-                onConfirmLogout = {
-                    navController.navigate(Screen.StartScreen.route){
-                        popUpTo(0){inclusive = true}
-                    }
-                },
-                onBackClick = {
-                    navController.navigate(Screen.ProfileScreen.route)
-                }
+                viewModel = hiltViewModel(),
+                onConfirmLogout = { navController.navigate(Screen.StartScreen.route) { popUpTo(0) { inclusive = true } } },
+                onBackClick = { navController.popBackStack() }
             )
         }
     }

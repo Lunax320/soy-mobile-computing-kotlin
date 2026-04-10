@@ -1,7 +1,5 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
-import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -10,17 +8,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,23 +49,15 @@ import com.example.soymusicreviewapp.ui.utils.SettingsButton
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
-    settingsButtonPressed: () -> Unit
+    settingsButtonPressed: () -> Unit,
+    onEditReview: (String, String) -> Unit // Para navegar a editar
 ) {
     val state by viewModel.uiState.collectAsState()
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let {
-            Log.d("ProfileScreen", uri.toString())
-            viewModel.uploadImageToFirebase(uri)
-        }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { viewModel.uploadImageToFirebase(it) }
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         ProfileScreenHeader(
             profileImageId = state.profileImageId,
             profileImageUrl = state.profileImageUrl,
@@ -80,22 +67,21 @@ fun ProfileScreen(
             followersCount = state.followersCount,
             followingCount = state.followingCount,
             settingsButtonPressed = settingsButtonPressed,
-            editProfileClick = {
-                launcher.launch("image/*")
-            }
+            editProfileClick = { launcher.launch("image/*") }
         )
         ProfileScreenBody(
             userReviews = state.userReviews,
-            modifier = Modifier
-                .fillMaxSize()
+            onDeleteClick = { id -> viewModel.deleteReview(id) },
+            onEditClick = { review -> onEditReview(review.usernameId, review.songId) },
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
 
 @Composable
 fun ProfileScreenHeader(
-    modifier: Modifier = Modifier,
     profileImageId: Int,
+    modifier: Modifier = Modifier,
     profileImageUrl: String?,
     name: String,
     username: String,
@@ -247,20 +233,23 @@ fun EditableProfilePicture(
 @Composable
 fun ProfileScreenBody(
     userReviews: List<Review>,
+    onDeleteClick: (String) -> Unit,
+    onEditClick: (Review) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         PlainBackground()
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            ReviewList(
-                reviews = userReviews,
-                modifier = Modifier.weight(1f),
-                title = stringResource(R.string.my_reviews),
-                isProfileView = true
-            )
-        }
+        ReviewList(
+            reviews = userReviews,
+            modifier = Modifier.fillMaxSize(),
+            title = stringResource(R.string.my_reviews),
+            isProfileView = true,
+            onDeleteClick = onDeleteClick,
+            onEditClick = { id: String ->
+                val review = userReviews.find { it.usernameId == id }
+                review?.let { onEditClick(it) }
+            }
+        )
     }
 }
 
@@ -281,27 +270,6 @@ fun ProfileScreenHeaderPreview() {
             followingCount = 189,
             settingsButtonPressed = {},
             editProfileClick = {}
-        )
-    }
-}
-
-@Composable
-@Preview
-fun ProfileScreenPreview() {
-    CompMovilProyectoTheme() {
-        ProfileScreen(
-            viewModel = viewModel(),
-            settingsButtonPressed = {}
-        )
-    }
-}
-
-@Composable
-@Preview
-fun ProfileScreenBodyPreview() {
-    CompMovilProyectoTheme() {
-        ProfileScreenBody(
-            userReviews = LocalReviewProvider.reviews
         )
     }
 }

@@ -1,45 +1,65 @@
 package com.example.soymusicreviewapp.data.repository
 
-import android.adservices.adid.AdId
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.data.datasource.ReviewRemoteDataSource
 import com.example.soymusicreviewapp.data.datasource.impl.ReviewRetrofitDataSourceImpl
 import com.example.soymusicreviewapp.data.dtos.toReview
-import javax.inject.Inject
-import coil.network.HttpException
 import com.example.soymusicreviewapp.data.dtos.CreateReviewDto
-import com.example.soymusicreviewapp.ui.screens.searchsong.CreateReviewScreen
+import javax.inject.Inject
 
 class ReviewRepository @Inject constructor(
     private val remoteDataSource: ReviewRetrofitDataSourceImpl
 ) {
+    // LEER
     suspend fun getReviews(): Result<List<Review>> {
         return try {
             val reviews = remoteDataSource.getAllReviews()
-            val reviewInfo = reviews.map { it.toReview() }
-            Result.success(reviewInfo)
-
-        } catch (e: HttpException) {
-            Result.failure(e)
-
+            Result.success(reviews.map { it.toReview() })
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    suspend fun createReview(userId: String,  songId: String,  reviewText: String,  rating: Int,  date: String,  parentId: String?): Result<Unit> {
+    // CREAR
+    suspend fun createReview(songId: String, reviewText: String, rating: Int): Result<Unit> {
         return try {
             val createReviewDto = CreateReviewDto(
-                userId = userId.toInt(),
+                userId = 1, // <--- ID QUEMADO
                 songId = songId.toInt(),
                 reviewText = reviewText,
                 rating = rating,
-                date = date,
-                parentId = parentId?.toInt(),
+                date = "2026-04-10",
+                parentId = null
             )
             remoteDataSource.createReview(createReviewDto)
             Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
+    // ELIMINAR
+    suspend fun deleteReview(reviewId: String): Result<Unit> {
+        return try {
+            remoteDataSource.deleteReview(reviewId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    // MODIFICAR
+    suspend fun updateReview(reviewId: String, songId: String, reviewText: String, rating: Int): Result<Unit> {
+        return try {
+            val updateDto = CreateReviewDto(
+                userId = 1, // <--- ID QUEMADO
+                songId = songId.toInt(),
+                reviewText = reviewText,
+                rating = rating,
+                date = "2026-04-10",
+                parentId = null
+            )
+            remoteDataSource.updateReview(reviewId, updateDto)
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

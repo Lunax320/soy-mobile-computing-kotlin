@@ -28,6 +28,7 @@ import com.example.soymusicreviewapp.ui.utils.SoyBackground
 
 @Composable
 fun EditReviewScreen(
+    reviewId: String,
     songId: String,
     onBackClick: () -> Unit,
     viewModel: EditReviewViewModel,
@@ -35,6 +36,12 @@ fun EditReviewScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val song = viewModel.getSong(songId)
+
+    LaunchedEffect(state.navigateBack) {
+        if (state.navigateBack) {
+            onBackClick()
+        }
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         SoyBackground()
@@ -47,9 +54,11 @@ fun EditReviewScreen(
                     song = song,
                     reviewText = state.reviewText,
                     rating = state.rating,
+                    isLoading = state.isLoading, // <--- Pasar el estado
                     onReviewChange = { viewModel.onReviewTextChange(it) },
                     onRatingChange = { viewModel.onRatingChange(it) },
-                    onSubmitClick = { /* Lógica de actualización futura */ },
+                    // CONEXIÓN FINAL:
+                    onSubmitClick = { viewModel.saveEdit(reviewId, songId) },
                     modifier = Modifier.weight(1f)
                 )
             } else {
@@ -86,31 +95,26 @@ fun EditReviewBody(
     song: Song,
     reviewText: String,
     rating: Int,
+    isLoading: Boolean, // <--- AÑADIR ESTO
     onReviewChange: (String) -> Unit,
     onRatingChange: (Int) -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-    ) {
+    Column(modifier = modifier) {
         Spacer(modifier = Modifier.height(20.dp))
-
         SelectedSongSection(song = song)
-
         Spacer(modifier = Modifier.height(16.dp))
-
         RatingSelectionCard(rating = rating, onRatingChange = onRatingChange)
-
         Spacer(modifier = Modifier.height(16.dp))
-
         ReviewInputCard(reviewText = reviewText, onReviewChange = onReviewChange)
-
         Spacer(modifier = Modifier.weight(1f))
 
         GeneralButton(
-            text = "Modify Review",
-            onClick = onSubmitClick,
+            // Cambia el texto dinámicamente
+            text = if (isLoading) "Modifying..." else "Modify Review",
+            color = if (isLoading) Color.Gray else MaterialTheme.colorScheme.secondary,
+            onClick = { if (!isLoading) onSubmitClick() },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 18.dp)
@@ -205,22 +209,5 @@ fun ReviewInputCard(reviewText: String, onReviewChange: (String) -> Unit, modifi
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
-    }
-}
-
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
-@Preview(showBackground = true)
-@Composable
-fun EditReviewScreenPreview() {
-    CompMovilProyectoTheme {
-        val songId = LocalSongsProvider.songs.firstOrNull()?.songId ?: "1"
-
-        EditReviewScreen(
-            songId = songId,
-            viewModel = viewModel(),
-            onBackClick = {}
-        )
     }
 }

@@ -2,7 +2,9 @@ package com.example.soymusicreviewapp.ui.screens.createreview
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -36,26 +38,57 @@ fun CreateReviewScreen(
     val state by viewModel.uiState.collectAsState()
     val song = viewModel.getSong(songId)
 
+    // Lógica de navegación reactiva
+    LaunchedEffect(state.navigateBack) {
+        if (state.navigateBack) {
+            onBackClick()
+        }
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         SoyBackground()
 
         Column(modifier = Modifier.fillMaxSize()) {
+            // 1. El Header siempre arriba
             CreateReviewHeader(onBackClick = onBackClick)
 
+            // 2. El Cuerpo solo si la canción existe
             if (song != null) {
                 CreateReviewBody(
                     song = song,
                     reviewText = state.reviewText,
                     rating = state.rating,
+                    isLoading = state.isLoading, // <-- Esto es lo que causaba el rojo
                     onReviewChange = { viewModel.onReviewTextChange(it) },
                     onRatingChange = { viewModel.onRatingChange(it) },
-                    onSubmitClick = { /* Lógica de guardado futura */ },
-                    modifier = Modifier.weight(1f)
+                    onSubmitClick = { viewModel.createReview(songId) },
+                    modifier = Modifier.weight(1f) // Esto empuja el contenido
                 )
-            } else {
+            }
+            else {
+                // Mensaje opcional por si no carga la canción
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Error loading song data", color = MaterialTheme.colorScheme.error)
+                    Text("Loading song data...", color = MaterialTheme.colorScheme.onErrorContainer)
                 }
+            }
+        }
+
+        // 3. El mensaje de error flotando al fondo (fuera de la Column para que no se mueva)
+        if (state.errorMessage != null) {
+            Surface(
+                color = MaterialTheme.colorScheme.errorContainer,
+                shape = RoundedCornerShape(8.dp),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 100.dp)
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = state.errorMessage ?: "Error publicando",
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(12.dp),
+                    fontSize = 14.sp
+                )
             }
         }
     }
@@ -86,12 +119,18 @@ fun CreateReviewBody(
     song: Song,
     reviewText: String,
     rating: Int,
+    isLoading: Boolean, // <-- AGREGAR ESTO
     onReviewChange: (String) -> Unit,
     onRatingChange: (Int) -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -105,20 +144,23 @@ fun CreateReviewBody(
 
         ReviewInputCard(reviewText = reviewText, onReviewChange = onReviewChange)
 
-        Spacer(modifier = Modifier.height(65.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
+        // Tu botón usando el estado de carga
         GeneralButton(
-            text = "Publish Review",
-            onClick = onSubmitClick,
+            text = if (isLoading) "Publishing..." else "Publish Review",
+            color = if (isLoading) Color.Gray else MaterialTheme.colorScheme.secondary,
+            onClick = {
+                if (!isLoading) onSubmitClick()
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 18.dp)
                 .height(70.dp)
-                .padding(bottom = 16.dp)
+                .padding(bottom = 20.dp)
         )
     }
 }
-
 @Composable
 fun SelectedSongSection(song: Song, modifier: Modifier = Modifier) {
     SongCard(
