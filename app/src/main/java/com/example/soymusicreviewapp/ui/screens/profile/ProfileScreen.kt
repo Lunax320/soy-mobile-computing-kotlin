@@ -69,9 +69,8 @@ fun ProfileScreen(
         )
         ProfileScreenBody(
             userReviews = state.userReviews,
-            onDeleteClick = { id -> viewModel.deleteReview(id) },
-            // Se envía una cadena vacía en lugar de songId para evitar el error de compilación
-            onEditClick = { review -> onEditReview(review.usernameId, "") },
+            onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
+            onEditClick = { review -> onEditReview(review.usernameId, review.songId) },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -243,6 +242,11 @@ fun ProfileScreenBody(
             modifier = Modifier.fillMaxSize(),
             title = stringResource(R.string.my_reviews),
             isProfileView = true,
+            onDeleteClick = onDeleteClick,
+            onEditClick = { id : String ->
+                val review = userReviews.find { it.usernameId == id }
+                review?.let { onEditClick(it) }
+            }
         )
     }
 }
@@ -250,7 +254,7 @@ fun ProfileScreenBody(
 @Composable
 @Preview
 fun ProfileScreenHeaderPreview() {
-    CompMovilProyectoTheme() {
+    CompMovilProyectoTheme {
         ProfileScreenHeader(
             profileImageId = R.drawable.img_avatar_penguin,
             profileImageUrl = null,
