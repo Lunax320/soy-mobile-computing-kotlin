@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
-
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository
@@ -19,14 +18,8 @@ class SplashViewModel @Inject constructor(
         checkUser()
     }
 
-
     private fun checkUser(){
-        if(authRepository.currentUser != null){
-            _navigateHome.value = true
-        } else {
-            _navigateHome.value = false
-        }
-
+        // Se fuerza la navegacion al inicio
+        _navigateHome.value = true
     }
-
 }

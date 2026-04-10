@@ -1,6 +1,5 @@
 package com.example.soymusicreviewapp.data
 
-
 data class Review(
     val usernameId: String,
     val userId: String,

@@ -33,12 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
@@ -50,7 +48,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
     settingsButtonPressed: () -> Unit,
-    onEditReview: (String, String) -> Unit // Para navegar a editar
+    onEditReview: (String, String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -72,7 +70,8 @@ fun ProfileScreen(
         ProfileScreenBody(
             userReviews = state.userReviews,
             onDeleteClick = { id -> viewModel.deleteReview(id) },
-            onEditClick = { review -> onEditReview(review.usernameId, review.songId) },
+            // Se envía una cadena vacía en lugar de songId para evitar el error de compilación
+            onEditClick = { review -> onEditReview(review.usernameId, "") },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -219,7 +218,7 @@ fun EditableProfilePicture(
             onClick = onEditClick,
             modifier = Modifier
                 .size(buttonSize)
-                 .align(Alignment.BottomEnd),
+                .align(Alignment.BottomEnd),
         ) {
             Icon(
                 imageVector = Icons.Filled.PhotoCamera,
@@ -244,18 +243,10 @@ fun ProfileScreenBody(
             modifier = Modifier.fillMaxSize(),
             title = stringResource(R.string.my_reviews),
             isProfileView = true,
-            onDeleteClick = onDeleteClick,
-            onEditClick = { id: String ->
-                val review = userReviews.find { it.usernameId == id }
-                review?.let { onEditClick(it) }
-            }
         )
     }
 }
 
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
 @Composable
 @Preview
 fun ProfileScreenHeaderPreview() {

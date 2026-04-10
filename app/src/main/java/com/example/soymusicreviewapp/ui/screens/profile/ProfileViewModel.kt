@@ -1,15 +1,11 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import com.example.soymusicreviewapp.data.repository.StorageRepository
-import com.google.firebase.crashlytics.internal.common.Utils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,34 +24,31 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
-    init {
-        loadUserReviews("1")
-    }
-
     fun loadUserReviews(userId: String) {
         viewModelScope.launch {
             val result = reviewRepository.getReviews()
             if (result.isSuccess) {
                 val allReviews = result.getOrNull() ?: emptyList()
 
-                val myReviews = allReviews.filter { it.userId == userId || userId == "1" }
+                // FILTRO CORREGIDO: Compara los IDs de forma exacta
+                val myReviews = allReviews.filter { it.userId == userId || it.usernameId == userId }
+                val firstReview = myReviews.firstOrNull()
 
                 _uiState.update { it.copy(
                     userReviews = myReviews,
                     reviewCount = myReviews.size,
-                    name = "Music Lover",
-                    username = "@musiclover"
+                    name = firstReview?.userName ?: "Music Lover",
+                    username = firstReview?.userName?.let { name -> "@${name.lowercase().replace(" ", "")}" } ?: "@musiclover",
+                    profileImageUrl = firstReview?.profileImage ?: ""
                 )}
             }
         }
     }
 
- // Eliminar
     fun deleteReview(reviewId: String) {
         viewModelScope.launch {
             val result = reviewRepository.deleteReview(reviewId)
             if (result.isSuccess) {
-                // Actualización inmediata en la UI (Optimización que pide el video)
                 _uiState.update { state ->
                     state.copy(userReviews = state.userReviews.filter { it.usernameId != reviewId })
                 }

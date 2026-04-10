@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.data.local.LocalReviewProvider
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
@@ -211,7 +210,7 @@ fun CommentInputBar(
 //--------------------------------------------------------------------------------------------------
 // PREVIEWS
 //--------------------------------------------------------------------------------------------------
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun CommentReviewScreenPreview() {
     CompMovilProyectoTheme {
@@ -224,3 +223,4 @@ fun CommentReviewScreenPreview() {
         )
     }
 }
+*/

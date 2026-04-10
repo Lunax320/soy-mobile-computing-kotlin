@@ -36,9 +36,8 @@ fun CreateReviewScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    val song = viewModel.getSong(songId)
+    val song = state.song
 
-    // Lógica de navegación reactiva
     LaunchedEffect(state.navigateBack) {
         if (state.navigateBack) {
             onBackClick()
@@ -49,31 +48,27 @@ fun CreateReviewScreen(
         SoyBackground()
 
         Column(modifier = Modifier.fillMaxSize()) {
-            // 1. El Header siempre arriba
             CreateReviewHeader(onBackClick = onBackClick)
 
-            // 2. El Cuerpo solo si la canción existe
             if (song != null) {
                 CreateReviewBody(
                     song = song,
                     reviewText = state.reviewText,
                     rating = state.rating,
-                    isLoading = state.isLoading, // <-- Esto es lo que causaba el rojo
+                    isLoading = state.isLoading,
                     onReviewChange = { viewModel.onReviewTextChange(it) },
                     onRatingChange = { viewModel.onRatingChange(it) },
                     onSubmitClick = { viewModel.createReview(songId) },
-                    modifier = Modifier.weight(1f) // Esto empuja el contenido
+                    modifier = Modifier.weight(1f)
                 )
             }
             else {
-                // Mensaje opcional por si no carga la canción
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Loading song data...", color = MaterialTheme.colorScheme.onErrorContainer)
+                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
                 }
             }
         }
 
-        // 3. El mensaje de error flotando al fondo (fuera de la Column para que no se mueva)
         if (state.errorMessage != null) {
             Surface(
                 color = MaterialTheme.colorScheme.errorContainer,
@@ -119,7 +114,7 @@ fun CreateReviewBody(
     song: Song,
     reviewText: String,
     rating: Int,
-    isLoading: Boolean, // <-- AGREGAR ESTO
+    isLoading: Boolean,
     onReviewChange: (String) -> Unit,
     onRatingChange: (Int) -> Unit,
     onSubmitClick: () -> Unit,
@@ -146,7 +141,6 @@ fun CreateReviewBody(
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Tu botón usando el estado de carga
         GeneralButton(
             text = if (isLoading) "Publishing..." else "Publish Review",
             color = if (isLoading) Color.Gray else MaterialTheme.colorScheme.secondary,
@@ -168,6 +162,7 @@ fun SelectedSongSection(song: Song, modifier: Modifier = Modifier) {
         onClick = { }
     )
 }
+
 @Composable
 fun RatingSelectionCard(rating: Int, onRatingChange: (Int) -> Unit, modifier: Modifier = Modifier) {
     Surface(
