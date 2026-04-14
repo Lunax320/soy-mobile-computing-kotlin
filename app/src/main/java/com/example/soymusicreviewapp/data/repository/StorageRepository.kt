@@ -1,8 +1,8 @@
 package com.example.soymusicreviewapp.data.repository
 
 import android.net.Uri
-import com.example.soymusicreviewapp.data.datasource.AuthRemoteDataSource
-import com.example.soymusicreviewapp.data.datasource.StorageRemoteDataSource
+import com.example.soymusicreviewapp.data.datasource.remotedatasource.AuthRemoteDataSource
+import com.example.soymusicreviewapp.data.datasource.remotedatasource.StorageRemoteDataSource
 import javax.inject.Inject
 
 class StorageRepository @Inject constructor(

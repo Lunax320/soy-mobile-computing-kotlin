@@ -3,6 +3,7 @@ package com.example.soymusicreviewapp.ui.screens.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.data.repository.AuthRepository
+import com.example.soymusicreviewapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterState())
@@ -57,18 +59,30 @@ class RegisterViewModel @Inject constructor(
                     _uiState.update { it.copy(showMessage = true, errorMessage = "El email ya esta en uso") }
                 } else {
                     viewModelScope.launch {
+                        // 1. Crea la cuenta en Firebase Auth
                         val resultado = authRepository.signUp(currentState.emailText, currentState.passwordText)
 
                         if (resultado.isSuccess) {
-                            _uiState.update { it.copy(navigate = true) }
+                            val userId = authRepository.currentUser?.uid ?: throw Exception("No se pudo obtener el usuario actual")
+
+                            val dbResult = userRepository.registerUser(
+                                username = currentState.userText,
+                                fullname = currentState.nameText,
+                                userId = userId
+                            )
+
+                            if (dbResult.isSuccess) {
+                                _uiState.update { it.copy(navigate = true) }
+                            } else {
+                                _uiState.update { it.copy(errorMessage = "Error guardando perfil", showMessage = true) }
+                            }
+
                         } else {
                             var mensajeDeError = "Error al crear la cuenta"
                             val excepcion = resultado.exceptionOrNull()
-
                             if (excepcion != null && excepcion.message != null) {
                                 mensajeDeError = excepcion.message.toString()
                             }
-
                             _uiState.update { it.copy(errorMessage = mensajeDeError, showMessage = true) }
                         }
                     }

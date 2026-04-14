@@ -1,10 +1,7 @@
 package com.example.soymusicreviewapp.ui.navigation
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -17,30 +14,19 @@ import com.example.soymusicreviewapp.ui.screens.login.LoginScreen
 import com.example.soymusicreviewapp.ui.screens.register.RegisterScreen
 import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
 import com.example.soymusicreviewapp.ui.screens.searchsong.CreateReviewScreen
-import com.example.soymusicreviewapp.ui.screens.explore.ExploreViewModel
 import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
 import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedScreen
-import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedViewModel
-import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedViewModel
 import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedScreen
-import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedViewModel
-import com.example.soymusicreviewapp.ui.screens.login.LoginViewModel
-import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
-import com.example.soymusicreviewapp.ui.screens.notifications.NotificationViewModel
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileScreen
-import com.example.soymusicreviewapp.ui.screens.register.RegisterViewModel
-import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailViewModel
-import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
-import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailViewModel
-import com.example.soymusicreviewapp.ui.screens.start.StartViewModel
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileViewModel
+import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
 import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewViewModel
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
 
-sealed class Screen (val route: String) {
+sealed class Screen(val route: String) {
     object SplashScreen : Screen("splash")
     object StartScreen : Screen("start")
     object LoginScreen : Screen("login")
@@ -56,7 +42,7 @@ sealed class Screen (val route: String) {
 }
 
 @Composable
-fun AppNavigation (
+fun AppNavigation(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -65,10 +51,18 @@ fun AppNavigation (
         startDestination = Screen.SplashScreen.route,
         modifier = modifier
     ) {
-        composable (route = Screen.SplashScreen.route) {
+        composable(route = Screen.SplashScreen.route) {
             SplashScreen(
-                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) { popUpTo(Screen.SplashScreen.route) { inclusive = true } } },
-                navigateToStart = { navController.navigate(Screen.StartScreen.route) { popUpTo(Screen.SplashScreen.route) { inclusive = true } } },
+                navigateToHome = {
+                    navController.navigate(Screen.ForYouFeedScreen.route) {
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
+                },
+                navigateToStart = {
+                    navController.navigate(Screen.StartScreen.route) {
+                        popUpTo(Screen.SplashScreen.route) { inclusive = true }
+                    }
+                },
                 splashViewModel = hiltViewModel()
             )
         }
@@ -82,11 +76,17 @@ fun AppNavigation (
         }
 
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen(viewModel = hiltViewModel(), navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) })
+            LoginScreen(
+                viewModel = hiltViewModel(),
+                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) }
+            )
         }
 
         composable(route = Screen.RegisterScreen.route) {
-            RegisterScreen(viewModel = hiltViewModel(), navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) })
+            RegisterScreen(
+                viewModel = hiltViewModel(),
+                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) }
+            )
         }
 
         composable(route = Screen.ForYouFeedScreen.route) {
@@ -106,11 +106,17 @@ fun AppNavigation (
         }
 
         composable(route = Screen.LatestFeedScreen.route) {
-            LatestFeedScreen(viewModel = hiltViewModel(), latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) })
+            LatestFeedScreen(
+                viewModel = hiltViewModel(),
+                latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) }
+            )
         }
 
         composable(route = Screen.ExploreScreen.route) {
-            ExploreScreen(viewModel = hiltViewModel(), onSongClick = { songId -> navController.navigate("songDetail/$songId") })
+            ExploreScreen(
+                viewModel = hiltViewModel(),
+                onSongClick = { songId -> navController.navigate("songDetail/$songId") }
+            )
         }
 
         composable(
@@ -166,38 +172,50 @@ fun AppNavigation (
 
         composable(route = Screen.ProfileScreen.route) {
             val profileViewModel: ProfileViewModel = hiltViewModel()
-            LaunchedEffect(Unit) { profileViewModel.loadUserReviews("1") }
 
-            ProfileScreen(
-                viewModel = profileViewModel,
-                settingsButtonPressed = { navController.navigate(Screen.SettingsScreen.route) },
-                onEditReview = { rId, sId ->
-                    navController.navigate("editReview/$rId/$sId")
-                }
-            )
+            val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
+
+            if (currentUserId.isNotEmpty()) {
+                ProfileScreen(
+                    userId = currentUserId,
+                    viewModel = profileViewModel,
+                    settingsButtonPressed = { navController.navigate(Screen.SettingsScreen.route) },
+                    onEditReview = { rId, sId ->
+                        navController.navigate("editReview/$rId/$sId")
+                    }
+                )
+            }
         }
 
         composable(
             route = "userProfile/{userId}",
             arguments = listOf(navArgument("userId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId") ?: "1"
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
             val profileViewModel: ProfileViewModel = hiltViewModel()
-            LaunchedEffect(userId) { profileViewModel.loadUserReviews(userId) }
 
-            ProfileScreen(
-                viewModel = profileViewModel,
-                settingsButtonPressed = { },
-                onEditReview = { _, _ -> }
-            )
+            if (userId.isNotEmpty()) {
+                ProfileScreen(
+                    userId = userId,
+                    viewModel = profileViewModel,
+                    settingsButtonPressed = { },
+                    onEditReview = { _, _ -> }
+                )
+            }
         }
 
-        composable(route = Screen.NotificationScreen.route) { NotificationScreen(viewModel = hiltViewModel()) }
+        composable(route = Screen.NotificationScreen.route) {
+            NotificationScreen(viewModel = hiltViewModel())
+        }
 
         composable(route = Screen.SettingsScreen.route) {
             SettingsScreen(
                 viewModel = hiltViewModel(),
-                onConfirmLogout = { navController.navigate(Screen.StartScreen.route) { popUpTo(0) { inclusive = true } } },
+                onConfirmLogout = {
+                    navController.navigate(Screen.StartScreen.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
                 onBackClick = { navController.popBackStack() }
             )
         }

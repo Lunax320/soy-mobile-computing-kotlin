@@ -17,12 +17,11 @@ interface ReviewRetrofitService {
     suspend fun createReview(@Body review: CreateReviewDto): Unit
 
     @DELETE("reviews/{reviewId}")
-    suspend fun deleteReview(@Path("reviewId") reviewId: Int): Unit
+    suspend fun deleteReview(@Path("reviewId") reviewId: String): Unit
 
     @PUT("reviews/{reviewId}")
-    suspend fun updateReview(@Path("reviewId") reviewId: Int, @Body review: CreateReviewDto): Unit
+    suspend fun updateReview(@Path("reviewId") reviewId: String, @Body review: CreateReviewDto): Unit
 
     @GET("reviews/{reviewId}")
-    suspend fun getReviewById(@Path("reviewId") reviewId: Int): ReviewDto
+    suspend fun getReviewById(@Path("reviewId") reviewId: String): ReviewDto
 }
-

@@ -1,6 +1,5 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
-import android.net.Uri
 import com.example.soymusicreviewapp.data.Review
 
 data class ProfileState(

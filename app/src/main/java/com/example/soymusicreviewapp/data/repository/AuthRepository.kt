@@ -1,16 +1,17 @@
 package com.example.soymusicreviewapp.data.repository
 
-import com.example.soymusicreviewapp.data.datasource.AuthRemoteDataSource
-import com.google.firebase.Firebase
+import com.example.soymusicreviewapp.data.datasource.remotedatasource.AuthRemoteDataSource
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.FirebaseUser
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
     private val authDataSource: AuthRemoteDataSource
 ){
 
-    val currentUser = authDataSource.currentUser
+    val currentUser: FirebaseUser?
+        get() = authDataSource.currentUser
     suspend fun signIn(email: String, password: String): Result<Unit> {
         try {
             authDataSource.singIn(email, password)

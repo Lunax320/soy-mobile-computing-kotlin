@@ -1,7 +1,6 @@
 package com.example.soymusicreviewapp
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -11,20 +10,22 @@ import com.example.soymusicreviewapp.ui.navigation.AppNavigation
 import com.example.soymusicreviewapp.ui.navigation.SOYBottomNavigationBar
 import com.example.soymusicreviewapp.ui.navigation.Screen
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.soymusicreviewapp.ui.screens.explore.ExploreScreen
-import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun SOYApp() {
     val navController = rememberNavController()
 
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val userId = currentUser?.uid ?: ""
 
     val showBar = currentRoute != Screen.StartScreen.route &&
             currentRoute != Screen.LoginScreen.route &&
-            currentRoute != Screen.RegisterScreen.route
+            currentRoute != Screen.RegisterScreen.route &&
+            currentRoute != Screen.SplashScreen.route
 
     Scaffold(
         bottomBar = {
@@ -34,11 +35,10 @@ fun SOYApp() {
                 )
             }
         }
-    ){
+    ) { paddingValues ->
         AppNavigation(
             navController = navController,
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
-

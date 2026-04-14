@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.data.datasource
+package com.example.soymusicreviewapp.data.datasource.remotedatasource
 
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage

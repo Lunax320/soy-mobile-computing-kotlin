@@ -87,14 +87,11 @@ class CreateReviewViewModel @Inject constructor(
 
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-            var songIdentifier = 0
-            val parsedSongId = songId.toIntOrNull()
-            if (parsedSongId != null) {
-                songIdentifier = parsedSongId
-            }
+            val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
             val result = reviewRepository.createReview(
-                songId = songIdentifier,
+                userId = currentUserId,
+                songId = songId,
                 reviewText = _uiState.value.reviewText,
                 rating = _uiState.value.rating,
                 date = currentDate

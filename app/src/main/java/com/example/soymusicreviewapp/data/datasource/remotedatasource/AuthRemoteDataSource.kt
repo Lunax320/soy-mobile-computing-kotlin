@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.data.datasource
+package com.example.soymusicreviewapp.data.datasource.remotedatasource
 
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
@@ -10,7 +10,8 @@ import javax.inject.Inject
 class AuthRemoteDataSource @Inject constructor(
     private val auth: FirebaseAuth
 ){
-    val currentUser: FirebaseUser? = auth.currentUser
+    val currentUser: FirebaseUser?
+        get() = auth.currentUser
 
     suspend fun singIn(email: String, password: String): Unit {
         auth.signInWithEmailAndPassword(email, password).await()

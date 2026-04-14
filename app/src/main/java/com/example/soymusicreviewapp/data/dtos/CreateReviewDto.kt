@@ -1,10 +1,10 @@
 package com.example.soymusicreviewapp.data.dtos
 
 data class CreateReviewDto(
-    val userId: Int,
-    val songId: Int,
-    val reviewText: String,
-    val rating: Int,
-    val date: String,
-    val parentId: Int?
+    val userId: String = "",
+    val songId: String = "",
+    val reviewText: String = "",
+    val rating: Int = 0,
+    val date: String = "",
+    val parentId: String? = null
 )

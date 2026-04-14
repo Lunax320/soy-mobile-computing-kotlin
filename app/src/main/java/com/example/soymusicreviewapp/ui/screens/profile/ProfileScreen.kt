@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,14 +46,22 @@ import com.example.soymusicreviewapp.ui.utils.SettingsButton
 
 @Composable
 fun ProfileScreen(
+    userId: String,
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
     settingsButtonPressed: () -> Unit,
     onEditReview: (String, String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { viewModel.uploadImageToFirebase(it) }
+        if (uri != null) {
+            viewModel.uploadImageToFirebase(uri)
+        }
+    }
+
+    LaunchedEffect(userId) {
+        viewModel.loadUserProfile(userId)
     }
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -67,6 +76,7 @@ fun ProfileScreen(
             settingsButtonPressed = settingsButtonPressed,
             editProfileClick = { launcher.launch("image/*") }
         )
+
         ProfileScreenBody(
             userReviews = state.userReviews,
             onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
@@ -111,14 +121,14 @@ fun ProfileScreenHeader(
             )
 
             Text(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier.padding(top = 15.dp),
                 text = name,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                modifier = Modifier.padding(top = 15.dp),
+                modifier = Modifier.padding(top = 8.dp),
                 text = username,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 10.sp,
@@ -153,7 +163,7 @@ fun ProfileScreenHeader(
             Column{
                 Row{
                     Text(
-                        modifier = Modifier.padding(top = 12.dp),
+                        modifier = Modifier.padding(top = 8.dp),
                         text = stringResource(R.string.reviews),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,
@@ -161,7 +171,7 @@ fun ProfileScreenHeader(
                     )
                     Spacer(modifier = Modifier.width(40.dp))
                     Text(
-                        modifier = Modifier.padding(top = 12.dp),
+                        modifier = Modifier.padding(top = 8.dp),
                         text = stringResource(R.string.followers),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,
@@ -169,7 +179,7 @@ fun ProfileScreenHeader(
                     )
                     Spacer(modifier = Modifier.width(40.dp))
                     Text(
-                        modifier = Modifier.padding(top = 12.dp),
+                        modifier = Modifier.padding(top = 8.dp),
                         text = stringResource(R.string.following),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 10.sp,

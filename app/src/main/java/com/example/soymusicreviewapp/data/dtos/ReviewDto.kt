@@ -16,11 +16,29 @@ data class ReviewDto(
 )
 
 fun ReviewDto.toReview(): Review {
+
+    var finalUsernameId = userId
+    if (user != null) {
+        finalUsernameId = user.id
+    }
+
+    var finalProfileImage = ""
+    if (user != null) {
+        if (user.profileImage != null) {
+            finalProfileImage = user.profileImage
+        }
+    }
+
+    var finalUserName = "Usuario Desconocido"
+    if (user != null) {
+        finalUserName = user.username
+    }
+
     return Review(
-        usernameId = user?.id ?: userId,
+        usernameId = finalUsernameId,
         userId = userId,
-        profileImage = user?.profileImage ?: "",
-        userName = user?.username ?: "Usuario Desconocido",
+        profileImage = finalProfileImage,
+        userName = finalUserName,
         date = createdAt,
         songName = songName,
         songId = songId,
