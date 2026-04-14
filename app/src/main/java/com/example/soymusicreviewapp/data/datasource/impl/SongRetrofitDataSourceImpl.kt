@@ -14,6 +14,11 @@ class SongRetrofitDataSourceImpl @Inject constructor(
     }
 
     override suspend fun getSongById(songId: String): SongDto {
-        return service.getSongById(songId.toInt())
+        val idInt = songId.toIntOrNull()
+        if (idInt != null) {
+            return service.getSongById(idInt)
+        } else {
+            throw Exception("Identificador invalido")
+        }
     }
 }

@@ -3,7 +3,7 @@ package com.example.soymusicreviewapp.data.dtos
 import com.example.soymusicreviewapp.data.Song
 
 data class SongDto(
-    val id: Int = 0,
+    val id: String = "",
     val name: String = "",
     val artist: String = "",
     val genre: String? = null,
@@ -28,7 +28,7 @@ fun SongDto.toSong(): Song {
     }
 
     return Song(
-        songId = id.toString(),
+        songId = id,
         name = name,
         artist = artist,
         genre = finalGenre,

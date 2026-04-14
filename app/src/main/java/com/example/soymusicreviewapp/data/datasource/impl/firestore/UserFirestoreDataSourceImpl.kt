@@ -18,7 +18,6 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
 
         val user = respuesta.toObject(UserDto::class.java) ?: throw Exception("No se pudo procesar el JSON del usuario")
 
-        // Mapeamos el ID del documento al objeto de Kotlin
         return user.copy(id = respuesta.id)
     }
 

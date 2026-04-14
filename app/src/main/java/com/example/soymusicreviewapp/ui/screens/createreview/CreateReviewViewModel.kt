@@ -4,27 +4,23 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.soymusicreviewapp.data.Song
-import com.example.soymusicreviewapp.data.local.LocalSongsProvider
+import com.example.soymusicreviewapp.data.repository.ReviewRepository
+import com.example.soymusicreviewapp.data.repository.SongRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
-import java.net.URL
-import javax.inject.Inject
-import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @HiltViewModel
 class CreateReviewViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
+    private val songRepository: SongRepository, // Se inyecta el repositorio de canciones
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -32,36 +28,24 @@ class CreateReviewViewModel @Inject constructor(
     val uiState: StateFlow<CreateReviewState> = _uiState.asStateFlow()
 
     init {
-        val songId = savedStateHandle.get<String>("songId") ?: "1"
-        loadSongData(songId)
+        val songId = savedStateHandle.get<String>("songId") ?: ""
+        if (songId.isNotEmpty()) {
+            loadSongData(songId)
+        }
     }
 
     private fun loadSongData(songId: String) {
         viewModelScope.launch {
-            val fetchedSong = withContext(Dispatchers.IO) {
-                try {
-                    val response = URL("http://10.0.2.2:3000/songs/$songId").readText()
-                    val obj = JSONObject(response)
+            val result = songRepository.getSongById(songId)
 
-                    var imgUrl = if (obj.isNull("songImage")) "" else obj.getString("songImage")
-                    if (imgUrl.contains("example.com") || imgUrl.isEmpty()) {
-                        imgUrl = "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&q=80"
-                    }
-
-                    Song(
-                        songId = obj.getInt("id").toString(),
-                        name = obj.getString("name"),
-                        artist = obj.getString("artist"),
-                        genre = obj.optString("genre", "Desconocido"),
-                        duration = obj.optString("duration", "0:00"),
-                        songImage = imgUrl
-                    )
-                } catch (e: Exception) {
-                    Log.e("API_TRACKER", "Crear Reseña: Fallo al descargar canción - ${e.message}")
-                    LocalSongsProvider.songs.find { it.songId == songId } ?: LocalSongsProvider.songs.first()
+            if (result.isSuccess) {
+                val fetchedSong = result.getOrNull()
+                if (fetchedSong != null) {
+                    _uiState.update { it.copy(song = fetchedSong) }
                 }
+            } else {
+                Log.e("API_TRACKER", "Crear Reseña: Fallo al descargar la información de la canción. Motivo: ${result.exceptionOrNull()?.message}")
             }
-            _uiState.update { it.copy(song = fetchedSong) }
         }
     }
 
@@ -86,7 +70,6 @@ class CreateReviewViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
 
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
             val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
             val result = reviewRepository.createReview(
