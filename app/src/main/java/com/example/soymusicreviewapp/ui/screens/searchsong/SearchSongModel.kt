@@ -32,19 +32,18 @@ class SearchSongModel @Inject constructor(
 
     private fun loadSongs() {
         viewModelScope.launch {
-            Log.d("API_TRACKER", "Buscar Canción: Solicitando catálogo al repositorio...")
 
             val result = songRepository.getSongs()
 
             if (result.isSuccess) {
                 val backendSongs = result.getOrNull() ?: emptyList()
-                Log.d("API_TRACKER", "Buscar Canción: Se cargaron ${backendSongs.size} canciones exitosamente.")
+                Log.d("API_TRACKER", "Se cargaron ${backendSongs.size} canciones")
 
                 _uiState.update { currentState ->
                     currentState.copy(songs = backendSongs)
                 }
             } else {
-                Log.e("API_TRACKER", "Buscar Canción: Fallo al descargar canciones. Motivo: ${result.exceptionOrNull()?.message}")
+                Log.e("API_TRACKER", "Fallo al descargar canciones")
             }
         }
     }

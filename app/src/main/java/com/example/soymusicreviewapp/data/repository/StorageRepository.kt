@@ -18,8 +18,6 @@ class StorageRepository @Inject constructor(
             val path = "profileImages/$userId.jpg"
             val url = storageDataSource.uploadImage(path, uri)
 
-
-            //update user URL
             authDataSource.updateProfileImage(url)
 
             Result.success(url)

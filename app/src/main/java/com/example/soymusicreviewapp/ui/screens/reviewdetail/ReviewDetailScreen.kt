@@ -46,13 +46,11 @@ fun ReviewDetailScreen(
 
         PlainBackground()
 
-        // Only show content if the review was found
         if (state.selectedReview != null) {
             LazyColumn(
                 modifier = modifier.fillMaxSize()
             ) {
                 item {
-                    // Use the review from the state
                     ReviewInfo(
                         review = state.selectedReview!!,
                         isProfileView = true,

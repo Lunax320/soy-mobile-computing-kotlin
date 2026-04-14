@@ -23,7 +23,6 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
     }
 
     override suspend fun deleteReview(reviewId: String){
-        // ARREGLO: Pasamos el texto directo
         service.deleteReview(reviewId)
     }
 

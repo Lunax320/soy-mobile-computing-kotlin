@@ -37,7 +37,7 @@ class ReviewDetailViewModel @Inject constructor(
                     )
                 }
             } else {
-                Log.e("API_TRACKER", "Detalle de Reseña: No se pudo establecer conexión con el servidor.")
+                Log.e("API_TRACKER", "Reseña - no conexion con servidor.")
             }
         }
     }

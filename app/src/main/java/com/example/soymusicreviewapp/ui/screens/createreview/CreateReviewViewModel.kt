@@ -81,10 +81,10 @@ class CreateReviewViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                Log.d("API_TRACKER", "ViewModel: Publicación exitosa.")
+                Log.d("API_TRACKER", "Publicacion exitosa")
                 _uiState.update { it.copy(navigateBack = true) }
             } else {
-                Log.e("API_TRACKER", "ViewModel: Fallo en la publicación.")
+                Log.e("API_TRACKER", "Fallo en la publicacion")
                 _uiState.update { it.copy(isLoading = false, errorMessage = "Error al publicar") }
             }
         }

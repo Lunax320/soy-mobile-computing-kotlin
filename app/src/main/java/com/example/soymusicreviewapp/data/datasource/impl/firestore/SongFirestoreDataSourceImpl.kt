@@ -31,7 +31,7 @@ class SongFirestoreDataSourceImpl @Inject constructor(
         if (song != null) {
             return song.copy(id = snapshot.id)
         } else {
-            throw Exception("No se encontró la canción solicitada.")
+            throw Exception("No se encontro la cancion")
         }
     }
 }

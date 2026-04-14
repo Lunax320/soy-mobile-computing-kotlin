@@ -2,18 +2,19 @@ package com.example.soymusicreviewapp.data.repository
 
 import android.util.Log
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.data.datasource.impl.ReviewRetrofitDataSourceImpl
+import com.example.soymusicreviewapp.data.datasource.impl.firestore.ReviewFirestoreDataSourceImpl
 import com.example.soymusicreviewapp.data.dtos.toReview
 import javax.inject.Inject
 import coil.network.HttpException
-import com.example.soymusicreviewapp.data.datasource.remotedatasource.ReviewRemoteDataSource
 import com.example.soymusicreviewapp.data.dtos.CreateReviewDto
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class ReviewRepository @Inject constructor(
-    private val remoteDataSource: ReviewRetrofitDataSourceImpl
+    private val remoteDataSource: ReviewFirestoreDataSourceImpl,
+    private val userRepository: UserRepository,
+    private val songRepository: SongRepository
 ) {
 
     suspend fun getReviews(): Result<List<Review>> {
@@ -21,11 +22,7 @@ class ReviewRepository @Inject constructor(
             val reviews = remoteDataSource.getAllReviews()
             val reviewInfo = reviews.map { it.toReview() }
             Result.success(reviewInfo)
-        } catch (e: HttpException) {
-            Log.e("API_TRACKER", "Error HTTP al descargar reseñas: " + e.message)
-            Result.failure(e)
         } catch (e: Exception) {
-            Log.e("API_TRACKER", "Error general al descargar reseñas: " + e.message)
             Result.failure(e)
         }
     }
@@ -48,21 +45,31 @@ class ReviewRepository @Inject constructor(
         date: String,
         parentId: String? = null
     ): Result<Unit> {
-        Log.d("API_TRACKER", "Repositorio: Iniciando creación de reseña para la canción con identificador: " + songId)
 
         return try {
+            val userResult = userRepository.getUserById(userId)
+            val userProfile = userResult.getOrNull()
+
+            val songResult = songRepository.getSongById(songId)
+            val songDetails = songResult.getOrNull()
+
             val createReviewDto = CreateReviewDto(
                 userId = userId,
                 songId = songId,
+                songName = songDetails?.name ?: "Cancion Desconocida",
+                artistName = songDetails?.artist ?: "Artista Desconocido",
                 reviewText = reviewText,
                 rating = rating,
                 date = date,
-                parentId = parentId
+                parentId = parentId,
+                user = userProfile
             )
+
             remoteDataSource.createReview(createReviewDto)
+            Log.d("API_TRACKER", "Reseña normalizados")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("API_TRACKER", "Repositorio: El servidor rechazó la creación. Motivo: " + e.message)
+            Log.e("API_TRACKER", "Fallo al crear la reseña")
             Result.failure(e)
         }
     }
@@ -82,11 +89,8 @@ class ReviewRepository @Inject constructor(
         reviewText: String,
         rating: Int
     ): Result<Unit> {
-        Log.d("API_TRACKER", "Repositorio: Iniciando actualización de la reseña: " + reviewId)
-
         return try {
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
             val updateDto = CreateReviewDto(
                 userId = "1",
                 songId = songId,
@@ -95,7 +99,6 @@ class ReviewRepository @Inject constructor(
                 date = currentDate,
                 parentId = null
             )
-
             remoteDataSource.updateReview(reviewId, updateDto)
             Result.success(Unit)
         } catch (e: Exception) {
