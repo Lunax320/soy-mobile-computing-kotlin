@@ -34,6 +34,8 @@ import com.example.soymusicreviewapp.ui.utils.SongCard
 @Composable
 fun LatestFeedScreen(
     modifier: Modifier = Modifier,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     latestCreateAccount: () -> Unit,
     viewModel: LatestFeedViewModel
 ) {
@@ -55,6 +57,8 @@ fun LatestFeedScreen(
             LatestFeedList(
                 songs = state.newReleases,
                 reviews = state.recentReviews,
+                onReviewClick = onReviewClick,
+                onUserClick = onUserClick,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -65,6 +69,8 @@ fun LatestFeedScreen(
 fun LatestFeedList(
     songs: List<Song>,
     reviews: List<Review>,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -113,6 +119,8 @@ fun LatestFeedList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
+                onReviewClick = onReviewClick,
+                onUserClick = onUserClick,
                 isProfileView = false
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -130,6 +138,8 @@ fun LatestFeedPreview() {
         LatestFeedScreen(
             viewModel = viewModel(),
             modifier = Modifier,
+            onReviewClick = {},
+            onUserClick = {},
             latestCreateAccount = {}
         )
     }

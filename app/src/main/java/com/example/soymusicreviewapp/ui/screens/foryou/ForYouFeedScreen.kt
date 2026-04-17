@@ -22,6 +22,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 @Composable
 fun ForYouFeedScreen(
     onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     followingButtonPressed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ForYouFeedViewModel
@@ -40,6 +41,7 @@ fun ForYouFeedScreen(
         ForYouScreenBody(
             reviews = state.reviews,
             onReviewClick = onReviewClick,
+            onUserClick = onUserClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -52,6 +54,7 @@ fun ForYouFeedScreen(
 fun ForYouScreenBody(
     reviews: List<Review>,
     onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -62,6 +65,7 @@ fun ForYouScreenBody(
             // Displays the list of reviews using data from state
             ReviewList(
                 onReviewClick = { reviewId -> onReviewClick(reviewId) },
+                onUserClick = { userId -> onUserClick(userId) },
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.recommended_reviews_for_you),
                 reviews = reviews
@@ -81,6 +85,7 @@ fun ForYouFeedScreenPreview() {
         ForYouFeedScreen(
             viewModel = viewModel(),
             onReviewClick = {},
+            onUserClick = {},
             followingButtonPressed = {}
         )
     }

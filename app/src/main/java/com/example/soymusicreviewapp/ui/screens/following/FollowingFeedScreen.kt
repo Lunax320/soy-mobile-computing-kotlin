@@ -23,6 +23,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 fun FollowingFeedScreen(
     latestButtonPressed: () -> Unit,
     onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FollowingFeedViewModel
 ) {
@@ -40,6 +41,7 @@ fun FollowingFeedScreen(
         FollowingFeedScreenBody(
             reviews = state.reviews,
             onReviewClick = onReviewClick,
+            onUserClick = onUserClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -52,6 +54,7 @@ fun FollowingFeedScreen(
 fun FollowingFeedScreenBody(
     reviews: List<Review>,
     onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -62,6 +65,7 @@ fun FollowingFeedScreenBody(
             // Displays the list of reviews passed from the state
             ReviewList(
                 onReviewClick = { reviewId -> onReviewClick(reviewId) },
+                onUserClick = { userId -> onUserClick(userId) },
                 reviews = reviews,
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.reviews_from_users_you_follow)
@@ -80,6 +84,7 @@ fun FollowingFeedScreenPreview() {
         FollowingFeedScreen(
             viewModel= viewModel(),
             onReviewClick = {},
+            onUserClick = {},
             latestButtonPressed = {}
         )
     }

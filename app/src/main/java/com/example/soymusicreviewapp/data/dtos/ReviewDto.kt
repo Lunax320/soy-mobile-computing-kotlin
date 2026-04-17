@@ -10,8 +10,10 @@ data class ReviewDto(
     val artistName: String = "",
     val reviewText: String = "",
     val rating: Int = 0,
+    val date: String = "",
     val createdAt: String = "",
     val updatedAt: String = "",
+    val parentId: String? = null,
     val user: UserDto? = null
 )
 
@@ -34,16 +36,20 @@ fun ReviewDto.toReview(): Review {
         finalUserName = user.username
     }
 
+    val finalDate = if (createdAt.isNotEmpty()) createdAt else date
+
     return Review(
+        id = id,
         usernameId = finalUsernameId,
         userId = userId,
         profileImage = finalProfileImage,
         userName = finalUserName,
-        date = createdAt,
+        date = finalDate,
         songName = songName,
         songId = songId,
         artistName = artistName,
         reviewText = reviewText,
-        rating = rating
+        rating = rating,
+        parentId = parentId
     )
 }

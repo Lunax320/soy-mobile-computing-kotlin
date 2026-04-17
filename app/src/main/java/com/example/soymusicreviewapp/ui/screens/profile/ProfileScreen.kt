@@ -80,7 +80,7 @@ fun ProfileScreen(
         ProfileScreenBody(
             userReviews = state.userReviews,
             onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
-            onEditClick = { review -> onEditReview(review.usernameId, review.songId) },
+            onEditClick = { review -> onEditReview(review.id, review.songId) },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -254,7 +254,7 @@ fun ProfileScreenBody(
             isProfileView = true,
             onDeleteClick = onDeleteClick,
             onEditClick = { id : String ->
-                val review = userReviews.find { it.usernameId == id }
+                val review = userReviews.find { it.id == id }
                 review?.let { onEditClick(it) }
             }
         )

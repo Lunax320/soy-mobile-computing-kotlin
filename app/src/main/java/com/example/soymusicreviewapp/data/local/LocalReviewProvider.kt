@@ -5,6 +5,7 @@ import com.example.soymusicreviewapp.data.Review
 object LocalReviewProvider {
     val reviews = listOf(
         Review(
+            id = "1",
             usernameId = "1",
             userId = "1",
             songId = "1",
@@ -17,6 +18,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            id = "2",
             usernameId = "2",
             userId = "2",
             songId = "2",
@@ -29,6 +31,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            id = "3",
             usernameId = "3",
             userId = "3",
             songId = "3",
@@ -41,6 +44,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            id = "4",
             usernameId = "4",
             userId = "4",
             songId = "4",
@@ -53,6 +57,7 @@ object LocalReviewProvider {
             rating = 4
         ),
         Review(
+            id = "5",
             usernameId = "5",
             userId = "5",
             songId = "5",
@@ -65,6 +70,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            id = "6",
             usernameId = "6",
             userId = "6",
             songId = "6",
@@ -77,6 +83,7 @@ object LocalReviewProvider {
             rating = 5
         ),
         Review(
+            id = "7",
             usernameId = "7",
             userId = "7",
             songId = "7",

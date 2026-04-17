@@ -45,6 +45,7 @@ fun ReviewInfo(
     review: Review,
     isProfileView: Boolean = false,
     modifier: Modifier = Modifier,
+    onUserClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
     onEditClick: (() -> Unit)? = null
 ) {
@@ -56,7 +57,10 @@ fun ReviewInfo(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = if (onUserClick != null) Modifier.clickable { onUserClick() } else Modifier
+            ) {
 
                 ReviewAsyncImage(
                     profileImage = review.profileImage,

@@ -127,6 +127,7 @@ fun FeedScreenHeader(
 fun ReviewCard(
     review: Review,
     onReviewClick: (String) -> Unit = {},
+    onUserClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false,
     onDeleteClick: (() -> Unit)? = null,
@@ -137,7 +138,7 @@ fun ReviewCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceDim
         ),
-        onClick = { onReviewClick(review.usernameId) },
+        onClick = { onReviewClick(review.id) },
         modifier = modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -145,6 +146,7 @@ fun ReviewCard(
         ReviewInfo(
             review = review,
             isProfileView = isProfileView,
+            onUserClick = { onUserClick(review.userId) },
             onDeleteClick = onDeleteClick,
             onEditClick = onEditClick
         )
@@ -166,6 +168,7 @@ fun ReviewListpreview(){
     CompMovilProyectoTheme {
         ReviewList(
             onReviewClick = {},
+            onUserClick = {},
             reviews = LocalReviewProvider.reviews,
             title = stringResource(R.string.recommended_reviews_for_you),
             modifier = Modifier.fillMaxSize()
@@ -175,6 +178,7 @@ fun ReviewListpreview(){
 @Composable
 fun ReviewList(
     onReviewClick: (String) -> Unit = {},
+    onUserClick: (String) -> Unit = {},
     reviews: List<Review>,
     title: String,
     modifier: Modifier = Modifier,
@@ -204,14 +208,15 @@ fun ReviewList(
                 modifier = Modifier.fillMaxWidth(),
                 isProfileView = isProfileView,
                 onReviewClick = onReviewClick,
+                onUserClick = onUserClick,
                 onDeleteClick = {
                     if (onDeleteClick != null) {
-                        onDeleteClick(reviews[index].usernameId)
+                        onDeleteClick(reviews[index].id)
                     }
                 },
                 onEditClick = {
                     if (onEditClick != null) {
-                        onEditClick(reviews[index].usernameId)
+                        onEditClick(reviews[index].id)
                     }
                 }
             )

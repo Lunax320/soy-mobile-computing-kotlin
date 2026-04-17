@@ -24,6 +24,7 @@ import com.example.soymusicreviewapp.ui.screens.profile.ProfileViewModel
 import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
 import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewViewModel
+import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
 
 sealed class Screen(val route: String) {
@@ -39,6 +40,7 @@ sealed class Screen(val route: String) {
     object NotificationScreen : Screen("notification")
     object ProfileScreen : Screen("profile")
     object SettingsScreen : Screen("settings")
+    object ReviewDetailScreen : Screen("reviewDetail")
 }
 
 @Composable
@@ -92,7 +94,8 @@ fun AppNavigation(
         composable(route = Screen.ForYouFeedScreen.route) {
             ForYouFeedScreen(
                 viewModel = hiltViewModel(),
-                onReviewClick = { userId -> navController.navigate("userProfile/$userId") },
+                onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 followingButtonPressed = { navController.navigate(Screen.FollowingFeedScreen.route) }
             )
         }
@@ -100,7 +103,8 @@ fun AppNavigation(
         composable(route = Screen.FollowingFeedScreen.route) {
             FollowingFeedScreen(
                 viewModel = hiltViewModel(),
-                onReviewClick = { userId -> navController.navigate("userProfile/$userId") },
+                onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 latestButtonPressed = { navController.navigate(Screen.LatestFeedScreen.route) }
             )
         }
@@ -108,7 +112,20 @@ fun AppNavigation(
         composable(route = Screen.LatestFeedScreen.route) {
             LatestFeedScreen(
                 viewModel = hiltViewModel(),
+                onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) }
+            )
+        }
+
+        composable(
+            route = "reviewDetail/{reviewId}",
+            arguments = listOf(navArgument("reviewId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val reviewId = backStackEntry.arguments?.getString("reviewId") ?: ""
+            ReviewDetailScreen(
+                reviewId = reviewId,
+                viewModel = hiltViewModel()
             )
         }
 

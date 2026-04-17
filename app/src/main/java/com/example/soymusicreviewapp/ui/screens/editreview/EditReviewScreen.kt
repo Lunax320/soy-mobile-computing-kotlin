@@ -16,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
@@ -35,7 +34,11 @@ fun EditReviewScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    val song = viewModel.getSong(songId)
+
+    // CARGAMOS los datos reales de la reseña y la canción de Firestore
+    LaunchedEffect(reviewId, songId) {
+        viewModel.loadReviewData(reviewId, songId)
+    }
 
     LaunchedEffect(state.navigateBack) {
         if (state.navigateBack) {
@@ -49,22 +52,24 @@ fun EditReviewScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             EditReviewHeader(onBackClick = onBackClick)
 
-            if (song != null) {
+            val song = state.selectedSong
+
+            if (state.isLoading && song == null) {
+                // Loading central inicial
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
+                }
+            } else if (song != null) {
                 EditReviewBody(
                     song = song,
                     reviewText = state.reviewText,
                     rating = state.rating,
-                    isLoading = state.isLoading, // <--- Pasar el estado
+                    isLoading = state.isLoading,
                     onReviewChange = { viewModel.onReviewTextChange(it) },
                     onRatingChange = { viewModel.onRatingChange(it) },
-                    // CONEXIÓN FINAL:
                     onSubmitClick = { viewModel.saveEdit(reviewId, songId) },
                     modifier = Modifier.weight(1f)
                 )
-            } else {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Error loading song data", color = MaterialTheme.colorScheme.error)
-                }
             }
         }
     }
@@ -95,7 +100,7 @@ fun EditReviewBody(
     song: Song,
     reviewText: String,
     rating: Int,
-    isLoading: Boolean, // <--- AÑADIR ESTO
+    isLoading: Boolean,
     onReviewChange: (String) -> Unit,
     onRatingChange: (Int) -> Unit,
     onSubmitClick: () -> Unit,
@@ -111,7 +116,6 @@ fun EditReviewBody(
         Spacer(modifier = Modifier.weight(1f))
 
         GeneralButton(
-            // Cambia el texto dinámicamente
             text = if (isLoading) "Modifying..." else "Modify Review",
             color = if (isLoading) Color.Gray else MaterialTheme.colorScheme.secondary,
             onClick = { if (!isLoading) onSubmitClick() },
@@ -208,6 +212,30 @@ fun ReviewInputCard(reviewText: String, onReviewChange: (String) -> Unit, modifi
                 fontSize = 12.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun EditReviewScreenPreview() {
+    CompMovilProyectoTheme {
+        Box(modifier = Modifier.fillMaxSize()) {
+            SoyBackground()
+            Column(modifier = Modifier.fillMaxSize()) {
+                EditReviewHeader(onBackClick = {})
+                EditReviewBody(
+                    song = LocalSongsProvider.songs[0],
+                    reviewText = "This is a sample review text to see how it looks in the edit screen.",
+                    rating = 4,
+                    isLoading = false,
+                    onReviewChange = {},
+                    onRatingChange = {},
+                    onSubmitClick = {},
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
     }
 }

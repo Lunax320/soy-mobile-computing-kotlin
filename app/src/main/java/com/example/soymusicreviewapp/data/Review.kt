@@ -1,6 +1,7 @@
 package com.example.soymusicreviewapp.data
 
 data class Review(
+    val id: String,
     val usernameId: String,
     val userId: String,
     val profileImage: String,
@@ -10,5 +11,6 @@ data class Review(
     val songId: String,
     val artistName: String,
     val reviewText: String,
-    val rating: Int
+    val rating: Int,
+    val parentId: String? = null
 )
