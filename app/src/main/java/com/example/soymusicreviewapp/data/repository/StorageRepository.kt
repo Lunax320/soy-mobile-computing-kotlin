@@ -14,11 +14,8 @@ class StorageRepository @Inject constructor(
         return try {
             val userId = authDataSource.currentUser?.uid
                 ?: return Result.failure(Exception("Usuario no autenticado"))
-
             val path = "profileImages/$userId.jpg"
             val url = storageDataSource.uploadImage(path, uri)
-
-            authDataSource.updateProfileImage(url)
 
             Result.success(url)
 

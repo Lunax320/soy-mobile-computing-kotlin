@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -19,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
@@ -29,6 +29,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,8 +66,11 @@ fun ProfileScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    var localUri by remember { mutableStateOf<Uri?>(null) }
+
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
+            localUri = uri
             viewModel.uploadImageToFirebase(uri)
         }
     }
@@ -75,7 +81,7 @@ fun ProfileScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         ProfileScreenHeader(
-            profileImageUrl = state.user.profileImageUrl,
+            profileImageUrl = localUri ?: state.user.profileImageUrl,
             name = state.user.name,
             username = state.user.username,
             reviewCount = state.reviewCount,
@@ -104,7 +110,7 @@ fun ProfileScreen(
 @Composable
 fun ProfileScreenHeader(
     modifier: Modifier = Modifier,
-    profileImageUrl: String?,
+    profileImageUrl: Any?,
     name: String,
     username: String,
     reviewCount: Int,
@@ -216,7 +222,7 @@ fun ProfileScreenHeader(
 
 @Composable
 fun ProfilePictureWithAction(
-    model: String?,
+    model: Any?,
     isOwnProfile: Boolean,
     followed: Boolean,
     onEditClick: () -> Unit,
@@ -234,9 +240,10 @@ fun ProfilePictureWithAction(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(model)
                 .crossfade(true)
+                .memoryCacheKey(model?.toString()) // Forzamos refresco si cambia el modelo
                 .build(),
             contentDescription = stringResource(R.string.profile),
-            error = painterResource(id = R.drawable.ic_loading),
+            error = painterResource(id = R.drawable.ic_profile),
             placeholder = painterResource(id = R.drawable.ic_profile),
             contentScale = ContentScale.Crop,
             modifier = Modifier

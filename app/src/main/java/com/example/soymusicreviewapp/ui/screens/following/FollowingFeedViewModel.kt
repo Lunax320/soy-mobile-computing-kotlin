@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
+import com.example.soymusicreviewapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FollowingFeedViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(FollowingFeedState())
@@ -34,12 +36,19 @@ class FollowingFeedViewModel @Inject constructor(
 
     private fun loadReviews() {
         viewModelScope.launch {
+            val currentUserId = _uiState.value.currentUserId
+            if (currentUserId.isEmpty()) return@launch
+
+            val followingIds = userRepository.getFollowingIds(currentUserId)
+
             reviewRepository.getReviewsLive()
                 .catch { e -> 
-                    android.util.Log.e("API_ERROR", "Error en tiempo real (Following): ${e.message}")
+                    android.util.Log.e("FollowingVM", "Error en feed social: ${e.message}")
                 }
-                .collect { reviews ->
-                    _uiState.update { it.copy(reviews = reviews) }
+                .collect { allReviews ->
+                    val filteredReviews = allReviews.filter { it.userId in followingIds }
+                    
+                    _uiState.update { it.copy(reviews = filteredReviews) }
                 }
         }
     }

@@ -51,4 +51,21 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun getFollowingIds(userId: String): List<String> {
+        return try {
+            remoteDataSource.getFollowingIds(userId)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun updateProfileImage(userId: String, imageUrl: String): Result<Unit> {
+        return try {
+            remoteDataSource.updateProfileImage(userId, imageUrl)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 }

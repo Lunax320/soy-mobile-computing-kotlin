@@ -20,8 +20,10 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
 
         val exist = followerDoc.exists()
 
-        user.followed = exist
-        return user
+        return user.copy(
+            id = respuesta.id,
+            followed = exist
+        )
     }
 
     override suspend fun createUser(user: UserDto): UserDto {
@@ -56,5 +58,15 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
                 transaction.update(targetUserRef, "followersCount", FieldValue.increment(1))
             }
         }.await()
+    }
+
+    override suspend fun getFollowingIds(userId: String): List<String> {
+        val snapshot = db.collection("users").document(userId)
+            .collection("following").get().await()
+        return snapshot.documents.map { it.id }
+    }
+
+    override suspend fun updateProfileImage(userId: String, imageUrl: String) {
+        db.collection("users").document(userId).update("profileImage", imageUrl).await()
     }
 }

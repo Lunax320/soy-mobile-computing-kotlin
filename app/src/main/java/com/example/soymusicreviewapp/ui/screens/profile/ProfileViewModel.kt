@@ -37,7 +37,6 @@ class ProfileViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, currentUserId = currentUserId) }
 
             val userResult = userRepository.getUserById(userId)
-
             if (userResult.isSuccess) {
                 val userDto = userResult.getOrNull()
                 if (userDto != null) {
@@ -48,11 +47,18 @@ class ProfileViewModel @Inject constructor(
             reviewRepository.getUserReviewsLive(userId)
                 .catch { e -> Log.e("ProfileViewModel", "Error loading live reviews: ${e.message}") }
                 .collect { reviews ->
-                    _uiState.update { it.copy(
-                        userReviews = reviews,
-                        reviewCount = reviews.size,
-                        isLoading = false
-                    )}
+                    _uiState.update { state ->
+                        val currentPhoto = state.user.profileImageUrl ?: ""
+                        val patchedReviews = reviews.map { 
+                            if (it.userId == userId) it.copy(profileImage = currentPhoto) else it 
+                        }
+                        
+                        state.copy(
+                            userReviews = patchedReviews,
+                            reviewCount = patchedReviews.size,
+                            isLoading = false
+                        )
+                    }
                 }
         }
     }
@@ -86,18 +92,22 @@ class ProfileViewModel @Inject constructor(
 
     fun deleteReview(reviewId: String) {
         viewModelScope.launch {
-            val result = reviewRepository.deleteReview(reviewId)
-            if (result.isSuccess) {
-            }
+            reviewRepository.deleteReview(reviewId)
         }
     }
 
     fun uploadImageToFirebase(uri: Uri) {
+        _uiState.update { state ->
+            state.copy(user = state.user.copy(profileImageUrl = uri.toString()))
+        }
+
         viewModelScope.launch {
             val result = storageRepository.uploadProfileImage(uri)
             if (result.isSuccess) {
                 val imageUrl = result.getOrNull()
                 if (imageUrl != null) {
+                    userRepository.updateProfileImage(currentUserId, imageUrl)
+
                     _uiState.update { state ->
                         state.copy(user = state.user.copy(profileImageUrl = imageUrl))
                     }

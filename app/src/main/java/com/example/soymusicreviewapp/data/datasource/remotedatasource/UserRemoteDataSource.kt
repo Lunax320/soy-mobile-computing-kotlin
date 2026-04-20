@@ -8,4 +8,6 @@ interface UserRemoteDataSource {
     suspend fun createUser(user: UserDto): UserDto
     suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String): Unit
     suspend fun followOrUnfollowUser(currentUserId: String, targetUserId: String): Unit
+    suspend fun getFollowingIds(userId: String): List<String>
+    suspend fun updateProfileImage(userId: String, imageUrl: String): Unit
 }

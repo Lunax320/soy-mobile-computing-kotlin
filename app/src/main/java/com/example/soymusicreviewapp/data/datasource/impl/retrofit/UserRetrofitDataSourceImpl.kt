@@ -25,4 +25,12 @@ class UserRetrofitDataSourceImpl @Inject constructor(
     override suspend fun followOrUnfollowUser(currentUserId: String, targetUserId: String) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getFollowingIds(userId: String): List<String> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateProfileImage(userId: String, imageUrl: String) {
+        TODO("Not yet implemented")
+    }
 }
