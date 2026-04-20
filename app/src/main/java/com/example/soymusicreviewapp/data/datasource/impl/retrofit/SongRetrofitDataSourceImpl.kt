@@ -1,8 +1,9 @@
-package com.example.soymusicreviewapp.data.datasource.impl
+package com.example.soymusicreviewapp.data.datasource.impl.retrofit
 
 import com.example.soymusicreviewapp.data.datasource.remotedatasource.SongRemoteDataSource
 import com.example.soymusicreviewapp.data.datasource.services.SongRetrofitService
 import com.example.soymusicreviewapp.data.dtos.SongDto
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SongRetrofitDataSourceImpl @Inject constructor(
@@ -20,5 +21,9 @@ class SongRetrofitDataSourceImpl @Inject constructor(
         } else {
             throw Exception("Identificador invalido")
         }
+    }
+
+    override fun listenAllSongs(): Flow<List<SongDto>> {
+        TODO("Not yet implemented")
     }
 }

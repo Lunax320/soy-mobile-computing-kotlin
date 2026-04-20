@@ -12,5 +12,7 @@ data class Review(
     val artistName: String,
     val reviewText: String,
     val rating: Int,
-    val parentId: String? = null
+    val parentId: String? = null,
+    val likesCount: Int = 0,
+    val liked: Boolean = false
 )

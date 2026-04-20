@@ -125,7 +125,9 @@ fun AppNavigation(
             val reviewId = backStackEntry.arguments?.getString("reviewId") ?: ""
             ReviewDetailScreen(
                 reviewId = reviewId,
-                viewModel = hiltViewModel()
+                viewModel = hiltViewModel(),
+                onReviewClick = { rId -> navController.navigate("reviewDetail/$rId") },
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") }
             )
         }
 
@@ -166,7 +168,8 @@ fun AppNavigation(
                 viewModel = hiltViewModel(),
                 songId = songId,
                 onBack = { navController.popBackStack() },
-                onReviewClick = { userId -> navController.navigate("userProfile/$userId") }
+                onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") }
             )
         }
 
@@ -189,7 +192,6 @@ fun AppNavigation(
 
         composable(route = Screen.ProfileScreen.route) {
             val profileViewModel: ProfileViewModel = hiltViewModel()
-
             val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
             if (currentUserId.isNotEmpty()) {
@@ -199,7 +201,9 @@ fun AppNavigation(
                     settingsButtonPressed = { navController.navigate(Screen.SettingsScreen.route) },
                     onEditReview = { rId, sId ->
                         navController.navigate("editReview/$rId/$sId")
-                    }
+                    },
+                    onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                    onUserClick = { userId -> navController.navigate("userProfile/$userId") }
                 )
             }
         }
@@ -216,7 +220,9 @@ fun AppNavigation(
                     userId = userId,
                     viewModel = profileViewModel,
                     settingsButtonPressed = { },
-                    onEditReview = { _, _ -> }
+                    onEditReview = { _, _ -> },
+                    onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
+                    onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
                 )
             }
         }

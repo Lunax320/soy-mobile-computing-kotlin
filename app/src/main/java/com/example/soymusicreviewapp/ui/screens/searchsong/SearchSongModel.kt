@@ -8,13 +8,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchSongModel @Inject constructor(
-    private val songRepository: SongRepository // Se inyecta el repositorio
+    private val songRepository: SongRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(SearchSongState())
@@ -32,19 +33,16 @@ class SearchSongModel @Inject constructor(
 
     private fun loadSongs() {
         viewModelScope.launch {
-
-            val result = songRepository.getSongs()
-
-            if (result.isSuccess) {
-                val backendSongs = result.getOrNull() ?: emptyList()
-                Log.d("API_TRACKER", "Se cargaron ${backendSongs.size} canciones")
-
-                _uiState.update { currentState ->
-                    currentState.copy(songs = backendSongs)
+            songRepository.getSongsLive()
+                .catch { e ->
+                    Log.e("API_TRACKER", "Fallo al descargar canciones en vivo: ${e.message}")
                 }
-            } else {
-                Log.e("API_TRACKER", "Fallo al descargar canciones")
-            }
+                .collect { backendSongs ->
+                    Log.d("API_TRACKER", "Actualización en vivo: ${backendSongs.size} canciones")
+                    _uiState.update { currentState ->
+                        currentState.copy(songs = backendSongs)
+                    }
+                }
         }
     }
 }

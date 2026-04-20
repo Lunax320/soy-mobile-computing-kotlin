@@ -2,18 +2,21 @@ package com.example.soymusicreviewapp.ui.screens.foryou
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ForYouFeedViewModel @Inject constructor(
-    private val reviewRepository: ReviewRepository
+    private val reviewRepository: ReviewRepository,
+    private val authRepository: AuthRepository
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ForYouFeedState())
@@ -21,24 +24,48 @@ class ForYouFeedViewModel @Inject constructor(
 
     init {
         loadReviews()
+        loadCurrentUser()
+    }
+
+    private fun loadCurrentUser() {
+        val userId = authRepository.currentUser?.uid ?: ""
+        _uiState.update { it.copy(currentUserId = userId) }
     }
 
     fun loadReviews() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            val reviewsResult = reviewRepository.getReviews()
+            reviewRepository.getReviewsLive()
+                .catch { e -> 
+                    _uiState.update { it.copy(errorMessage = e.message, isLoading = false) } 
+                }
+                .collect { reviews ->
+                    _uiState.update { it.copy(reviews = reviews, isLoading = false, errorMessage = null) }
+                }
+        }
+    }
 
-            if (reviewsResult.isSuccess) {
-                _uiState.update { it.copy(isLoading = false,
-                    errorMessage = null,
-                    reviews = reviewsResult.getOrNull() ?: emptyList()
-                )}
-            } else {
-                _uiState.update { it.copy(
-                    isLoading = false,
-                    errorMessage = reviewsResult.exceptionOrNull()?.message
-                )}
+    fun sendOrDeleteReviewLike(reviewId: String, userId: String) {
+        if (userId.isEmpty()) return
+
+        viewModelScope.launch {
+            val result = reviewRepository.sendOrDeleteReviewLike(reviewId, userId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    val updatedReviews = state.reviews.map { review ->
+                        if (review.id == reviewId) {
+                            val isCurrentlyLiked = review.liked
+                            review.copy(
+                                liked = !isCurrentlyLiked,
+                                likesCount = if (isCurrentlyLiked) review.likesCount - 1 else review.likesCount + 1
+                            )
+                        } else {
+                            review
+                        }
+                    }
+                    state.copy(reviews = updatedReviews)
+                }
             }
         }
     }

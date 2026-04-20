@@ -1,8 +1,10 @@
 package com.example.soymusicreviewapp.ui.screens.profile
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.soymusicreviewapp.data.dtos.toUserProfileInfo
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import com.example.soymusicreviewapp.data.repository.StorageRepository
@@ -11,10 +13,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import android.util.Log
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -27,61 +29,57 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileState())
     val uiState: StateFlow<ProfileState> = _uiState.asStateFlow()
 
+    val currentUserId: String
+        get() = authRepository.currentUser?.uid ?: ""
+
     fun loadUserProfile(userId: String) {
-        // LOG 1: ¿Está llegando el ID correctamente desde la navegación?
-        Log.d("PROFILE_TRACKER", "1. Iniciando carga de perfil. ID recibido: '$userId'")
-
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, currentUserId = currentUserId) }
 
-            // --- RASTREO DEL USUARIO ---
             val userResult = userRepository.getUserById(userId)
 
             if (userResult.isSuccess) {
-                val userProfile = userResult.getOrNull()
-                // LOG 2: ¿Encontró el documento en la colección 'users'?
-                Log.d("PROFILE_TRACKER", "2. Éxito al buscar usuario. Datos crudos: $userProfile")
-
-                if (userProfile != null) {
-                    _uiState.update { state ->
-                        state.copy(
-                            name = userProfile.name,
-                            // Si el username viene vacío de Firebase, aquí se notará
-                            username = if (userProfile.username.isNotEmpty()) "@" + userProfile.username.lowercase().replace(" ", "") else "@usuario",
-                            profileImageUrl = userProfile.profileImage,
-                            followersCount = userProfile.followersCount,
-                            followingCount = userProfile.followingCount
-                        )
-                    }
-                    Log.d("PROFILE_TRACKER", "3. Estado UI actualizado con la información del usuario.")
-                } else {
-                    Log.e("PROFILE_TRACKER", "2. ERROR: El resultado fue exitoso pero el objeto userProfile es NULO.")
+                val userDto = userResult.getOrNull()
+                if (userDto != null) {
+                    _uiState.update { it.copy(user = userDto.toUserProfileInfo()) }
                 }
-            } else {
-                // LOG 2.1: Si falló, ¿por qué falló?
-                Log.e("PROFILE_TRACKER", "2. ERROR AL BUSCAR USUARIO: ${userResult.exceptionOrNull()?.message}")
             }
 
-            // --- RASTREO DE LAS RESEÑAS ---
-            Log.d("PROFILE_TRACKER", "4. Buscando reseñas para el usuario: '$userId'")
-            val reviewsResult = reviewRepository.getUserReviews(userId)
-
-            if (reviewsResult.isSuccess) {
-                val reviews = reviewsResult.getOrNull()
-                // LOG 5: ¿Cuántas reseñas trajo la consulta whereEqualTo?
-                Log.d("PROFILE_TRACKER", "5. Éxito al buscar reseñas. Cantidad encontrada: ${reviews?.size}")
-
-                if (reviews != null) {
-                    _uiState.update { state ->
-                        state.copy(
-                            userReviews = reviews,
-                            reviewCount = reviews.size
-                        )
-                    }
-                    Log.d("PROFILE_TRACKER", "6. Estado UI actualizado con la lista de reseñas.")
+            reviewRepository.getUserReviewsLive(userId)
+                .catch { e -> Log.e("ProfileViewModel", "Error loading live reviews: ${e.message}") }
+                .collect { reviews ->
+                    _uiState.update { it.copy(
+                        userReviews = reviews,
+                        reviewCount = reviews.size,
+                        isLoading = false
+                    )}
                 }
-            } else {
-                // LOG 5.1: Si la consulta a Firestore falló
-                Log.e("PROFILE_TRACKER", "5. ERROR AL BUSCAR RESEÑAS: ${reviewsResult.exceptionOrNull()?.message}")
+        }
+    }
+
+    fun sendOrDeleteReviewLike(reviewId: String, userId: String) {
+        if (userId.isEmpty()) return
+        viewModelScope.launch {
+            reviewRepository.sendOrDeleteReviewLike(reviewId, userId)
+        }
+    }
+
+    fun followOrUnfollowUser(targetUserId: String) {
+        val sessionUserId = currentUserId
+        if (sessionUserId.isEmpty()) return
+
+        viewModelScope.launch {
+            val result = userRepository.followOrUnfollowUser(sessionUserId, targetUserId)
+            if (result.isSuccess) {
+                _uiState.update { state ->
+                    val isNowFollowing = !state.user.followed
+                    state.copy(
+                        user = state.user.copy(
+                            followed = isNowFollowing,
+                            followersCount = if (isNowFollowing) state.user.followersCount + 1 else state.user.followersCount - 1
+                        )
+                    )
+                }
             }
         }
     }
@@ -90,9 +88,6 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             val result = reviewRepository.deleteReview(reviewId)
             if (result.isSuccess) {
-                _uiState.update { state ->
-                    state.copy(userReviews = state.userReviews.filter { it.usernameId != reviewId })
-                }
             }
         }
     }
@@ -104,7 +99,7 @@ class ProfileViewModel @Inject constructor(
                 val imageUrl = result.getOrNull()
                 if (imageUrl != null) {
                     _uiState.update { state ->
-                        state.copy(profileImageUrl = imageUrl)
+                        state.copy(user = state.user.copy(profileImageUrl = imageUrl))
                     }
                 }
             }

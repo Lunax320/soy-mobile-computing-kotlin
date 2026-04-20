@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -20,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateReviewViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
-    private val songRepository: SongRepository, // Se inyecta el repositorio de canciones
+    private val songRepository: SongRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -36,16 +37,14 @@ class CreateReviewViewModel @Inject constructor(
 
     private fun loadSongData(songId: String) {
         viewModelScope.launch {
-            val result = songRepository.getSongById(songId)
-
-            if (result.isSuccess) {
-                val fetchedSong = result.getOrNull()
-                if (fetchedSong != null) {
-                    _uiState.update { it.copy(song = fetchedSong) }
+            songRepository.getSongsLive()
+                .catch { e -> Log.e("API_TRACKER", "Error loading song: ${e.message}") }
+                .collect { allSongs ->
+                    val updatedSong = allSongs.find { it.songId == songId }
+                    updatedSong?.let { song ->
+                        _uiState.update { it.copy(song = song) }
+                    }
                 }
-            } else {
-                Log.e("API_TRACKER", "Crear Reseña: Fallo al descargar la información de la canción. Motivo: ${result.exceptionOrNull()?.message}")
-            }
         }
     }
 
@@ -64,8 +63,6 @@ class CreateReviewViewModel @Inject constructor(
     }
 
     fun createReview(songId: String) {
-        Log.d("API_TRACKER", "ViewModel: Iniciando publicación para la canción: $songId")
-
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
@@ -81,10 +78,8 @@ class CreateReviewViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                Log.d("API_TRACKER", "Publicacion exitosa")
                 _uiState.update { it.copy(navigateBack = true) }
             } else {
-                Log.e("API_TRACKER", "Fallo en la publicacion")
                 _uiState.update { it.copy(isLoading = false, errorMessage = "Error al publicar") }
             }
         }

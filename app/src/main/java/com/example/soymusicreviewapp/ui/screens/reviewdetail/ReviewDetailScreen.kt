@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.reviewdetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,10 +30,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
-// Main screen composable
 @Composable
 fun ReviewDetailScreen(
     reviewId: String,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ReviewDetailViewModel
 ) {
@@ -43,7 +45,6 @@ fun ReviewDetailScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-
         PlainBackground()
 
         if (state.selectedReview != null) {
@@ -53,19 +54,23 @@ fun ReviewDetailScreen(
                 item {
                     ReviewInfo(
                         review = state.selectedReview!!,
+                        currentUserId = state.currentUserId,
                         isProfileView = true,
                         onDeleteClick = {},
-                        onEditClick = {}
+                        onEditClick = {},
+                        onUserClick = { onUserClick(state.selectedReview!!.userId) }
                     )
 
                     HorizontalDivider(thickness = 1.dp, color =  MaterialTheme.colorScheme.tertiary)
 
                     ReviewActionBar(
-                        onLike = { /* */ },
+                        onLike = {
+                            Log.d("ReviewDetailScreen", "Usuario ${state.currentUserId} dio like a $reviewId")
+                        },
                         onComment = { /* */ },
                         onShare = { /* */ },
                         onFavorite = { /* */ },
-                        isLiked = false
+                        isLiked = state.selectedReview?.liked ?: false
                     )
 
                     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
@@ -78,21 +83,22 @@ fun ReviewDetailScreen(
                 }
 
                 items(state.responseReviews.size) { index ->
+                    val responseReview = state.responseReviews[index]
                     ReviewInfo(
-                        review = state.responseReviews[index],
+                        review = responseReview,
+                        currentUserId = state.currentUserId,
                         modifier = Modifier.padding(vertical = 4.dp),
                         onDeleteClick = {},
-                        onEditClick = {}
+                        onEditClick = {},
+                        onUserClick = { onUserClick(responseReview.userId) }
                     )
                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.onTertiary)
                 }
             }
-        } else {
         }
     }
 }
 
-// Action bar component
 @Composable
 fun ReviewActionBar(
     onLike: () -> Unit,
@@ -127,7 +133,7 @@ fun ReviewActionBar(
         IconButton(onClick = onFavorite) {
             Icon(
                 imageVector = Icons.Outlined.Star,
-                contentDescription = "Comment",
+                contentDescription = "Favorite",
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
@@ -140,13 +146,4 @@ fun ReviewActionBar(
             )
         }
     }
-}
-
-@Composable
-@Preview
-fun reviewDetailScreenPreview() {
-    ReviewDetailScreen(
-        reviewId = "1",
-        viewModel = viewModel()
-    )
 }

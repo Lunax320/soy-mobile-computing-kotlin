@@ -8,14 +8,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PhotoCamera
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +57,9 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel,
     settingsButtonPressed: () -> Unit,
-    onEditReview: (String, String) -> Unit
+    onEditReview: (String, String) -> Unit,
+    onReviewClick: (String) -> Unit = {},
+    onUserClick: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -66,21 +75,27 @@ fun ProfileScreen(
 
     Column(modifier = modifier.fillMaxSize()) {
         ProfileScreenHeader(
-            profileImageId = state.profileImageId,
-            profileImageUrl = state.profileImageUrl,
-            name = state.name,
-            username = state.username,
+            profileImageUrl = state.user.profileImageUrl,
+            name = state.user.name,
+            username = state.user.username,
             reviewCount = state.reviewCount,
-            followersCount = state.followersCount,
-            followingCount = state.followingCount,
+            followersCount = state.user.followersCount,
+            followingCount = state.user.followingCount,
             settingsButtonPressed = settingsButtonPressed,
-            editProfileClick = { launcher.launch("image/*") }
+            editProfileClick = { launcher.launch("image/*") },
+            isOwnProfile = userId == state.currentUserId,
+            followed = state.user.followed,
+            onFollowClick = { viewModel.followOrUnfollowUser(userId) }
         )
 
         ProfileScreenBody(
             userReviews = state.userReviews,
+            currentUserId = state.currentUserId,
             onDeleteClick = { reviewId -> viewModel.deleteReview(reviewId) },
             onEditClick = { review -> onEditReview(review.id, review.songId) },
+            onReviewClick = onReviewClick,
+            onUserClick = onUserClick,
+            onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
             modifier = Modifier.fillMaxSize()
         )
     }
@@ -88,7 +103,6 @@ fun ProfileScreen(
 
 @Composable
 fun ProfileScreenHeader(
-    profileImageId: Int,
     modifier: Modifier = Modifier,
     profileImageUrl: String?,
     name: String,
@@ -97,26 +111,36 @@ fun ProfileScreenHeader(
     followersCount: Int,
     followingCount: Int,
     settingsButtonPressed: () -> Unit,
-    editProfileClick: () -> Unit
-){
+    editProfileClick: () -> Unit,
+    isOwnProfile: Boolean,
+    followed: Boolean,
+    onFollowClick: () -> Unit,
+    onImageClick: () -> Unit = {}
+) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
         TopPlainBackground()
+
         SettingsButton(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(16.dp),
             onClick = settingsButtonPressed
         )
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
 
-            EditableProfilePicture(
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ProfilePictureWithAction(
                 model = profileImageUrl,
+                isOwnProfile = isOwnProfile,
+                followed = followed,
                 onEditClick = editProfileClick,
+                onFollowClick = onFollowClick,
+                onClick = onImageClick,
                 modifier = Modifier.padding(top = 20.dp)
             )
 
@@ -131,10 +155,11 @@ fun ProfileScreenHeader(
                 modifier = Modifier.padding(top = 8.dp),
                 text = username,
                 color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 10.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
-            Row{
+
+            Row {
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = reviewCount.toString(),
@@ -158,44 +183,46 @@ fun ProfileScreenHeader(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
-
             }
-            Column{
-                Row{
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = stringResource(R.string.reviews),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = stringResource(R.string.followers),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(40.dp))
-                    Text(
-                        modifier = Modifier.padding(top = 8.dp),
-                        text = stringResource(R.string.following),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+
+            Row {
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = stringResource(R.string.reviews),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(40.dp))
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = stringResource(R.string.followers),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(40.dp))
+                Text(
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = stringResource(R.string.following),
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
 }
 
 @Composable
-fun EditableProfilePicture(
+fun ProfilePictureWithAction(
     model: String?,
+    isOwnProfile: Boolean,
+    followed: Boolean,
     onEditClick: () -> Unit,
+    onFollowClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
     avatarSize: Dp = 125.dp,
     buttonSize: Dp = 40.dp
 ) {
@@ -222,18 +249,37 @@ fun EditableProfilePicture(
                 )
         )
 
-
-        FilledIconButton(
-            onClick = onEditClick,
-            modifier = Modifier
-                .size(buttonSize)
-                .align(Alignment.BottomEnd),
-        ) {
-            Icon(
-                imageVector = Icons.Filled.PhotoCamera,
-                contentDescription = stringResource(R.string.change_profile_picture),
-                modifier = Modifier.size(20.dp)
-            )
+        if (isOwnProfile) {
+            FilledIconButton(
+                onClick = onEditClick,
+                modifier = Modifier
+                    .size(buttonSize)
+                    .align(Alignment.BottomEnd),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PhotoCamera,
+                    contentDescription = stringResource(R.string.change_profile_picture),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        } else {
+            FilledIconButton(
+                onClick = onFollowClick,
+                modifier = Modifier
+                    .size(buttonSize)
+                    .align(Alignment.BottomEnd),
+                shape = CircleShape,
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = if (followed) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Icon(
+                    imageVector = if (followed) Icons.Filled.Remove else Icons.Filled.Add,
+                    contentDescription = if (followed) "Unfollow user" else "Follow user",
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
     }
 }
@@ -241,21 +287,31 @@ fun EditableProfilePicture(
 @Composable
 fun ProfileScreenBody(
     userReviews: List<Review>,
+    currentUserId: String,
     onDeleteClick: (String) -> Unit,
     onEditClick: (Review) -> Unit,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
+    onLikeClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         PlainBackground()
         ReviewList(
             reviews = userReviews,
+            currentUserId = currentUserId,
+            onReviewClick = onReviewClick,
+            onUserClick = onUserClick,
+            onLikeClick = onLikeClick,
             modifier = Modifier.fillMaxSize(),
-            title = stringResource(R.string.my_reviews),
+            title = "Publicaciones",
             isProfileView = true,
             onDeleteClick = onDeleteClick,
             onEditClick = { id : String ->
                 val review = userReviews.find { it.id == id }
-                review?.let { onEditClick(it) }
+                if (review != null) {
+                    onEditClick(review)
+                }
             }
         )
     }
@@ -266,7 +322,6 @@ fun ProfileScreenBody(
 fun ProfileScreenHeaderPreview() {
     CompMovilProyectoTheme {
         ProfileScreenHeader(
-            profileImageId = R.drawable.img_avatar_penguin,
             profileImageUrl = null,
             name = "Music Lover",
             username = "@musiclover",
@@ -274,7 +329,10 @@ fun ProfileScreenHeaderPreview() {
             followersCount = 234,
             followingCount = 189,
             settingsButtonPressed = {},
-            editProfileClick = {}
+            editProfileClick = {},
+            isOwnProfile = true,
+            followed = false,
+            onFollowClick = {}
         )
     }
 }

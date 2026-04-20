@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
@@ -18,7 +17,6 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 
-// Main screen composable that integrates ViewModel and Navigation
 @Composable
 fun FollowingFeedScreen(
     latestButtonPressed: () -> Unit,
@@ -30,43 +28,39 @@ fun FollowingFeedScreen(
     val state by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        // Header with navigation logic maintained
-        FeedScreenHeader(1,
-            HeaderButtonPressed = latestButtonPressed)
+        FeedScreenHeader(1, HeaderButtonPressed = latestButtonPressed)
 
-        // Body receives the data from the state
         FollowingFeedScreenBody(
             reviews = state.reviews,
+            currentUserId = state.currentUserId,
             onReviewClick = onReviewClick,
             onUserClick = onUserClick,
-            modifier = Modifier
-                .fillMaxSize()
-                .weight(1f)
+            onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
+            modifier = Modifier.fillMaxSize().weight(1f)
         )
     }
 }
 
-// Composable for the screen body, receiving the list of reviews as a parameter
 @Composable
 fun FollowingFeedScreenBody(
     reviews: List<Review>,
+    currentUserId: String,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onLikeClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         PlainBackground()
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            // Displays the list of reviews passed from the state
+        Column(modifier = Modifier.fillMaxSize()) {
             ReviewList(
-                onReviewClick = { reviewId -> onReviewClick(reviewId) },
-                onUserClick = { userId -> onUserClick(userId) },
+                onReviewClick = onReviewClick,
+                onUserClick = onUserClick,
+                onLikeClick = onLikeClick,
                 reviews = reviews,
+                currentUserId = currentUserId,
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.reviews_from_users_you_follow)
             )
@@ -74,18 +68,16 @@ fun FollowingFeedScreenBody(
     }
 }
 
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun FollowingFeedScreenPreview() {
     CompMovilProyectoTheme {
-        FollowingFeedScreen(
-            viewModel= viewModel(),
+        FollowingFeedScreenBody(
+            reviews = LocalReviewProvider.reviews,
+            currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            latestButtonPressed = {}
+            onLikeClick = {}
         )
     }
 }

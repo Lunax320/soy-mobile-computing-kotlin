@@ -4,5 +4,6 @@ import com.example.soymusicreviewapp.data.Review
 
 data class ReviewDetailState(
     val selectedReview: Review? = null,
-    val responseReviews: List<Review> = emptyList()
+    val responseReviews: List<Review> = emptyList(),
+    val currentUserId: String = ""
 )

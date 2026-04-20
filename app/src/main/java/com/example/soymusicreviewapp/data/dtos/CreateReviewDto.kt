@@ -1,15 +1,25 @@
 package com.example.soymusicreviewapp.data.dtos
 
 data class CreateReviewDto(
-    val userId: String = "",
-    val songId: String = "",
-    // Desnormalizacion cancion
-    val songName: String = "",
-    val artistName: String = "",
-    val reviewText: String = "",
-    val rating: Int = 0,
-    val date: String = "",
-    val parentId: String? = null,
-    // Desnormalización suario
-    val user: UserDto? = null
-)
+    val userId: String,
+    val songId: String,
+    val songName: String,
+    val artistName: String,
+    val reviewText: String,
+    val rating: Int,
+    val date: String,
+    val parentId: String?,
+    val user: UserDto?
+) {
+    constructor() : this(
+        userId = "",
+        songId = "",
+        songName = "",
+        artistName = "",
+        reviewText = "",
+        rating = 0,
+        date = "",
+        parentId = null,
+        user = null
+    )
+}

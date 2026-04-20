@@ -6,5 +6,6 @@ import com.example.soymusicreviewapp.data.Song
 data class LatestFeedState(
     // List of songs for the New Releases
     val newReleases: List<Song> = emptyList(),
-    val recentReviews: List<Review> = emptyList()
+    val recentReviews: List<Review> = emptyList(),
+    val currentUserId: String = ""
 )

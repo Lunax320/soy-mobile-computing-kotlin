@@ -20,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
@@ -30,7 +29,6 @@ import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewCard
 import com.example.soymusicreviewapp.ui.utils.SongCard
 
-// Main screen composable
 @Composable
 fun LatestFeedScreen(
     modifier: Modifier = Modifier,
@@ -44,7 +42,6 @@ fun LatestFeedScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Header navigation logic
         FeedScreenHeader(
             currentTab = 2,
             HeaderButtonPressed = latestCreateAccount
@@ -53,12 +50,13 @@ fun LatestFeedScreen(
         Box {
             PlainBackground()
 
-            // Pass data from state to the list
             LatestFeedList(
                 songs = state.newReleases,
                 reviews = state.recentReviews,
+                currentUserId = state.currentUserId,
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
+                onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -69,8 +67,10 @@ fun LatestFeedScreen(
 fun LatestFeedList(
     songs: List<Song>,
     reviews: List<Review>,
+    currentUserId: String,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onLikeClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -89,7 +89,6 @@ fun LatestFeedList(
             )
         }
 
-        // Display the top 3 songs
         items(songs.size) { index ->
             SongCard(
                 song = songs[index],
@@ -112,15 +111,16 @@ fun LatestFeedList(
             )
         }
 
-        // Display all reviews
         items(reviews.size) { index ->
             ReviewCard(
                 review = reviews[index],
+                currentUserId = currentUserId,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
+                onLikeClick = onLikeClick,
                 isProfileView = false
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -128,19 +128,17 @@ fun LatestFeedList(
     }
 }
 
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun LatestFeedPreview() {
     CompMovilProyectoTheme {
-        LatestFeedScreen(
-            viewModel = viewModel(),
-            modifier = Modifier,
+        LatestFeedList(
+            songs = emptyList(),
+            reviews = emptyList(),
+            currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            latestCreateAccount = {}
+            onLikeClick = {}
         )
     }
 }

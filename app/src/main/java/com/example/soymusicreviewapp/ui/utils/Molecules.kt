@@ -18,7 +18,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,11 +47,14 @@ import com.example.soymusicreviewapp.data.Song
 @Composable
 fun ReviewInfo(
     review: Review,
+    currentUserId: String,
     isProfileView: Boolean = false,
     modifier: Modifier = Modifier,
     onUserClick: (() -> Unit)? = null,
     onDeleteClick: (() -> Unit)? = null,
-    onEditClick: (() -> Unit)? = null
+    onEditClick: (() -> Unit)? = null,
+    onLikeClick: (String) -> Unit = {},
+    onCommentClick: (String) -> Unit = {}
 ) {
     Column(modifier = modifier) {
         Row(
@@ -77,68 +84,83 @@ fun ReviewInfo(
             }
 
             if (isProfileView) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_edit),
-                        contentDescription = "Edit review",
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable {
-                                if (onEditClick != null) {
-                                    onEditClick()
+                if (review.userId == currentUserId) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_edit),
+                            contentDescription = "Edit review",
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    if (onEditClick != null) {
+                                        onEditClick()
+                                    }
                                 }
-                            }
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
 
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_delete),
-                        contentDescription = "Delete review",
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable {
-                                if (onDeleteClick != null) {
-                                    onDeleteClick()
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_delete),
+                            contentDescription = "Delete review",
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    if (onDeleteClick != null) {
+                                        onDeleteClick()
+                                    }
                                 }
-                            }
-                    )
+                        )
+                    }
                 }
             }
         }
 
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             SongText(songName = review.songName)
-            ArtistText(artistName = review.userName)
+            ArtistText(artistName = review.artistName)
             Spacer(modifier = Modifier.height(10.dp))
             RatingText(rating = review.rating)
             Spacer(modifier = Modifier.height(10.dp))
             ReviewText(review = review.reviewText)
             Spacer(modifier = Modifier.height(7.dp))
         }
+    }
+}
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_heart),
-                contentDescription = "Like",
-                modifier = Modifier.size(18.dp)
+@Composable
+fun ReviewInteractionBar(
+    likesCount: Int,
+    isLiked: Boolean,
+    onLikeClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(6.dp))
+        IconButton(onClick = onLikeClick) {
+            Icon(
+                imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                contentDescription = "",
+                tint = if (isLiked) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onPrimary
             )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "42", color = MaterialTheme.colorScheme.onPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_comment),
-                contentDescription = "Comment",
-                modifier = Modifier.size(18.dp)
+        }
+        Text(
+            text = likesCount.toString(),
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        IconButton(onClick = onCommentClick) {
+            Icon(
+                imageVector = Icons.Outlined.Comment,
+                contentDescription = "",
+                tint = MaterialTheme.colorScheme.onPrimary
             )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(text = "Comment", color = MaterialTheme.colorScheme.onPrimary, fontSize = 14.sp)
         }
     }
 }
@@ -289,4 +311,17 @@ fun SettingOptionsPreview() {
             onClick = { }
         )
     }
+}
+
+@Composable
+@Preview
+fun PreviewReviewInteractionBar(
+    modifier: Modifier = Modifier
+) {
+    ReviewInteractionBar(
+        likesCount = 10,
+        isLiked = true,
+        onLikeClick = {},
+        onCommentClick = {}
+    )
 }

@@ -3,6 +3,8 @@ package com.example.soymusicreviewapp.data.repository
 import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.data.datasource.impl.firestore.SongFirestoreDataSourceImpl
 import com.example.soymusicreviewapp.data.dtos.toSong
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SongRepository @Inject constructor(
@@ -24,6 +26,12 @@ class SongRepository @Inject constructor(
             Result.success(songDto.toSong())
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    fun getSongsLive(): Flow<List<Song>> {
+        return remoteDataSource.listenAllSongs().map { songsDto ->
+            songsDto.map { it.toSong() }
         }
     }
 }

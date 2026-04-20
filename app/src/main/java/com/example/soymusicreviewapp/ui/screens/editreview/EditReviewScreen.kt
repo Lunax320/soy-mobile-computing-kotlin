@@ -35,7 +35,6 @@ fun EditReviewScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    // CARGAMOS los datos reales de la reseña y la canción de Firestore
     LaunchedEffect(reviewId, songId) {
         viewModel.loadReviewData(reviewId, songId)
     }
@@ -55,7 +54,6 @@ fun EditReviewScreen(
             val song = state.selectedSong
 
             if (state.isLoading && song == null) {
-                // Loading central inicial
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
                 }

@@ -6,6 +6,8 @@ import com.example.soymusicreviewapp.data.datasource.impl.firestore.ReviewFirest
 import com.example.soymusicreviewapp.data.dtos.toReview
 import javax.inject.Inject
 import com.example.soymusicreviewapp.data.dtos.CreateReviewDto
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -13,12 +15,14 @@ import java.util.Locale
 class ReviewRepository @Inject constructor(
     private val remoteDataSource: ReviewFirestoreDataSourceImpl,
     private val userRepository: UserRepository,
-    private val songRepository: SongRepository
+    private val songRepository: SongRepository,
+    private val authRepository: AuthRepository
 ) {
 
     suspend fun getReviews(): Result<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviews = remoteDataSource.getAllReviews()
+            val reviews = remoteDataSource.getAllReviews(currentUserId)
             val reviewInfo = reviews.map { it.toReview() }
             Result.success(reviewInfo)
         } catch (e: Exception) {
@@ -27,8 +31,9 @@ class ReviewRepository @Inject constructor(
     }
 
     suspend fun getReviewById(reviewId: String): Result<Review> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviewDto = remoteDataSource.getReviewById(reviewId)
+            val reviewDto = remoteDataSource.getReviewById(reviewId, currentUserId)
             Result.success(reviewDto.toReview())
         } catch (e: Exception) {
             Result.failure(e)
@@ -36,12 +41,34 @@ class ReviewRepository @Inject constructor(
     }
 
     suspend fun getUserReviews(userId: String): Result<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviews = remoteDataSource.getUserReviews(userId)
+            val reviews = remoteDataSource.getUserReviews(userId, currentUserId)
             val reviewInfo = reviews.map { it.toReview() }
             Result.success(reviewInfo)
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    fun getReviewsLive(): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return remoteDataSource.listenAllReviews(currentUserId).map { reviews ->
+            reviews.map { it.toReview() }
+        }
+    }
+
+    fun getUserReviewsLive(userId: String): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return remoteDataSource.listenUserReviews(userId, currentUserId).map { reviews ->
+            reviews.map { it.toReview() }
+        }
+    }
+
+    fun getSongReviewsLive(songId: String): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return remoteDataSource.listenSongReviews(songId, currentUserId).map { reviews ->
+            reviews.map { it.toReview() }
         }
     }
 
@@ -91,6 +118,16 @@ class ReviewRepository @Inject constructor(
         }
     }
 
+    suspend fun sendOrDeleteReviewLike(reviewId: String, userId: String): Result<Unit> {
+        return try {
+            remoteDataSource.sendOrDeleteReviewLike(reviewId, userId)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
     suspend fun updateReview(
         reviewId: String,
         songId: String,
@@ -98,12 +135,11 @@ class ReviewRepository @Inject constructor(
         rating: Int
     ): Result<Unit> {
         return try {
-            // 1. Obtenemos la reseña actual para no perder los datos del usuario
-            val currentReview = remoteDataSource.getReviewById(reviewId)
-            
+            val currentUserId = authRepository.currentUser?.uid ?: ""
+            val currentReview = remoteDataSource.getReviewById(reviewId, currentUserId)
+
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-            
-            // 2. Creamos el DTO de actualización manteniendo el usuario original
+
             val updateDto = CreateReviewDto(
                 userId = currentReview.userId ?: "",
                 songId = songId,

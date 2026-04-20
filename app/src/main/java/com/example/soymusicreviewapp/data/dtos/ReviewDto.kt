@@ -3,22 +3,40 @@ package com.example.soymusicreviewapp.data.dtos
 import com.example.soymusicreviewapp.data.Review
 
 data class ReviewDto(
-    val id: String = "",
-    val userId: String = "",
-    val songId: String = "",
-    val songName: String = "",
-    val artistName: String = "",
-    val reviewText: String = "",
-    val rating: Int = 0,
-    val date: String = "",
-    val createdAt: String = "",
-    val updatedAt: String = "",
-    val parentId: String? = null,
-    val user: UserDto? = null
-)
+    val id: String,
+    val userId: String,
+    val songId: String,
+    val songName: String,
+    val artistName: String,
+    val reviewText: String,
+    val rating: Int,
+    val date: String,
+    val createdAt: String,
+    val updatedAt: String,
+    val parentId: String?,
+    val user: UserDto?,
+    val likesCount : Int,
+    val liked: Boolean
+) {
+    constructor() : this(
+        id = "",
+        userId = "",
+        songId = "",
+        songName = "",
+        artistName = "",
+        reviewText = "",
+        rating = 0,
+        date = "",
+        createdAt = "",
+        updatedAt = "",
+        parentId = null,
+        user = null,
+        likesCount = 0,
+        liked = false
+    )
+}
 
 fun ReviewDto.toReview(): Review {
-
     var finalUsernameId = userId
     if (user != null) {
         finalUsernameId = user.id
@@ -50,6 +68,8 @@ fun ReviewDto.toReview(): Review {
         artistName = artistName,
         reviewText = reviewText,
         rating = rating,
-        parentId = parentId
+        parentId = parentId,
+        likesCount = likesCount,
+        liked = liked
     )
 }

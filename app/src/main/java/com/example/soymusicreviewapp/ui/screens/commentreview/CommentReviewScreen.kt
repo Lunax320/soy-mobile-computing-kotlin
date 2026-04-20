@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
-import com.example.soymusicreviewapp.ui.screens.commentreview.CommentReviewHeader
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
@@ -49,7 +48,10 @@ fun CommentReviewScreen(
                 if (comments.isEmpty()) {
                     CommentEmptyState()
                 } else {
-                    CommentListSection(comments = comments)
+                    CommentListSection(
+                        comments = comments,
+                        currentUserId = state.currentUserId
+                    )
                 }
             }
 
@@ -58,7 +60,7 @@ fun CommentReviewScreen(
             CommentInputBar(
                 commentText = state.commentText,
                 onCommentChange = { viewModel.onCommentTextChange(it) },
-                onSendClick = { /* Lógica futura para enviar el comentario */ }
+                onSendClick = { /* Logica para enviar el comentario */ }
             )
         }
     }
@@ -119,7 +121,7 @@ fun CommentEmptyState(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Be the first to comment!",
-            color = MaterialTheme.colorScheme.primary, // Color morado claro
+            color = MaterialTheme.colorScheme.primary,
             fontSize = 16.sp,
             textAlign = TextAlign.Center
         )
@@ -127,11 +129,16 @@ fun CommentEmptyState(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CommentListSection(comments: List<Review>, modifier: Modifier = Modifier) {
+fun CommentListSection(
+    comments: List<Review>,
+    currentUserId: String,
+    modifier: Modifier = Modifier
+) {
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(comments.size) { index ->
             ReviewInfo(
                 review = comments[index],
+                currentUserId = currentUserId, // Pasar el ID a ReviewInfo
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                 onDeleteClick = { },
                 onEditClick = { }
@@ -176,7 +183,6 @@ fun CommentInputBar(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Boton de Enviar
             Button(
                 onClick = onSendClick,
                 modifier = Modifier
@@ -197,7 +203,6 @@ fun CommentInputBar(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Contador de caracteres
         Text(
             text = "${commentText.length}/500 characters",
             color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -208,21 +213,3 @@ fun CommentInputBar(
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
-
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
-/*@Preview(showBackground = true)
-@Composable
-fun CommentReviewScreenPreview() {
-    CompMovilProyectoTheme {
-        val dummyReviewId = LocalReviewProvider.reviews.firstOrNull()?.usernameId ?: "1"
-
-        CommentReviewScreen(
-            reviewId = dummyReviewId,
-            onCloseClick = {},
-            viewModel = viewModel()
-        )
-    }
-}
-*/

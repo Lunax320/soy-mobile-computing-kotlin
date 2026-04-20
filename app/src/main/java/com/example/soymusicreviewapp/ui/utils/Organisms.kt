@@ -15,8 +15,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -126,89 +131,88 @@ fun FeedScreenHeader(
 @Composable
 fun ReviewCard(
     review: Review,
-    onReviewClick: (String) -> Unit = {},
-    onUserClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier,
-    isProfileView: Boolean = false,
-    onDeleteClick: (() -> Unit)? = null,
-    onEditClick: (() -> Unit)? = null
-) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceDim
-        ),
-        onClick = { onReviewClick(review.id) },
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        ReviewInfo(
-            review = review,
-            isProfileView = isProfileView,
-            onUserClick = { onUserClick(review.userId) },
-            onDeleteClick = onDeleteClick,
-            onEditClick = onEditClick
-        )
-    }
-}
-@Preview
-@Composable
-fun ReviewCardpreview() {
-    CompMovilProyectoTheme {
-        ReviewCard(
-            review = LocalReviewProvider.reviews[0],
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-@Preview
-@Composable
-fun ReviewListpreview(){
-    CompMovilProyectoTheme {
-        ReviewList(
-            onReviewClick = {},
-            onUserClick = {},
-            reviews = LocalReviewProvider.reviews,
-            title = stringResource(R.string.recommended_reviews_for_you),
-            modifier = Modifier.fillMaxSize()
-        )
-    }
-}
-@Composable
-fun ReviewList(
-    onReviewClick: (String) -> Unit = {},
-    onUserClick: (String) -> Unit = {},
-    reviews: List<Review>,
-    title: String,
+    currentUserId: String,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
+    onLikeClick: (String) -> Unit = {},
+    onCommentClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     isProfileView: Boolean = false,
     onDeleteClick: ((String) -> Unit)? = null,
     onEditClick: ((String) -> Unit)? = null
 ) {
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    Surface(
+        onClick = { onReviewClick(review.id) },
+        color = MaterialTheme.colorScheme.surfaceDim,
+        shape = RoundedCornerShape(20.dp),
+        modifier = modifier.padding(vertical = 8.dp)
     ) {
+        Column(modifier = Modifier.padding(10.dp)) {
 
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = title,
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 16.sp,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                fontWeight = FontWeight.Bold
+            ReviewInfo(
+                review = review,
+                currentUserId = currentUserId,
+                isProfileView = isProfileView,
+                onUserClick = { onUserClick(review.userId) },
+                onDeleteClick = if (onDeleteClick != null) { { onDeleteClick(review.id) } } else null,
+                onEditClick = if (onEditClick != null) { { onEditClick(review.id) } } else null,
+                onLikeClick = onLikeClick,
+                onCommentClick = onCommentClick
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            ReviewInteractionBar(
+                likesCount = review.likesCount,
+                isLiked = review.liked, // Se usa la propiedad liked del objeto Review
+                onLikeClick = { onLikeClick(review.id) },
+                onCommentClick = { onCommentClick(review.id) }
             )
         }
+    }
+}
 
+@Composable
+fun ReviewList(
+    reviews: List<Review>,
+    currentUserId: String,
+    onReviewClick: (String) -> Unit,
+    onUserClick: (String) -> Unit,
+    onLikeClick: (String) -> Unit = {},
+    onCommentClick: (String) -> Unit = {},
+    modifier: Modifier = Modifier,
+    title: String = "",
+    isProfileView: Boolean = false,
+    onDeleteClick: ((String) -> Unit)? = null,
+    onEditClick: ((String) -> Unit)? = null
+) {
+    LazyColumn(
+        modifier = modifier.padding(horizontal = 20.dp),
+        contentPadding = PaddingValues(bottom = 15.dp)
+    ) {
+        if (title.isNotEmpty()) {
+
+            item{
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+            item {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+            }
+        }
         items(reviews.size) { index ->
             ReviewCard(
                 review = reviews[index],
-                modifier = Modifier.fillMaxWidth(),
-                isProfileView = isProfileView,
+                currentUserId = currentUserId,
                 onReviewClick = onReviewClick,
+                onLikeClick = onLikeClick,
+                onCommentClick = onCommentClick,
                 onUserClick = onUserClick,
+                isProfileView = isProfileView,
                 onDeleteClick = {
                     if (onDeleteClick != null) {
                         onDeleteClick(reviews[index].id)
@@ -224,6 +228,36 @@ fun ReviewList(
     }
 }
 
+
+@Preview
+@Composable
+fun ReviewCardpreview() {
+    CompMovilProyectoTheme {
+        ReviewCard(
+            review = LocalReviewProvider.reviews[0],
+            modifier = Modifier.fillMaxSize(),
+            onReviewClick = {},
+            onUserClick = {},
+            onLikeClick = {},
+            onCommentClick = {},
+            currentUserId = "1"
+        )
+    }
+}
+@Preview
+@Composable
+fun ReviewListpreview(){
+    CompMovilProyectoTheme {
+        ReviewList(
+            onReviewClick = {},
+            onUserClick = {},
+            reviews = LocalReviewProvider.reviews,
+            title = stringResource(R.string.recommended_reviews_for_you),
+            modifier = Modifier.fillMaxSize(),
+            currentUserId = "1"
+        )
+    }
+}
 @Composable
 fun SongCard(
     song: Song,

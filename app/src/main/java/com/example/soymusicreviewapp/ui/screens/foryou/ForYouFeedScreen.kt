@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.foryou
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.local.LocalReviewProvider
@@ -18,7 +18,6 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 
-// Main screen composable connecting ViewModel and UI
 @Composable
 fun ForYouFeedScreen(
     onReviewClick: (String) -> Unit,
@@ -32,16 +31,19 @@ fun ForYouFeedScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        // Header component with navigation callback
         FeedScreenHeader(
             currentTab = 0,
             HeaderButtonPressed = followingButtonPressed)
 
-        // Body receives data from state
         ForYouScreenBody(
             reviews = state.reviews,
+            currentUserId = state.currentUserId,
             onReviewClick = onReviewClick,
             onUserClick = onUserClick,
+            onLikeClick = { reviewId -> 
+                viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId)
+                Log.d("ForYouFeedScreen", "el usuario ${state.currentUserId} dio like a la reseña $reviewId")
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -49,12 +51,13 @@ fun ForYouFeedScreen(
     }
 }
 
-// Composable for the screen body, receiving the reviews list as parameter
 @Composable
 fun ForYouScreenBody(
     reviews: List<Review>,
+    currentUserId: String,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onLikeClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -62,31 +65,29 @@ fun ForYouScreenBody(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Displays the list of reviews using data from state
             ReviewList(
                 onReviewClick = { reviewId -> onReviewClick(reviewId) },
                 onUserClick = { userId -> onUserClick(userId) },
+                onLikeClick = onLikeClick,
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.recommended_reviews_for_you),
-                reviews = reviews
+                reviews = reviews,
+                currentUserId = currentUserId
             )
         }
     }
 }
 
-
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun ForYouFeedScreenPreview() {
     CompMovilProyectoTheme {
-        ForYouFeedScreen(
-            viewModel = viewModel(),
+        ForYouScreenBody(
+            reviews = LocalReviewProvider.reviews,
+            currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            followingButtonPressed = {}
+            onLikeClick = {}
         )
     }
 }

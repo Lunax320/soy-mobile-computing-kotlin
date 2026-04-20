@@ -32,12 +32,10 @@ class EditReviewViewModel @Inject constructor(
         _uiState.update { it.copy(rating = newRating) }
     }
 
-    // 1. Carga los datos actuales de la reseña para editarlos
     fun loadReviewData(reviewId: String, songId: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            
-            // Cargar reseña existente primero para obtener los datos que queremos mostrar
+
             val reviewResult = reviewRepository.getReviewById(reviewId)
             
             if (reviewResult.isSuccess) {
@@ -47,11 +45,9 @@ class EditReviewViewModel @Inject constructor(
                         it.copy(
                             reviewText = r.reviewText,
                             rating = r.rating,
-                            // Si no tenemos la canción cargada aún, podemos crear un objeto temporal 
-                            // con los datos desnormalizados de la reseña
                             selectedSong = Song(
                                 songId = r.songId,
-                                songImage = "", // No tenemos la imagen en Review, se cargará con songRepository
+                                songImage = "",
                                 name = r.songName,
                                 artist = r.artistName,
                                 genre = "",
@@ -62,7 +58,6 @@ class EditReviewViewModel @Inject constructor(
                 }
             }
 
-            // Cargar datos completos de la canción (incluyendo imagen, género, etc)
             val songResult = songRepository.getSongById(songId)
             if (songResult.isSuccess) {
                 _uiState.update { it.copy(selectedSong = songResult.getOrNull(), isLoading = false) }

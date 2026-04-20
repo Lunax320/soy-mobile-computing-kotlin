@@ -3,6 +3,9 @@ package com.example.soymusicreviewapp.data.datasource.impl.firestore
 import com.example.soymusicreviewapp.data.datasource.remotedatasource.SongRemoteDataSource
 import com.example.soymusicreviewapp.data.dtos.SongDto
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -15,11 +18,7 @@ class SongFirestoreDataSourceImpl @Inject constructor(
 
         return snapshot.documents.mapNotNull { doc ->
             val song = doc.toObject(SongDto::class.java)
-            if (song != null) {
-                song.copy(id = doc.id)
-            } else {
-                null
-            }
+            song?.copy(id = doc.id)
         }
     }
 
@@ -33,5 +32,22 @@ class SongFirestoreDataSourceImpl @Inject constructor(
         } else {
             throw Exception("No se encontro la cancion")
         }
+    }
+
+    override fun listenAllSongs(): Flow<List<SongDto>> = callbackFlow {
+        val listener = db.collection("songs").addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val songs = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(SongDto::class.java)?.copy(id = doc.id)
+                }
+                trySend(songs).isSuccess
+            }
+        }
+        awaitClose { listener.remove() }
     }
 }
