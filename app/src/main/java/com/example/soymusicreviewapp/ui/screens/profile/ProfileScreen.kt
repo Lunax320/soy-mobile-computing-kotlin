@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -53,6 +52,7 @@ import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SettingsButton
+import com.example.soymusicreviewapp.ui.utils.EditButton
 
 @Composable
 fun ProfileScreen(
@@ -61,6 +61,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel,
     settingsButtonPressed: () -> Unit,
     onEditReview: (String, String) -> Unit,
+    onEditProfileClick: () -> Unit = {},
     onReviewClick: (String) -> Unit = {},
     onUserClick: (String) -> Unit = {}
 ) {
@@ -88,6 +89,7 @@ fun ProfileScreen(
             followersCount = state.user.followersCount,
             followingCount = state.user.followingCount,
             settingsButtonPressed = settingsButtonPressed,
+            onEditProfileClick = onEditProfileClick,
             editProfileClick = { launcher.launch("image/*") },
             isOwnProfile = userId == state.currentUserId,
             followed = state.user.followed,
@@ -117,6 +119,7 @@ fun ProfileScreenHeader(
     followersCount: Int,
     followingCount: Int,
     settingsButtonPressed: () -> Unit,
+    onEditProfileClick: () -> Unit,
     editProfileClick: () -> Unit,
     isOwnProfile: Boolean,
     followed: Boolean,
@@ -128,6 +131,15 @@ fun ProfileScreenHeader(
         contentAlignment = Alignment.Center
     ) {
         TopPlainBackground()
+
+        if (isOwnProfile) {
+            EditButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp),
+                onClick = onEditProfileClick
+            )
+        }
 
         SettingsButton(
             modifier = Modifier
@@ -240,7 +252,7 @@ fun ProfilePictureWithAction(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(model)
                 .crossfade(true)
-                .memoryCacheKey(model?.toString()) // Forzamos refresco si cambia el modelo
+                .memoryCacheKey(model?.toString())
                 .build(),
             contentDescription = stringResource(R.string.profile),
             error = painterResource(id = R.drawable.ic_profile),
@@ -336,6 +348,7 @@ fun ProfileScreenHeaderPreview() {
             followersCount = 234,
             followingCount = 189,
             settingsButtonPressed = {},
+            onEditProfileClick = {},
             editProfileClick = {},
             isOwnProfile = true,
             followed = false,

@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -372,6 +373,22 @@ fun SettingsButton(
 }
 
 @Composable
+fun EditButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        modifier = modifier,
+        onClick = onClick) {
+        Icon(
+            imageVector = Icons.Filled.Edit,
+            contentDescription = "Edit Profile",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Composable
 fun BackButton(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -434,7 +451,7 @@ fun ReviewAsyncImage(
             .crossfade(enable = true)
             .build(),
         error = painterResource(id = R.drawable.ic_profile),
-        placeholder = painterResource(id = R.drawable.ic_loading),
+        placeholder = painterResource(id = R.drawable.ic_profile),
         contentScale = ContentScale.Crop,
         modifier = modifier
             .size(size.dp)

@@ -25,6 +25,7 @@ import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
 import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewViewModel
 import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
+import com.example.soymusicreviewapp.ui.editprofile.EditProfileScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
 
 sealed class Screen(val route: String) {
@@ -41,6 +42,7 @@ sealed class Screen(val route: String) {
     object ProfileScreen : Screen("profile")
     object SettingsScreen : Screen("settings")
     object ReviewDetailScreen : Screen("reviewDetail")
+    object EditProfileScreen : Screen("editProfile")
 }
 
 @Composable
@@ -202,6 +204,7 @@ fun AppNavigation(
                     onEditReview = { rId, sId ->
                         navController.navigate("editReview/$rId/$sId")
                     },
+                    onEditProfileClick = { navController.navigate(Screen.EditProfileScreen.route) },
                     onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                     onUserClick = { userId -> navController.navigate("userProfile/$userId") }
                 )
@@ -240,6 +243,13 @@ fun AppNavigation(
                     }
                 },
                 onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(route = Screen.EditProfileScreen.route) {
+            EditProfileScreen(
+                onBackClick = { navController.popBackStack() },
+                viewModel = hiltViewModel()
             )
         }
     }

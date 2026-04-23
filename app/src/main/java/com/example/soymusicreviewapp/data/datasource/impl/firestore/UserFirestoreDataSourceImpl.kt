@@ -69,4 +69,14 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
     override suspend fun updateProfileImage(userId: String, imageUrl: String) {
         db.collection("users").document(userId).update("profileImage", imageUrl).await()
     }
+
+    suspend fun updateUserInfo(userId: String, name: String, username: String) {
+        db.collection("users").document(userId)
+            .update(
+                mapOf(
+                    "name" to name,
+                    "username" to username
+                )
+            ).await()
+    }
 }

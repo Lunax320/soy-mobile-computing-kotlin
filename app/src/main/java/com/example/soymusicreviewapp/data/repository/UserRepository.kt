@@ -68,4 +68,12 @@ class UserRepository @Inject constructor(
         }
     }
 
+    suspend fun updateUserInfo(userId: String, name: String, username: String): Result<Unit> {
+        return try {
+            remoteDataSource.updateUserInfo(userId, name, username)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
