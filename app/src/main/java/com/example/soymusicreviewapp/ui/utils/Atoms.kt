@@ -440,7 +440,7 @@ fun SearchBarPreview(){
 
 @Composable
 fun ReviewAsyncImage(
-    profileImage: String,
+    profileImage: String?,
     size: Int,
     modifier: Modifier = Modifier
 ) {
@@ -461,7 +461,7 @@ fun ReviewAsyncImage(
 
 @Composable
 fun SongAsyncImage(
-    profileImage: String,
+    profileImage: String?,
     size: Dp,
     modifier: Modifier = Modifier
 ) {

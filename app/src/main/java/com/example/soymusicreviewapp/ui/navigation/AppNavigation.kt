@@ -26,6 +26,8 @@ import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewViewModel
 import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
 import com.example.soymusicreviewapp.ui.editprofile.EditProfileScreen
+import com.example.soymusicreviewapp.ui.screens.followersDetail.FollowersDetailScreen
+import com.example.soymusicreviewapp.ui.screens.followingdetail.FollowingDetailScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
 
 sealed class Screen(val route: String) {
@@ -43,6 +45,8 @@ sealed class Screen(val route: String) {
     object SettingsScreen : Screen("settings")
     object ReviewDetailScreen : Screen("reviewDetail")
     object EditProfileScreen : Screen("editProfile")
+    object FollowersDetailScreen : Screen("followersDetail")
+    object FollowingDetailScreen : Screen("followingDetail")
 }
 
 @Composable
@@ -206,7 +210,9 @@ fun AppNavigation(
                     },
                     onEditProfileClick = { navController.navigate(Screen.EditProfileScreen.route) },
                     onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
-                    onUserClick = { userId -> navController.navigate("userProfile/$userId") }
+                    onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                    onFollowersClick = { userId -> navController.navigate("followersDetail/$userId") },
+                    onFollowingClick = { userId -> navController.navigate("followingDetail/$userId") }
                 )
             }
         }
@@ -225,7 +231,9 @@ fun AppNavigation(
                     settingsButtonPressed = { },
                     onEditReview = { _, _ -> },
                     onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
-                    onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
+                    onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") },
+                    onFollowersClick = { uId -> navController.navigate("followersDetail/$uId") },
+                    onFollowingClick = { uId -> navController.navigate("followingDetail/$uId") }
                 )
             }
         }
@@ -250,6 +258,32 @@ fun AppNavigation(
             EditProfileScreen(
                 onBackClick = { navController.popBackStack() },
                 viewModel = hiltViewModel()
+            )
+        }
+
+        composable(
+            route = "followersDetail/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            FollowersDetailScreen(
+                viewModel = hiltViewModel(),
+                userId = userId,
+                onBackClick = { navController.popBackStack() },
+                onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
+            )
+        }
+
+        composable(
+            route = "followingDetail/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val userId = backStackEntry.arguments?.getString("userId") ?: ""
+            FollowingDetailScreen(
+                viewModel = hiltViewModel(),
+                userId = userId,
+                onBackClick = { navController.popBackStack() },
+                onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
             )
         }
     }

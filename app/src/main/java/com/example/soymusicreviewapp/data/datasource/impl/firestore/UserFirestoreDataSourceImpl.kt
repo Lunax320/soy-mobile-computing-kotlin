@@ -70,6 +70,32 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
         db.collection("users").document(userId).update("profileImage", imageUrl).await()
     }
 
+    override suspend fun getFollowers(userId: String): List<UserDto> {
+        val snapshot = db.collection("users").document(userId)
+            .collection("followers").get().await()
+        val followerIds = snapshot.documents.map { it.id }
+
+        return if (followerIds.isEmpty()) emptyList() else {
+            val usersSnapshot = db.collection("users")
+                .whereIn("__name__", followerIds)
+                .get().await()
+            usersSnapshot.documents.mapNotNull { it.toObject(UserDto::class.java)?.copy(id = it.id) }
+        }
+    }
+
+    override suspend fun getFollowing(userId: String): List<UserDto> {
+        val snapshot = db.collection("users").document(userId)
+            .collection("following").get().await()
+        val followingIds = snapshot.documents.map { it.id }
+
+        return if (followingIds.isEmpty()) emptyList() else {
+            val usersSnapshot = db.collection("users")
+                .whereIn("__name__", followingIds)
+                .get().await()
+            usersSnapshot.documents.mapNotNull { it.toObject(UserDto::class.java)?.copy(id = it.id) }
+        }
+    }
+
     suspend fun updateUserInfo(userId: String, name: String, username: String) {
         db.collection("users").document(userId)
             .update(

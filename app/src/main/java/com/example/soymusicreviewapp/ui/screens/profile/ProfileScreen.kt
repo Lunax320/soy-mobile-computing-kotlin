@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,7 +64,9 @@ fun ProfileScreen(
     onEditReview: (String, String) -> Unit,
     onEditProfileClick: () -> Unit = {},
     onReviewClick: (String) -> Unit = {},
-    onUserClick: (String) -> Unit = {}
+    onUserClick: (String) -> Unit = {},
+    onFollowersClick: (String) -> Unit = {},
+    onFollowingClick: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -93,7 +96,9 @@ fun ProfileScreen(
             editProfileClick = { launcher.launch("image/*") },
             isOwnProfile = userId == state.currentUserId,
             followed = state.user.followed,
-            onFollowClick = { viewModel.followOrUnfollowUser(userId) }
+            onFollowClick = { viewModel.followOrUnfollowUser(userId) },
+            onFollowersClick = { onFollowersClick(userId) },
+            onFollowingClick = { onFollowingClick(userId) }
         )
 
         ProfileScreenBody(
@@ -124,6 +129,8 @@ fun ProfileScreenHeader(
     isOwnProfile: Boolean,
     followed: Boolean,
     onFollowClick: () -> Unit,
+    onFollowersClick: () -> Unit = {},
+    onFollowingClick: () -> Unit = {},
     onImageClick: () -> Unit = {}
 ) {
     Box(
@@ -187,7 +194,9 @@ fun ProfileScreenHeader(
                 )
                 Spacer(modifier = Modifier.width(55.dp))
                 Text(
-                    modifier = Modifier.padding(top = 12.dp),
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .clickable { onFollowersClick() },
                     text = followersCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
@@ -195,7 +204,9 @@ fun ProfileScreenHeader(
                 )
                 Spacer(modifier = Modifier.width(50.dp))
                 Text(
-                    modifier = Modifier.padding(top = 12.dp),
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .clickable { onFollowingClick() },
                     text = followingCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
@@ -213,7 +224,9 @@ fun ProfileScreenHeader(
                 )
                 Spacer(modifier = Modifier.width(40.dp))
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .clickable { onFollowersClick() },
                     text = stringResource(R.string.followers),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 10.sp,
@@ -221,7 +234,9 @@ fun ProfileScreenHeader(
                 )
                 Spacer(modifier = Modifier.width(40.dp))
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .clickable { onFollowingClick() },
                     text = stringResource(R.string.following),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 10.sp,
