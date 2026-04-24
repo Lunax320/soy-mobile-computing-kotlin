@@ -50,6 +50,15 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
         return finalReview
     }
 
+    /*override*/ suspend fun getReviewReplies(reviewId: String): List<ReviewDto> {
+        val snapshot = db.collection("reviews").document(reviewId)
+            .collection("comments").get().await()
+
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java) ?: ReviewDto()
+            review.copy(id = doc.id)
+        }
+    }
     override suspend fun createReview(review: CreateReviewDto) {
         db.collection("reviews").add(review).await()
     }

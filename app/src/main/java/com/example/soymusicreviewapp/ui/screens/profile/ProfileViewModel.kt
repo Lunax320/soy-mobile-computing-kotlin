@@ -97,8 +97,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun uploadImageToFirebase(uri: Uri) {
+        // Optimistic update: Mostrar la imagen localmente primero
         _uiState.update { state ->
-            state.copy(user = state.user.copy(profileImageUrl = uri.toString()))
+            state.copy(user = state.user.copy(profileImageUrl = uri.toString()), isLoading = true)
         }
 
         viewModelScope.launch {
@@ -106,12 +107,21 @@ class ProfileViewModel @Inject constructor(
             if (result.isSuccess) {
                 val imageUrl = result.getOrNull()
                 if (imageUrl != null) {
-                    userRepository.updateProfileImage(currentUserId, imageUrl)
-
-                    _uiState.update { state ->
-                        state.copy(user = state.user.copy(profileImageUrl = imageUrl))
+                    val updateResult = userRepository.updateProfileImage(currentUserId, imageUrl)
+                    if (updateResult.isSuccess) {
+                        _uiState.update { state ->
+                            state.copy(user = state.user.copy(profileImageUrl = imageUrl), isLoading = false)
+                        }
+                        Log.d("ProfileViewModel", "Imagen actualizada con éxito: $imageUrl")
+                    } else {
+                        Log.e("ProfileViewModel", "Error actualizando URL en Firestore")
+                        _uiState.update { it.copy(isLoading = false, errorMessage = "Error al vincular la foto con el perfil") }
                     }
                 }
+            } else {
+                val error = result.exceptionOrNull()?.message ?: "Error desconocido"
+                Log.e("ProfileViewModel", "Error al subir a Firebase Storage: $error")
+                _uiState.update { it.copy(isLoading = false, errorMessage = "Error al subir imagen: $error") }
             }
         }
     }

@@ -67,6 +67,7 @@ class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFi
     }
 
     override suspend fun updateProfileImage(userId: String, imageUrl: String) {
+        // ASEGURAMOS QUE EL NOMBRE DEL CAMPO COINCIDA CON UserDto (profileImage)
         db.collection("users").document(userId).update("profileImage", imageUrl).await()
     }
 

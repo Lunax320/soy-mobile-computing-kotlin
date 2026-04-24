@@ -14,7 +14,9 @@ class StorageRepository @Inject constructor(
         return try {
             val userId = authDataSource.currentUser?.uid
                 ?: return Result.failure(Exception("Usuario no autenticado"))
-            val path = "profileImages/$userId.jpg"
+            
+            // Eliminamos el .jpg para que coincida exactamente con tu regla: match /profileImages/{userId}
+            val path = "profileImages/$userId"
             val url = storageDataSource.uploadImage(path, uri)
 
             Result.success(url)
