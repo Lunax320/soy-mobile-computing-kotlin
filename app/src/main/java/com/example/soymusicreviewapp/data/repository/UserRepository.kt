@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.soymusicreviewapp.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
 import com.example.soymusicreviewapp.data.dtos.RegisterUserDto
 import com.example.soymusicreviewapp.data.dtos.UserDto
+import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -32,7 +34,8 @@ class UserRepository @Inject constructor(
 
     suspend fun registerUser(username: String, fullname: String? = null, userId: String): Result<Unit> {
         return try {
-            val registerUserDto = RegisterUserDto(username, fullname)
+            val fcmToken = FirebaseMessaging.getInstance().token.await()
+            val registerUserDto = RegisterUserDto(username, fullname, fcmToken)
             remoteDataSource.registerUser(registerUserDto, userId)
             Result.success(Unit)
         } catch (e: Exception) {

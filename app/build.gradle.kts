@@ -93,6 +93,9 @@ dependencies {
     //Firestore
     implementation("com.google.firebase:firebase-firestore")
 
+    //Messaging
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging")
 
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.ui.text.google.fonts)
