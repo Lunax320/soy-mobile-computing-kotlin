@@ -43,7 +43,8 @@ fun SOYApp() {
     val showBar = currentRoute != Screen.StartScreen.route &&
             currentRoute != Screen.LoginScreen.route &&
             currentRoute != Screen.RegisterScreen.route &&
-            currentRoute != Screen.SplashScreen.route
+            currentRoute != Screen.SplashScreen.route &&
+            currentRoute?.startsWith("commentReview") != true
 
     val context = LocalContext.current
 

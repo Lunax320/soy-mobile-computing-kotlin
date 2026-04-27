@@ -25,7 +25,8 @@ import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
 import com.example.soymusicreviewapp.ui.screens.editreview.EditReviewScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewViewModel
 import com.example.soymusicreviewapp.ui.screens.reviewdetail.ReviewDetailScreen
-import com.example.soymusicreviewapp.ui.editprofile.EditProfileScreen
+import com.example.soymusicreviewapp.ui.screens.editprofile.EditProfileScreen
+import com.example.soymusicreviewapp.ui.screens.commentreview.CommentReviewScreen
 import com.example.soymusicreviewapp.ui.screens.followersDetail.FollowersDetailScreen
 import com.example.soymusicreviewapp.ui.screens.followingdetail.FollowingDetailScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
@@ -102,6 +103,7 @@ fun AppNavigation(
                 viewModel = hiltViewModel(),
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                 followingButtonPressed = { navController.navigate(Screen.FollowingFeedScreen.route) }
             )
         }
@@ -111,6 +113,7 @@ fun AppNavigation(
                 viewModel = hiltViewModel(),
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                 latestButtonPressed = { navController.navigate(Screen.LatestFeedScreen.route) }
             )
         }
@@ -120,6 +123,7 @@ fun AppNavigation(
                 viewModel = hiltViewModel(),
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                 latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) }
             )
         }
@@ -133,6 +137,7 @@ fun AppNavigation(
                 reviewId = reviewId,
                 viewModel = hiltViewModel(),
                 onReviewClick = { rId -> navController.navigate("reviewDetail/$rId") },
+                onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") }
             )
         }
@@ -175,7 +180,8 @@ fun AppNavigation(
                 songId = songId,
                 onBack = { navController.popBackStack() },
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
-                onUserClick = { userId -> navController.navigate("userProfile/$userId") }
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") }
             )
         }
 
@@ -211,6 +217,7 @@ fun AppNavigation(
                     onEditProfileClick = { navController.navigate(Screen.EditProfileScreen.route) },
                     onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                     onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                    onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                     onFollowersClick = { userId -> navController.navigate("followersDetail/$userId") },
                     onFollowingClick = { userId -> navController.navigate("followingDetail/$userId") }
                 )
@@ -232,6 +239,7 @@ fun AppNavigation(
                     onEditReview = { _, _ -> },
                     onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                     onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") },
+                    onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                     onFollowersClick = { uId -> navController.navigate("followersDetail/$uId") },
                     onFollowingClick = { uId -> navController.navigate("followingDetail/$uId") }
                 )
@@ -271,6 +279,18 @@ fun AppNavigation(
                 userId = userId,
                 onBackClick = { navController.popBackStack() },
                 onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
+            )
+        }
+
+        composable(
+            route = "commentReview/{reviewId}",
+            arguments = listOf(navArgument("reviewId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val reviewId = backStackEntry.arguments?.getString("reviewId") ?: ""
+            CommentReviewScreen(
+                reviewId = reviewId,
+                onCloseClick = { navController.popBackStack() },
+                viewModel = hiltViewModel()
             )
         }
 

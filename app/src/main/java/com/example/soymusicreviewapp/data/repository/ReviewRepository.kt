@@ -13,7 +13,7 @@ import java.util.Date
 import java.util.Locale
 
 class ReviewRepository @Inject constructor(
-    private val remoteDataSource: ReviewFirestoreDataSourceImpl,
+    private val reviewDataSource: ReviewFirestoreDataSourceImpl,
     private val userRepository: UserRepository,
     private val songRepository: SongRepository,
     private val authRepository: AuthRepository
@@ -22,7 +22,7 @@ class ReviewRepository @Inject constructor(
     suspend fun getReviews(): Result<List<Review>> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviews = remoteDataSource.getAllReviews(currentUserId)
+            val reviews = reviewDataSource.getAllReviews(currentUserId)
             val reviewInfo = reviews.map { it.toReview() }
             Result.success(reviewInfo)
         } catch (e: Exception) {
@@ -33,7 +33,7 @@ class ReviewRepository @Inject constructor(
     suspend fun getReviewById(reviewId: String): Result<Review> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviewDto = remoteDataSource.getReviewById(reviewId, currentUserId)
+            val reviewDto = reviewDataSource.getReviewById(reviewId, currentUserId)
             Result.success(reviewDto.toReview())
         } catch (e: Exception) {
             Result.failure(e)
@@ -43,7 +43,7 @@ class ReviewRepository @Inject constructor(
     suspend fun getUserReviews(userId: String): Result<List<Review>> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
-            val reviews = remoteDataSource.getUserReviews(userId, currentUserId)
+            val reviews = reviewDataSource.getUserReviews(userId, currentUserId)
             val reviewInfo = reviews.map { it.toReview() }
             Result.success(reviewInfo)
         } catch (e: Exception) {
@@ -53,21 +53,21 @@ class ReviewRepository @Inject constructor(
 
     fun getReviewsLive(): Flow<List<Review>> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
-        return remoteDataSource.listenAllReviews(currentUserId).map { reviews ->
+        return reviewDataSource.listenAllReviews(currentUserId).map { reviews ->
             reviews.map { it.toReview() }
         }
     }
 
     fun getUserReviewsLive(userId: String): Flow<List<Review>> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
-        return remoteDataSource.listenUserReviews(userId, currentUserId).map { reviews ->
+        return reviewDataSource.listenUserReviews(userId, currentUserId).map { reviews ->
             reviews.map { it.toReview() }
         }
     }
 
     fun getSongReviewsLive(songId: String): Flow<List<Review>> {
         val currentUserId = authRepository.currentUser?.uid ?: ""
-        return remoteDataSource.listenSongReviews(songId, currentUserId).map { reviews ->
+        return reviewDataSource.listenSongReviews(songId, currentUserId).map { reviews ->
             reviews.map { it.toReview() }
         }
     }
@@ -100,7 +100,7 @@ class ReviewRepository @Inject constructor(
                 user = userProfile
             )
 
-            remoteDataSource.createReview(createReviewDto)
+            reviewDataSource.createReview(createReviewDto)
             Log.d("API_TRACKER", "Reseña normalizados")
             Result.success(Unit)
         } catch (e: Exception) {
@@ -111,7 +111,7 @@ class ReviewRepository @Inject constructor(
 
     suspend fun deleteReview(reviewId: String): Result<Unit> {
         return try {
-            remoteDataSource.deleteReview(reviewId)
+            reviewDataSource.deleteReview(reviewId)
             Result.success(Unit)
         } catch(e: Exception) {
             Result.failure(e)
@@ -120,7 +120,7 @@ class ReviewRepository @Inject constructor(
 
     suspend fun sendOrDeleteReviewLike(reviewId: String, userId: String): Result<Unit> {
         return try {
-            remoteDataSource.sendOrDeleteReviewLike(reviewId, userId)
+            reviewDataSource.sendOrDeleteReviewLike(reviewId, userId)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -136,7 +136,7 @@ class ReviewRepository @Inject constructor(
     ): Result<Unit> {
         return try {
             val currentUserId = authRepository.currentUser?.uid ?: ""
-            val currentReview = remoteDataSource.getReviewById(reviewId, currentUserId)
+            val currentReview = reviewDataSource.getReviewById(reviewId, currentUserId)
 
             val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
@@ -152,10 +152,80 @@ class ReviewRepository @Inject constructor(
                 user = currentReview.user
             )
 
-            remoteDataSource.updateReview(reviewId, updateDto)
+            reviewDataSource.updateReview(reviewId, updateDto)
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    suspend fun getCommentsForReview(parentReviewId: String): Result<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return try {
+            val comments = reviewDataSource.getCommentsForReview(parentReviewId, currentUserId)
+            Result.success(comments.map { it.toReview() })
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getCommentsForReviewLive(parentReviewId: String): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return reviewDataSource.listenCommentsForReview(parentReviewId, currentUserId)
+            .map { comments -> comments.map { it.toReview() } }
+    }
+
+    suspend fun createComment(
+        parentReviewId: String,
+        userId: String,
+        commentText: String,
+        date: String
+    ): Result<Unit> {
+        return try {
+            val parentReviewResult = getReviewById(parentReviewId)
+            val parentReview = parentReviewResult.getOrNull()
+
+            if (parentReview == null) {
+                return Result.failure(Exception("No se encontró la review original"))
+            }
+
+            val userResult = userRepository.getUserById(userId)
+            val userProfile = userResult.getOrNull()
+
+            val createCommentDto = CreateReviewDto(
+                userId = userId,
+                songId = parentReview.songId,
+                songName = parentReview.songName,
+                artistName = parentReview.artistName,
+                reviewText = commentText,
+                rating = 0,
+                date = date,
+                parentId = parentReviewId,
+                user = userProfile
+            )
+
+            reviewDataSource.createReview(createCommentDto)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    fun getMainReviewsLive(): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return reviewDataSource.listenAllReviews(currentUserId).map { reviews ->
+            reviews
+                .map { it.toReview() }
+                .filter { it.parentId == null }
+        }
+    }
+
+    fun getCommentsLive(): Flow<List<Review>> {
+        val currentUserId = authRepository.currentUser?.uid ?: ""
+        return reviewDataSource.listenAllReviews(currentUserId).map { reviews ->
+            reviews
+                .map { it.toReview() }
+                .filter { it.parentId != null }
         }
     }
 }

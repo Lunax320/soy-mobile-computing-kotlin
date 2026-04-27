@@ -17,27 +17,26 @@ class ReviewDetailViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(ReviewDetailState())
-
     val uiState: StateFlow<ReviewDetailState> = _uiState.asStateFlow()
+
     fun loadReview(reviewId: String) {
         viewModelScope.launch {
-            val result = reviewRepository.getReviews()
+            val result = reviewRepository.getReviewById(reviewId)
 
             if (result.isSuccess) {
-                val allReviews = result.getOrNull() ?: emptyList()
+                val review = result.getOrNull()
 
-                val foundReview = allReviews.find { it.usernameId == reviewId }
-
-                val otherReviews = allReviews.filter { it.usernameId != reviewId }
+                val commentsResult = reviewRepository.getCommentsForReview(reviewId)
+                val comments = commentsResult.getOrNull() ?: emptyList()
 
                 _uiState.update { currentState ->
                     currentState.copy(
-                        selectedReview = foundReview,
-                        responseReviews = otherReviews
+                        selectedReview = review,
+                        responseReviews = comments
                     )
                 }
             } else {
-                Log.e("API_TRACKER", "Reseña - no conexion con servidor.")
+                Log.e("API_TRACKER", "Reseña - no se pudo cargar la review con id: $reviewId")
             }
         }
     }

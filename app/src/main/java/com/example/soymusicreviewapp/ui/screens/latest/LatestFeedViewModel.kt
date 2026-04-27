@@ -48,7 +48,7 @@ class LatestFeedViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            reviewRepository.getReviewsLive()
+            reviewRepository.getMainReviewsLive()
                 .catch { e ->
                     android.util.Log.e("API_ERROR", "Error en tiempo real (Latest): ${e.message}")
                 }

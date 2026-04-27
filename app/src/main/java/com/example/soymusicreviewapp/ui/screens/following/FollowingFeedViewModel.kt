@@ -41,7 +41,7 @@ class FollowingFeedViewModel @Inject constructor(
 
             val followingIds = userRepository.getFollowingIds(currentUserId)
 
-            reviewRepository.getReviewsLive()
+            reviewRepository.getMainReviewsLive()
                 .catch { e -> 
                     android.util.Log.e("FollowingVM", "Error en feed social: ${e.message}")
                 }

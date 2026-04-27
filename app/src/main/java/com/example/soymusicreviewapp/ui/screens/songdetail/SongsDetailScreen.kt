@@ -37,6 +37,7 @@ fun SongsDetailScreen(
     onBack: () -> Unit,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SongsDetailViewModel
 ) {
@@ -61,6 +62,7 @@ fun SongsDetailScreen(
                     currentUserId = state.currentUserId,
                     onReviewClick = onReviewClick,
                     onUserClick = onUserClick,
+                    onCommentClick = onCommentClick,
                     onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
                     title = stringResource(R.string.songs_reviews),
                     modifier = Modifier.weight(1f)
@@ -117,7 +119,8 @@ fun SongsDetailScreenPreview(){
             onBack = {},
             onReviewClick = {},
             onUserClick = {},
-            viewModel = viewModel()
+            viewModel = viewModel(),
+            onCommentClick = {}
         )
     }
 }

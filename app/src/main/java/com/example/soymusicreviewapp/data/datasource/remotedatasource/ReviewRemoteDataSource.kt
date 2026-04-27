@@ -14,4 +14,6 @@ interface ReviewRemoteDataSource {
     fun listenAllReviews(currentUserId: String = ""): Flow<List<ReviewDto>>
     fun listenUserReviews(userId: String, currentUserId: String = ""): Flow<List<ReviewDto>>
     fun listenSongReviews(songId: String, currentUserId: String = ""): Flow<List<ReviewDto>>
+    suspend fun getCommentsForReview(parentReviewId: String, currentUserId: String = ""): List<ReviewDto>
+    fun listenCommentsForReview(parentReviewId: String, currentUserId: String = ""): Flow<List<ReviewDto>>
 }

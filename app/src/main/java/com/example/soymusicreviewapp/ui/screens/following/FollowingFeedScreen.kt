@@ -22,6 +22,7 @@ fun FollowingFeedScreen(
     latestButtonPressed: () -> Unit,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FollowingFeedViewModel
 ) {
@@ -38,6 +39,7 @@ fun FollowingFeedScreen(
             onReviewClick = onReviewClick,
             onUserClick = onUserClick,
             onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
+            onCommentClick = onCommentClick,
             modifier = Modifier.fillMaxSize().weight(1f)
         )
     }
@@ -50,6 +52,7 @@ fun FollowingFeedScreenBody(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onLikeClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -59,6 +62,7 @@ fun FollowingFeedScreenBody(
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
                 onLikeClick = onLikeClick,
+                onCommentClick = onCommentClick,
                 reviews = reviews,
                 currentUserId = currentUserId,
                 modifier = Modifier.weight(1f),
@@ -77,7 +81,8 @@ fun FollowingFeedScreenPreview() {
             currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            onLikeClick = {}
+            onLikeClick = {},
+            onCommentClick = {}
         )
     }
 }

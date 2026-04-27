@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.editprofile
+package com.example.soymusicreviewapp.ui.screens.editprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

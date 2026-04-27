@@ -66,7 +66,8 @@ fun ProfileScreen(
     onReviewClick: (String) -> Unit = {},
     onUserClick: (String) -> Unit = {},
     onFollowersClick: (String) -> Unit = {},
-    onFollowingClick: (String) -> Unit = {}
+    onFollowingClick: (String) -> Unit = {},
+    onCommentClick: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -108,6 +109,7 @@ fun ProfileScreen(
             onEditClick = { review -> onEditReview(review.id, review.songId) },
             onReviewClick = onReviewClick,
             onUserClick = onUserClick,
+            onCommentClick = onCommentClick,
             onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
             modifier = Modifier.fillMaxSize()
         )
@@ -327,7 +329,8 @@ fun ProfileScreenBody(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onLikeClick: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCommentClick: (String) -> Unit,
 ) {
     Box(modifier = modifier) {
         PlainBackground()
@@ -340,6 +343,7 @@ fun ProfileScreenBody(
             modifier = Modifier.fillMaxSize(),
             title = "Publicaciones",
             isProfileView = true,
+            onCommentClick = onCommentClick,
             onDeleteClick = onDeleteClick,
             onEditClick = { id : String ->
                 val review = userReviews.find { it.id == id }

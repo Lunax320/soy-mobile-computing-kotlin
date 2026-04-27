@@ -55,6 +55,7 @@ fun ReviewInfo(
     onEditClick: (() -> Unit)? = null,
     onLikeClick: (String) -> Unit = {},
     onCommentClick: (String) -> Unit = {}
+
 ) {
     Column(modifier = modifier) {
         Row(
@@ -119,8 +120,12 @@ fun ReviewInfo(
             SongText(songName = review.songName)
             ArtistText(artistName = review.artistName)
             Spacer(modifier = Modifier.height(10.dp))
-            RatingText(rating = review.rating)
-            Spacer(modifier = Modifier.height(10.dp))
+
+            if (review.rating > 0) {
+                RatingText(rating = review.rating)
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
             ReviewText(review = review.reviewText)
             Spacer(modifier = Modifier.height(7.dp))
         }

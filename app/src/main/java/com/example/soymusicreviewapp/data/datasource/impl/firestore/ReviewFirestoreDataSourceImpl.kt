@@ -193,4 +193,54 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
             }
         awaitClose { listener.remove() }
     }
+
+    override suspend fun getCommentsForReview(parentReviewId: String, currentUserId: String): List<ReviewDto> {
+        val snapshot = db.collection("reviews")
+            .whereEqualTo("parentId", parentReviewId)
+            .get()
+            .await()
+
+        return snapshot.documents.map { doc ->
+            val review = doc.toObject(ReviewDto::class.java) ?: ReviewDto()
+            var finalReview = review.copy(id = doc.id)
+
+            if (currentUserId.isNotEmpty()) {
+                val likeDoc = db.collection("reviews").document(doc.id)
+                    .collection("likes").document(currentUserId).get().await()
+                if (likeDoc.exists()) {
+                    finalReview = finalReview.copy(liked = true)
+                }
+            }
+            finalReview
+        }
+    }
+
+    override fun listenCommentsForReview(parentReviewId: String, currentUserId: String): Flow<List<ReviewDto>> = callbackFlow {
+        val listener = db.collection("reviews")
+            .whereEqualTo("parentId", parentReviewId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    launch {
+                        val comments = snapshot.documents.map { doc ->
+                            val review = doc.toObject(ReviewDto::class.java) ?: ReviewDto()
+                            var finalReview = review.copy(id = doc.id)
+
+                            if (currentUserId.isNotEmpty()) {
+                                val hasLiked = db.collection("reviews").document(doc.id)
+                                    .collection("likes").document(currentUserId).get().await().exists()
+                                finalReview = finalReview.copy(liked = hasLiked)
+                            }
+                            finalReview
+                        }
+                        trySend(comments)
+                    }
+                }
+            }
+        awaitClose { listener.remove() }
+    }
 }

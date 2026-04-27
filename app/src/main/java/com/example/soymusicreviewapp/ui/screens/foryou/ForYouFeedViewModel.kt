@@ -36,7 +36,7 @@ class ForYouFeedViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            reviewRepository.getReviewsLive()
+            reviewRepository.getMainReviewsLive()
                 .catch { e -> 
                     _uiState.update { it.copy(errorMessage = e.message, isLoading = false) } 
                 }

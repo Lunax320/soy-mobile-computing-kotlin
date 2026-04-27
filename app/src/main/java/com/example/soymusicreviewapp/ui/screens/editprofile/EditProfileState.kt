@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.ui.editprofile
+package com.example.soymusicreviewapp.ui.screens.editprofile
 
 data class EditProfileState(
     val name: String = "",

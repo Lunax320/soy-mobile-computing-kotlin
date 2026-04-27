@@ -57,4 +57,18 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getCommentsForReview(
+        parentReviewId: String,
+        currentUserId: String
+    ): List<ReviewDto> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenCommentsForReview(
+        parentReviewId: String,
+        currentUserId: String
+    ): Flow<List<ReviewDto>> {
+        TODO("Not yet implemented")
+    }
+
 }

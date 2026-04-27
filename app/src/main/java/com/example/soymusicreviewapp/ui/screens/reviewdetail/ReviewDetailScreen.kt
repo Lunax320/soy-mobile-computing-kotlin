@@ -36,6 +36,7 @@ fun ReviewDetailScreen(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onCommentClick: (String) -> Unit,
     viewModel: ReviewDetailViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -67,16 +68,16 @@ fun ReviewDetailScreen(
                         onLike = {
                             Log.d("ReviewDetailScreen", "Usuario ${state.currentUserId} dio like a $reviewId")
                         },
-                        onComment = { /* */ },
                         onShare = { /* */ },
                         onFavorite = { /* */ },
+                        onComment = { onCommentClick(reviewId) },
                         isLiked = state.selectedReview?.liked ?: false
                     )
 
                     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
 
                     Text(
-                        text = "Most relevant reviews",
+                        text = "Comments",
                         color =  MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.padding(top = 16.dp, bottom = 8.dp, start = 16.dp)
                     )

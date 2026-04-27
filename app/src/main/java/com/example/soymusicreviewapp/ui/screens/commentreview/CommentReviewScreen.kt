@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.soymusicreviewapp.R
-import com.example.soymusicreviewapp.data.Review
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 
@@ -24,43 +23,133 @@ import com.example.soymusicreviewapp.ui.utils.ReviewInfo
 fun CommentReviewScreen(
     reviewId: String,
     onCloseClick: () -> Unit,
-    viewModel: CommentReviewViewModel,
+    viewModel: CommentReviewViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
-    val parentReview = viewModel.getParentReview(reviewId)
-    val comments = viewModel.getCommentsForReview(reviewId)
+    val parentReview = state.parentReview
+    val comments = state.comments
 
     Box(modifier = modifier.fillMaxSize()) {
         PlainBackground()
 
         Column(modifier = Modifier.fillMaxSize()) {
             CommentReviewHeader(
-                songName = parentReview?.songName ?: "Unknown Song",
-                onCloseClick = onCloseClick,
-                profileImageId = R.drawable.img_avatar_penguin
+                songName = parentReview?.songName ?: "Cargando...",
+                onCloseClick = onCloseClick
             )
 
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
-
+            // TODO EL CONTENIDO DENTRO DE LAZYCOLUMN
             Box(modifier = Modifier.weight(1f)) {
-                if (comments.isEmpty()) {
-                    CommentEmptyState()
-                } else {
-                    CommentListSection(
-                        comments = comments,
-                        currentUserId = state.currentUserId
-                    )
+                when {
+                    state.isLoading && parentReview == null && comments.isEmpty() -> {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
+                        }
+                    }
+                    else -> {
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            if (parentReview != null) {
+                                item(key = "parent_review") {
+                                    Card(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp),
+                                        shape = RoundedCornerShape(12.dp),
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceDim
+                                        )
+                                    ) {
+                                        ReviewInfo(
+                                            review = parentReview,
+                                            currentUserId = state.currentUserId,
+                                            isProfileView = false,
+                                            onDeleteClick = {},
+                                            onEditClick = {},
+                                            onUserClick = {},
+                                            modifier = Modifier.padding(12.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                            if (comments.isNotEmpty()) {
+                                item(key = "comments_header") {
+                                    Text(
+                                        text = "Comentarios (${comments.size})",
+                                        color = MaterialTheme.colorScheme.onPrimary,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                                    )
+                                }
+                            }
+
+                            items(
+                                count = comments.size,
+                                key = { index -> comments[index].id }
+                            ) { index ->
+                                ReviewInfo(
+                                    review = comments[index],
+                                    currentUserId = state.currentUserId,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    onDeleteClick = { /* TODO: eliminar comentario */ },
+                                    onEditClick = { /* TODO: editar comentario */ },
+                                    onUserClick = {}
+                                )
+                                HorizontalDivider(
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                    modifier = Modifier.padding(start = 72.dp)
+                                )
+                            }
+
+                            if (comments.isEmpty() && !state.isLoading && parentReview != null) {
+                                item(key = "empty_state") {
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(32.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(
+                                            text = "No comments yet.",
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            fontSize = 16.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        Text(
+                                            text = "Be the first to comment!",
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontSize = 14.sp,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
             HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
 
+            state.errorMessage?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+            }
+
             CommentInputBar(
                 commentText = state.commentText,
                 onCommentChange = { viewModel.onCommentTextChange(it) },
-                onSendClick = { /* Logica para enviar el comentario */ }
+                onSendClick = { viewModel.sendComment() },
+                isSending = state.isSending
             )
         }
     }
@@ -68,7 +157,6 @@ fun CommentReviewScreen(
 
 @Composable
 fun CommentReviewHeader(
-    profileImageId: Int,
     songName: String,
     onCloseClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -91,7 +179,8 @@ fun CommentReviewHeader(
             Text(
                 text = songName,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                maxLines = 1
             )
         }
 
@@ -129,44 +218,22 @@ fun CommentEmptyState(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun CommentListSection(
-    comments: List<Review>,
-    currentUserId: String,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        items(comments.size) { index ->
-            ReviewInfo(
-                review = comments[index],
-                currentUserId = currentUserId, // Pasar el ID a ReviewInfo
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                onDeleteClick = { },
-                onEditClick = { }
-            )
-            HorizontalDivider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f))
-        }
-    }
-}
-
-@Composable
 fun CommentInputBar(
     commentText: String,
     onCommentChange: (String) -> Unit,
     onSendClick: () -> Unit,
+    isSending: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .padding(16.dp)
+        modifier = modifier.padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             OutlinedTextField(
                 value = commentText,
                 onValueChange = onCommentChange,
-                placeholder = {
-                    Text("Write a comment...", color = Color.Gray)
-                },
+                placeholder = { Text("Write a comment...", color = Color.Gray) },
+                enabled = !isSending,
                 modifier = Modifier
                     .weight(1f)
                     .height(56.dp),
@@ -185,19 +252,26 @@ fun CommentInputBar(
 
             Button(
                 onClick = onSendClick,
-                modifier = Modifier
-                    .size(56.dp),
+                enabled = !isSending && commentText.isNotBlank(),
+                modifier = Modifier.size(56.dp),
                 shape = RoundedCornerShape(12.dp),
                 contentPadding = PaddingValues(0.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
                 )
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.Send,
-                    contentDescription = "Send Comment",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+                if (isSending) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.Send,
+                        contentDescription = "Send Comment",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
         }
 
@@ -209,7 +283,5 @@ fun CommentInputBar(
             fontSize = 12.sp,
             modifier = Modifier.padding(start = 4.dp)
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }

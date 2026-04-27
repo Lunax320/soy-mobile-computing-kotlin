@@ -34,6 +34,7 @@ fun LatestFeedScreen(
     modifier: Modifier = Modifier,
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     latestCreateAccount: () -> Unit,
     viewModel: LatestFeedViewModel
 ) {
@@ -57,6 +58,7 @@ fun LatestFeedScreen(
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
                 onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
+                onCommentClick = onCommentClick,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -71,6 +73,7 @@ fun LatestFeedList(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onLikeClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit, // Nuevo parámetro
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -121,6 +124,7 @@ fun LatestFeedList(
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
                 onLikeClick = onLikeClick,
+                onCommentClick = onCommentClick, // Propagado a la tarjeta
                 isProfileView = false
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -138,7 +142,8 @@ fun LatestFeedPreview() {
             currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            onLikeClick = {}
+            onLikeClick = {},
+            onCommentClick = {}
         )
     }
 }

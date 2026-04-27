@@ -164,7 +164,7 @@ fun ReviewCard(
 
             ReviewInteractionBar(
                 likesCount = review.likesCount,
-                isLiked = review.liked, // Se usa la propiedad liked del objeto Review
+                isLiked = review.liked,
                 onLikeClick = { onLikeClick(review.id) },
                 onCommentClick = { onCommentClick(review.id) }
             )

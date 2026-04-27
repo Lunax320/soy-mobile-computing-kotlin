@@ -22,6 +22,7 @@ import com.example.soymusicreviewapp.ui.utils.ReviewList
 fun ForYouFeedScreen(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     followingButtonPressed: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ForYouFeedViewModel
@@ -44,6 +45,7 @@ fun ForYouFeedScreen(
                 viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId)
                 Log.d("ForYouFeedScreen", "el usuario ${state.currentUserId} dio like a la reseña $reviewId")
             },
+            onCommentClick = onCommentClick,
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
@@ -58,6 +60,7 @@ fun ForYouScreenBody(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onLikeClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
@@ -69,6 +72,7 @@ fun ForYouScreenBody(
                 onReviewClick = { reviewId -> onReviewClick(reviewId) },
                 onUserClick = { userId -> onUserClick(userId) },
                 onLikeClick = onLikeClick,
+                onCommentClick = onCommentClick,
                 modifier = Modifier.weight(1f),
                 title = stringResource(R.string.recommended_reviews_for_you),
                 reviews = reviews,
@@ -87,7 +91,8 @@ fun ForYouFeedScreenPreview() {
             currentUserId = "1",
             onReviewClick = {},
             onUserClick = {},
-            onLikeClick = {}
+            onLikeClick = {},
+            onCommentClick = {}
         )
     }
 }
