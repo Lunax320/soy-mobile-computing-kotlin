@@ -10,29 +10,39 @@ import javax.inject.Inject
 
 class UserFirestoreDataSourceImpl @Inject constructor(private val db: FirebaseFirestore): UserRemoteDataSource {
 
-    override suspend fun getUserById(id: String, currentUserId: String): UserDto {
+    override suspend fun getUserById(id: String, currentUserId: String): UserDto? {
         val docRef = db.collection("users").document(id)
         val respuesta = docRef.get().await()
-        val user = respuesta.toObject(UserDto::class.java) ?: throw Exception("No se pudo obtener el usuario")
+        val user = respuesta.toObject(UserDto::class.java) ?: return null
 
-        val followerDoc = db.collection("users").document(id)
-            .collection("followers").document(currentUserId).get().await()
-
-        val exist = followerDoc.exists()
+        var followed = false
+        if (currentUserId.isNotEmpty()) {
+            try {
+                val followerDoc = db.collection("users").document(id)
+                    .collection("followers").document(currentUserId).get().await()
+                followed = followerDoc.exists()
+            } catch (e: Exception) {
+                followed = false
+            }
+        }
 
         return user.copy(
             id = respuesta.id,
-            followed = exist
+            followed = followed
         )
     }
 
-    override suspend fun createUser(user: UserDto): UserDto {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String) {
-        val docRef = db.collection("users").document(userId)
-        docRef.set(registerUserDto).await()
+        val user = UserDto(
+            id = userId,
+            username = registerUserDto.username,
+            name = registerUserDto.name ?: registerUserDto.username,
+            profileImage = null,
+            followersCount = 0,
+            followingCount = 0,
+            followed = false
+        )
+        db.collection("users").document(userId).set(user).await()
     }
 
     override suspend fun followOrUnfollowUser(currentUserId: String, targetUserId: String) {

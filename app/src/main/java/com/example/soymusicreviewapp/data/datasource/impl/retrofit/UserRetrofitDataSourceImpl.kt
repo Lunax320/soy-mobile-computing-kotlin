@@ -28,10 +28,6 @@ class UserRetrofitDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun createUser(user: UserDto): UserDto {
-        return service.createUser(user)
-    }
-
     override suspend fun registerUser(registerUserDto: RegisterUserDto, userId: String) {
         val docRef = db.collection("users").document(userId)
         docRef.set(registerUserDto).await()

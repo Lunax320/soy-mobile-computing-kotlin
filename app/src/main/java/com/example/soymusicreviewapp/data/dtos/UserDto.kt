@@ -6,16 +6,12 @@ data class UserDto(
     val id: String,
     val username: String,
     val name: String,
-    val profileImage: String?,
-    var followed: Boolean
+    val profileImage: String? = null,
+    val followersCount: Int = 0,
+    val followingCount: Int = 0,
+    var followed: Boolean = false
 ) {
-    constructor() : this(
-        id = "",
-        username = "",
-        name = "",
-        profileImage = null,
-        followed = false
-    )
+    constructor() : this("", "", "")
 }
 
 fun UserDto.toUserProfileInfo(): UserProfileInfo {

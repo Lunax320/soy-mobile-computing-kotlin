@@ -16,6 +16,7 @@ class UserRepository @Inject constructor(
         val currentUserId = authRepository.currentUser?.uid ?: ""
         return try {
             val user = remoteDataSource.getUserById(userId, currentUserId)
+            if (user == null) return Result.failure(Exception("User not found"))
             Result.success(user)
         } catch (e: Exception) {
             Log.d("UserRepository", "Error obteniendo usuario: " + e.message)
@@ -23,14 +24,6 @@ class UserRepository @Inject constructor(
         }
     }
 
-    suspend fun createUser(user: UserDto): Result<Unit> {
-        return try {
-            remoteDataSource.createUser(user)
-            Result.success(Unit)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 
     suspend fun registerUser(username: String, fullname: String? = null, userId: String): Result<Unit> {
         return try {

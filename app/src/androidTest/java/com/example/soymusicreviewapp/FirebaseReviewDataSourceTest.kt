@@ -1,5 +1,4 @@
 package com.example.soymusicreviewapp
 
-class ExampleInstrumentedTest {
-
+class FirebaseReviewDataSourceTest {
 }

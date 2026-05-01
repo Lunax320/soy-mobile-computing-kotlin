@@ -122,10 +122,11 @@ dependencies {
 
     //Courutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
 
     //Alternativa a los asserts tradicionales
     testImplementation("com.google.truth:truth:1.4.2")
-    testImplementation("com.google.truth:truth:1.1.5")
+    androidTestImplementation("com.google.truth:truth:1.4.2")
 
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
