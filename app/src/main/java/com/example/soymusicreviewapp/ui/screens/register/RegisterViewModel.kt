@@ -52,8 +52,8 @@ class RegisterViewModel @Inject constructor(
 
     fun onRegisterButtonPressed() {
 
-                    viewModelScope.launch(ioDispatcher) {
-                        registerUserOnline()
+        viewModelScope.launch(ioDispatcher) {
+            registerUserOnline()
         }
     }
 

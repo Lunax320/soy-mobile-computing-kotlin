@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -145,7 +146,9 @@ fun ReviewCard(
         onClick = { onReviewClick(review.id) },
         color = MaterialTheme.colorScheme.surfaceDim,
         shape = RoundedCornerShape(20.dp),
-        modifier = modifier.padding(vertical = 8.dp)
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .testTag("reviewCard_${review.id}")
     ) {
         Column(modifier = Modifier.padding(10.dp)) {
 

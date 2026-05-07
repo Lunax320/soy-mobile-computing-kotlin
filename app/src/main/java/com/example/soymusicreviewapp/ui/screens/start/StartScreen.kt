@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -91,6 +92,7 @@ fun StartScreenBody(
         Spacer(modifier = Modifier.height(50.dp))
 
         GeneralButton(
+            modifier = Modifier.testTag("btnLogin"),
             text = stringResource(R.string.login),
             onClick = loginButtonPressed
         )
@@ -98,6 +100,7 @@ fun StartScreenBody(
         Spacer(modifier = Modifier.height(4.dp))
 
         GeneralButton(
+            modifier = Modifier.testTag("btnRegister"),
             text = stringResource(R.string.register),
             color = MaterialTheme.colorScheme.tertiaryContainer,
             onClick = registerButtonPressed

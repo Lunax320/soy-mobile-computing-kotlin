@@ -2,9 +2,12 @@ package com.example.soymusicreviewapp.ui.screens.foryou
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.soymusicreviewapp.data.injection.IoDispatcher
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ForYouFeedViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ForYouFeedState())
@@ -33,7 +37,7 @@ class ForYouFeedViewModel @Inject constructor(
     }
 
     fun loadReviews() {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher){
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             reviewRepository.getMainReviewsLive()
@@ -49,7 +53,7 @@ class ForYouFeedViewModel @Inject constructor(
     fun sendOrDeleteReviewLike(reviewId: String, userId: String) {
         if (userId.isEmpty()) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             val result = reviewRepository.sendOrDeleteReviewLike(reviewId, userId)
             if (result.isSuccess) {
                 _uiState.update { state ->

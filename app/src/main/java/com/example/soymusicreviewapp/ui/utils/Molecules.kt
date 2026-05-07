@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -146,7 +147,11 @@ fun ReviewInteractionBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(6.dp))
-        IconButton(onClick = onLikeClick) {
+        IconButton(
+            onClick = onLikeClick,
+            modifier = Modifier.testTag("likeButton")
+
+        ) {
             Icon(
                 imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "",
@@ -157,7 +162,8 @@ fun ReviewInteractionBar(
             text = likesCount.toString(),
             color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.testTag("likesCount")
         )
         Spacer(modifier = Modifier.width(16.dp))
         IconButton(onClick = onCommentClick) {

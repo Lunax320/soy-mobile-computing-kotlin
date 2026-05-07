@@ -138,7 +138,8 @@ fun AppNavigation(
                 viewModel = hiltViewModel(),
                 onReviewClick = { rId -> navController.navigate("reviewDetail/$rId") },
                 onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
-                onUserClick = { userId -> navController.navigate("userProfile/$userId") }
+                onUserClick = { userId -> navController.navigate("userProfile/$userId") },
+                onBackClick = { navController.popBackStack() }
             )
         }
 

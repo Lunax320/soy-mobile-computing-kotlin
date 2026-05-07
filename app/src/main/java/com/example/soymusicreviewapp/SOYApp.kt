@@ -61,7 +61,7 @@ fun SOYApp() {
     )
 
 
-    LaunchedEffect(Unit) {
+    /*LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     context,
@@ -71,7 +71,7 @@ fun SOYApp() {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
-    }
+    }*/
 
 
 

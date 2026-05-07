@@ -21,7 +21,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.soymusicreviewapp.HiltTestRunner"
+        //testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -117,32 +118,40 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    //Adicionales
+
+    // PRUEBAS UNITARIAS
+
+    testImplementation(libs.junit)
     testImplementation("io.mockk:mockk:1.13.11")
-
-    //Courutines test
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-
-    //Alternativa a los asserts tradicionales
     testImplementation("com.google.truth:truth:1.4.2")
-    androidTestImplementation("com.google.truth:truth:1.4.2")
-
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
-    kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
-
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
     testImplementation(kotlin("test"))
 
-    //e2e
-    // AndroidX Test - Instrumented
-    androidTestImplementation("androidx.test.ext:junit:1.1.52")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    //ActivityScenario
-    androidTestImplementation("androidx.test:core:1.5.0")
+    // PRUEBAS INSTRUMENTADAS (androidTest)
 
-    //Para UI / instrumented tests (androidTest/)
+    // Compose UI Tests
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.5")
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // AndroidX Test
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test:core:1.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+
+    // Coroutines para pruebas
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+    // Truth assertions
+    androidTestImplementation("com.google.truth:truth:1.4.2")
+
+    // Mockk para Android
     androidTestImplementation("io.mockk:mockk-android:1.13.14")
+
+    // Hilt para pruebas
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
+    kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
 
 }

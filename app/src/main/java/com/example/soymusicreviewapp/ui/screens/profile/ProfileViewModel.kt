@@ -5,11 +5,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.data.dtos.toUserProfileInfo
+import com.example.soymusicreviewapp.data.injection.IoDispatcher
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.ReviewRepository
 import com.example.soymusicreviewapp.data.repository.StorageRepository
 import com.example.soymusicreviewapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +26,8 @@ class ProfileViewModel @Inject constructor(
     private val storageRepository: StorageRepository,
     private val authRepository: AuthRepository,
     private val reviewRepository: ReviewRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileState())
@@ -33,8 +37,8 @@ class ProfileViewModel @Inject constructor(
         get() = authRepository.currentUser?.uid ?: ""
 
     fun loadUserProfile(userId: String) {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, currentUserId = currentUserId) }
+        viewModelScope.launch(ioDispatcher) {
+        _uiState.update { it.copy(isLoading = true, currentUserId = currentUserId) }
 
             val userResult = userRepository.getUserById(userId)
             if (userResult.isSuccess) {
@@ -65,7 +69,7 @@ class ProfileViewModel @Inject constructor(
 
     fun sendOrDeleteReviewLike(reviewId: String, userId: String) {
         if (userId.isEmpty()) return
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             reviewRepository.sendOrDeleteReviewLike(reviewId, userId)
         }
     }
@@ -74,7 +78,7 @@ class ProfileViewModel @Inject constructor(
         val sessionUserId = currentUserId
         if (sessionUserId.isEmpty()) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             val result = userRepository.followOrUnfollowUser(sessionUserId, targetUserId)
             if (result.isSuccess) {
                 _uiState.update { state ->
@@ -91,7 +95,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun deleteReview(reviewId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             reviewRepository.deleteReview(reviewId)
         }
     }
@@ -102,7 +106,7 @@ class ProfileViewModel @Inject constructor(
             state.copy(user = state.user.copy(profileImageUrl = uri.toString()), isLoading = true)
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             val result = storageRepository.uploadProfileImage(uri)
             if (result.isSuccess) {
                 val imageUrl = result.getOrNull()

@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,6 +38,7 @@ fun ReviewDetailScreen(
     onUserClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     onCommentClick: (String) -> Unit,
+    onBackClick: () -> Unit,
     viewModel: ReviewDetailViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -45,7 +47,9 @@ fun ReviewDetailScreen(
         viewModel.loadReview(reviewId)
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .testTag("reviewDetailScreen")) {
         PlainBackground()
 
         if (state.selectedReview != null) {
@@ -71,7 +75,8 @@ fun ReviewDetailScreen(
                         onShare = { /* */ },
                         onFavorite = { /* */ },
                         onComment = { onCommentClick(reviewId) },
-                        isLiked = state.selectedReview?.liked ?: false
+                        isLiked = state.selectedReview?.liked ?: false,
+                        modifier = Modifier.testTag("reviewActionBar")
                     )
 
                     HorizontalDivider(thickness = 1.dp, color = MaterialTheme.colorScheme.tertiary)
@@ -102,6 +107,7 @@ fun ReviewDetailScreen(
 
 @Composable
 fun ReviewActionBar(
+    modifier: Modifier = Modifier,
     onLike: () -> Unit,
     onComment: () -> Unit,
     onShare: () -> Unit,
@@ -115,7 +121,9 @@ fun ReviewActionBar(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        IconButton(onClick = onLike) {
+        IconButton(
+            onClick = onLike,
+            modifier = Modifier.testTag("detailLikeButton")) {
             Icon(
                 imageVector = if (isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Like",

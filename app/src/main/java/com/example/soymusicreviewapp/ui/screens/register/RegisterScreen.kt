@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,7 +26,7 @@ import com.example.soymusicreviewapp.ui.utils.*
 @Composable
 fun RegisterScreen(
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.testTag("registerScreen"),
     viewModel: RegisterViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -36,14 +37,6 @@ fun RegisterScreen(
             navigateToHome()
         }
     }
-
-    LaunchedEffect(key1 = state.showMessage) {
-        if (state.showMessage) {
-            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
-            viewModel.onMessageShown()
-        }
-    }
-
 
     Box(modifier = modifier) {
         PlainBackground()
@@ -58,7 +51,8 @@ fun RegisterScreen(
                 onEmailChange = { viewModel.onEmailChange(it) },
                 onPasswordChange = { viewModel.onPasswordChange(it) },
                 onRegisterButtonPressed = { viewModel.onRegisterButtonPressed() },
-                onTogglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+                onTogglePasswordVisibility = { viewModel.togglePasswordVisibility() },
+                onMessageShown = { viewModel.onMessageShown() }
             )
         }
     }
@@ -73,6 +67,7 @@ fun RegisterScreenBody(
     onPasswordChange: (String) -> Unit,
     onRegisterButtonPressed: () -> Unit,
     onTogglePasswordVisibility: () -> Unit,
+    onMessageShown: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -98,7 +93,8 @@ fun RegisterScreenBody(
         GeneralForm(
             labelId = R.string.name_2,
             textValue = state.nameText,
-            onValueChanged = onNameChange
+            onValueChanged = onNameChange,
+            modifier = Modifier.testTag("txtfullname")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -112,7 +108,8 @@ fun RegisterScreenBody(
         GeneralForm(
             labelId = R.string.user,
             textValue = state.userText,
-            onValueChanged = onUserChange
+            onValueChanged = onUserChange,
+            modifier = Modifier.testTag("txtuser")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -126,7 +123,8 @@ fun RegisterScreenBody(
         GeneralForm(
             labelId = R.string.email,
             textValue = state.emailText,
-            onValueChanged = onEmailChange
+            onValueChanged = onEmailChange,
+            modifier = Modifier.testTag("txtemail")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -143,13 +141,27 @@ fun RegisterScreenBody(
             onValueChanged = onPasswordChange,
             isPassword = true,
             showPassword = state.showPassword,
-            onTogglePasswordVisibility = onTogglePasswordVisibility
+            onTogglePasswordVisibility = onTogglePasswordVisibility,
+            modifier = Modifier.testTag("txtpassword")
         )
 
         Spacer(modifier = Modifier.height(30.dp))
 
+        if (state.showMessage) {
+            Text(
+                text = state.errorMessage,
+                color = androidx.compose.ui.graphics.Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(bottom = 8.dp)
+                    .testTag("errorMessage"),
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            )
+        }
+
         GeneralButton(
             text = stringResource(R.string.create_account),
+            modifier = Modifier.testTag("btnRegisterFinal"),
             onClick = {
                 onRegisterButtonPressed()
             }
