@@ -2,6 +2,7 @@ package com.example.soymusicreviewapp.data.repository
 
 import android.util.Log
 import com.example.soymusicreviewapp.data.datasource.impl.firestore.UserFirestoreDataSourceImpl
+import com.example.soymusicreviewapp.data.datasource.remotedatasource.AuthRemoteDataSource
 import com.example.soymusicreviewapp.data.dtos.RegisterUserDto
 import com.example.soymusicreviewapp.data.dtos.UserDto
 import com.google.firebase.messaging.FirebaseMessaging
@@ -10,10 +11,12 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val remoteDataSource: UserFirestoreDataSourceImpl,
-    private val authRepository: AuthRepository
+    // private val authRepository: AuthRepository,
+    private val authRemoteDataSource: AuthRemoteDataSource
+
 ) {
     suspend fun getUserById(userId: String): Result<UserDto> {
-        val currentUserId = authRepository.currentUser?.uid ?: ""
+        val currentUserId = authRemoteDataSource.currentUser?.uid ?: ""
         return try {
             val user = remoteDataSource.getUserById(userId, currentUserId)
             if (user == null) return Result.failure(Exception("User not found"))

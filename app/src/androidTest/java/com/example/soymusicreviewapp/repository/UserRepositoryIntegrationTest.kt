@@ -40,7 +40,9 @@ class UserRepositoryIntegrationTest {
         } catch (_: Exception) {
         }
 
-        userRepository = UserRepository(UserFirestoreDataSourceImpl(db), AuthRepository(AuthRemoteDataSource(auth)))
+        userRepository = UserRepository(UserFirestoreDataSourceImpl(db), AuthRemoteDataSource(auth))
+        //userRepository = UserRepository(UserFirestoreDataSourceImpl(db), AuthRepository(AuthRemoteDataSource(auth)))
+
 
 
 
