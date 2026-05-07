@@ -2,9 +2,12 @@ package com.example.soymusicreviewapp.ui.screens.register
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.soymusicreviewapp.data.injection.IoDispatcher
 import com.example.soymusicreviewapp.data.repository.AuthRepository
 import com.example.soymusicreviewapp.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(RegisterState())
@@ -47,47 +51,93 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun onRegisterButtonPressed() {
+
+                    viewModelScope.launch(ioDispatcher) {
+                        registerUserOnline()
+        }
+    }
+
+
+    suspend fun registerUserOnline() {
+        _uiState.update { it.copy(loading = true) }
         val currentState = _uiState.value
 
         if (currentState.passwordText.isNullOrEmpty() || currentState.emailText.isNullOrEmpty() || currentState.userText.isNullOrEmpty() || currentState.nameText.isNullOrEmpty()) {
-            _uiState.update { it.copy(showMessage = true, errorMessage = "Todos los campos son necesarios") }
+            _uiState.update {
+                it.copy(
+                    showMessage = true,
+                    errorMessage = "Todos los campos son necesarios",
+                    loading = false
+                )
+            }
         } else {
             if (currentState.passwordText.length < 6) {
-                _uiState.update { it.copy(showMessage = true, errorMessage = "La contraseña debe tener minimo 6 caracteres") }
+                _uiState.update {
+                    it.copy(
+                        showMessage = true,
+                        errorMessage = "La contraseña debe tener minimo 6 caracteres",
+                        loading = false
+                    )
+                }
             } else {
                 if (currentState.emailText == "admin@admin.com") {
-                    _uiState.update { it.copy(showMessage = true, errorMessage = "El email ya esta en uso") }
+                    _uiState.update {
+                        it.copy(
+                            showMessage = true,
+                            errorMessage = "El email ya esta en uso",
+                            loading = false
+                        )
+                    }
                 } else {
-                    viewModelScope.launch {
-                        // 1. Crea la cuenta en Firebase Auth
-                        val resultado = authRepository.signUp(currentState.emailText, currentState.passwordText)
 
-                        if (resultado.isSuccess) {
-                            val userId = authRepository.currentUser?.uid ?: throw Exception("No se pudo obtener el usuario actual")
+                    // 1. Crea la cuenta en Firebase Auth
+                    val resultado =
+                        authRepository.signUp(currentState.emailText, currentState.passwordText)
 
-                            val dbResult = userRepository.registerUser(
-                                username = currentState.userText,
-                                fullname = currentState.nameText,
-                                userId = userId
-                            )
+                    if (resultado.isSuccess) {
+                        val userId = authRepository.currentUser?.uid
+                            ?: throw Exception("No se pudo obtener el usuario actual")
 
-                            if (dbResult.isSuccess) {
-                                _uiState.update { it.copy(navigate = true) }
-                            } else {
-                                _uiState.update { it.copy(errorMessage = "Error guardando perfil", showMessage = true) }
-                            }
+                        val dbResult = userRepository.registerUser(
+                            username = currentState.userText,
+                            fullname = currentState.nameText,
+                            userId = userId
+                        )
+
+                        if (dbResult.isSuccess) {
+                            _uiState.update { it.copy(navigate = true , loading = false) }
+
 
                         } else {
-                            var mensajeDeError = "Error al crear la cuenta"
-                            val excepcion = resultado.exceptionOrNull()
-                            if (excepcion != null && excepcion.message != null) {
-                                mensajeDeError = excepcion.message.toString()
+                            _uiState.update {
+                                it.copy(
+                                    errorMessage = "Error guardando perfil",
+                                    showMessage = true,
+                                    loading = false
+                                )
                             }
-                            _uiState.update { it.copy(errorMessage = mensajeDeError, showMessage = true) }
+                        }
+
+                    } else {
+                        var mensajeDeError = "Error al crear la cuenta"
+                        val excepcion = resultado.exceptionOrNull()
+                        if (excepcion != null && excepcion.message != null) {
+                            mensajeDeError = excepcion.message.toString()
+                        }
+                        _uiState.update {
+                            it.copy(
+                                errorMessage = mensajeDeError,
+                                showMessage = true,
+                                loading = false
+                            )
                         }
                     }
                 }
             }
         }
+
     }
+
+
+
 }

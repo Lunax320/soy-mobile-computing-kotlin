@@ -8,5 +8,6 @@ data class RegisterState(
     val showPassword: Boolean = false,
     val showMessage: Boolean = false,
     val errorMessage: String = "",
-    val navigate: Boolean = false
+    val navigate: Boolean = false,
+    val loading: Boolean =false
 )
