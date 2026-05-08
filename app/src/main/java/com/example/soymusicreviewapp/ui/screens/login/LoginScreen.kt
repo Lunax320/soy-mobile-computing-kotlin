@@ -94,7 +94,8 @@ fun LoginScreenBody(
         GeneralForm(
             labelId = R.string.email,
             textValue = state.userText,
-            onValueChanged = onUserChange
+            onValueChanged = onUserChange,
+            modifier = Modifier.testTag("txtEmailLogin")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -111,13 +112,15 @@ fun LoginScreenBody(
             onValueChanged = onPasswordChange,
             isPassword = true,
             showPassword = state.showPassword,
-            onTogglePasswordVisibility = onTogglePasswordVisibility
+            onTogglePasswordVisibility = onTogglePasswordVisibility,
+            modifier = Modifier.testTag("txtPasswordLogin")
         )
 
         Spacer(modifier = Modifier.height(50.dp))
 
         GeneralButton(
             text = stringResource(R.string.login),
+            modifier = Modifier.testTag("btnLoginFinal"),
             onClick = {
                 onLoginButtonPressed()
             }

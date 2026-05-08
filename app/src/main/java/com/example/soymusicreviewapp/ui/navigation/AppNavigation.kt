@@ -220,7 +220,8 @@ fun AppNavigation(
                     onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                     onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                     onFollowersClick = { userId -> navController.navigate("followersDetail/$userId") },
-                    onFollowingClick = { userId -> navController.navigate("followingDetail/$userId") }
+                    onFollowingClick = { userId -> navController.navigate("followingDetail/$userId") },
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }
@@ -242,7 +243,8 @@ fun AppNavigation(
                     onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") },
                     onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
                     onFollowersClick = { uId -> navController.navigate("followersDetail/$uId") },
-                    onFollowingClick = { uId -> navController.navigate("followingDetail/$uId") }
+                    onFollowingClick = { uId -> navController.navigate("followingDetail/$uId") },
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         }

@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.screens.following
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.soymusicreviewapp.data.repository.AuthRepository
@@ -34,18 +35,17 @@ class FollowingFeedViewModel @Inject constructor(
         _uiState.update { it.copy(currentUserId = userId) }
     }
 
-    private fun loadReviews() {
+    fun loadReviews() {
         viewModelScope.launch {
-            val currentUserId = _uiState.value.currentUserId
+            val currentUserId = authRepository.currentUser?.uid ?: ""
             if (currentUserId.isEmpty()) return@launch
-
-            val followingIds = userRepository.getFollowingIds(currentUserId)
 
             reviewRepository.getMainReviewsLive()
                 .catch { e -> 
-                    android.util.Log.e("FollowingVM", "Error en feed social: ${e.message}")
+                    Log.e("FollowingVM", "Error en feed social: ${e.message}")
                 }
                 .collect { allReviews ->
+                    val followingIds = userRepository.getFollowingIds(currentUserId)
                     val filteredReviews = allReviews.filter { it.userId in followingIds }
                     
                     _uiState.update { it.copy(reviews = filteredReviews) }

@@ -94,7 +94,8 @@ fun FeedScreenHeader(
                     text = "For You",
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 6.dp),
+                        .padding(horizontal = 6.dp)
+                        .testTag("tabForYou"),
                     fontSize = 14.sp,
                     color = colorForYou,
                     onClick = {
@@ -105,7 +106,8 @@ fun FeedScreenHeader(
                     text = "Social",
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 6.dp),
+                        .padding(horizontal = 6.dp)
+                        .testTag("tabSocial"),
                     fontSize = 14.sp,
                     color = colorFollowing,
                     onClick = {
@@ -116,7 +118,8 @@ fun FeedScreenHeader(
                     text = "Latest",
                     modifier = Modifier
                         .weight(1f)
-                        .padding(horizontal = 6.dp),
+                        .padding(horizontal = 6.dp)
+                        .testTag("tabLatest"),
                     fontSize = 14.sp,
                     color = colorLatest,
                     onClick = {

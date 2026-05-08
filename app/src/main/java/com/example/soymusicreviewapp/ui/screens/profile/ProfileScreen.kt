@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,6 +55,7 @@ import com.example.soymusicreviewapp.ui.utils.TopPlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewList
 import com.example.soymusicreviewapp.ui.utils.SettingsButton
 import com.example.soymusicreviewapp.ui.utils.EditButton
+import com.example.soymusicreviewapp.ui.utils.BackButton
 
 @Composable
 fun ProfileScreen(
@@ -68,6 +70,7 @@ fun ProfileScreen(
     onFollowersClick: (String) -> Unit = {},
     onFollowingClick: (String) -> Unit = {},
     onCommentClick: (String) -> Unit,
+    onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -99,7 +102,8 @@ fun ProfileScreen(
             followed = state.user.followed,
             onFollowClick = { viewModel.followOrUnfollowUser(userId) },
             onFollowersClick = { onFollowersClick(userId) },
-            onFollowingClick = { onFollowingClick(userId) }
+            onFollowingClick = { onFollowingClick(userId) },
+            onBackClick = onBackClick
         )
 
         ProfileScreenBody(
@@ -133,7 +137,8 @@ fun ProfileScreenHeader(
     onFollowClick: () -> Unit,
     onFollowersClick: () -> Unit = {},
     onFollowingClick: () -> Unit = {},
-    onImageClick: () -> Unit = {}
+    onImageClick: () -> Unit = {},
+    onBackClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier,
@@ -147,6 +152,13 @@ fun ProfileScreenHeader(
                     .align(Alignment.TopStart)
                     .padding(16.dp),
                 onClick = onEditProfileClick
+            )
+        } else {
+            BackButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp),
+                onBack = onBackClick
             )
         }
 
@@ -172,14 +184,14 @@ fun ProfileScreenHeader(
             )
 
             Text(
-                modifier = Modifier.padding(top = 15.dp),
+                modifier = Modifier.padding(top = 15.dp).testTag("profileName"),
                 text = name,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = 8.dp).testTag("profileUsername"),
                 text = username,
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 15.sp,
@@ -188,7 +200,7 @@ fun ProfileScreenHeader(
 
             Row {
                 Text(
-                    modifier = Modifier.padding(top = 12.dp),
+                    modifier = Modifier.padding(top = 12.dp).testTag("profileReviewCount"),
                     text = reviewCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
@@ -198,7 +210,8 @@ fun ProfileScreenHeader(
                 Text(
                     modifier = Modifier
                         .padding(top = 12.dp)
-                        .clickable { onFollowersClick() },
+                        .clickable { onFollowersClick() }
+                        .testTag("profileFollowersCount"),
                     text = followersCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
@@ -208,7 +221,8 @@ fun ProfileScreenHeader(
                 Text(
                     modifier = Modifier
                         .padding(top = 12.dp)
-                        .clickable { onFollowingClick() },
+                        .clickable { onFollowingClick() }
+                        .testTag("profileFollowingCount"),
                     text = followingCount.toString(),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 20.sp,
