@@ -19,7 +19,7 @@ class LatestFeedViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
     private val authRepository: AuthRepository,
     private val songRepository: SongRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LatestFeedState())
     val uiState: StateFlow<LatestFeedState> = _uiState.asStateFlow()
@@ -27,6 +27,7 @@ class LatestFeedViewModel @Inject constructor(
     init {
         loadCurrentUser()
         loadData()
+        loadFavorites()
     }
 
     private fun loadCurrentUser() {
@@ -60,10 +61,47 @@ class LatestFeedViewModel @Inject constructor(
         }
     }
 
+    private fun loadFavorites() {
+        val userId = authRepository.currentUser?.uid ?: return
+        viewModelScope.launch {
+            songRepository.getFavoriteSongsLive(userId)
+                .catch { e ->
+                    android.util.Log.e("LatestViewModel", "Error loading favorites: ${e.message}")
+                }
+                .collect { favoriteSongs ->
+                    val favoriteIds = favoriteSongs.map { it.songId }.toSet()
+                    _uiState.update { it.copy(favoriteSongsIds = favoriteIds) }
+                }
+        }
+    }
+
     fun sendOrDeleteReviewLike(reviewId: String, userId: String) {
         if (userId.isEmpty()) return
         viewModelScope.launch {
             reviewRepository.sendOrDeleteReviewLike(reviewId, userId)
+        }
+    }
+
+    fun onFavoriteClick(songId: String) {
+        val userId = authRepository.currentUser?.uid ?: return
+        val isFavorite = _uiState.value.favoriteSongsIds.contains(songId)
+
+        val newFavoriteIds = if (isFavorite) {
+            _uiState.value.favoriteSongsIds.minus(songId)
+        } else {
+            _uiState.value.favoriteSongsIds.plus(songId)
+        }
+        _uiState.update { it.copy(favoriteSongsIds = newFavoriteIds) }
+
+        viewModelScope.launch {
+            val result = if (isFavorite) {
+                songRepository.removeFavorite(userId, songId)
+            } else {
+                songRepository.addFavorite(userId, songId)
+            }
+            if (result.isFailure) {
+                _uiState.update { it.copy(favoriteSongsIds = _uiState.value.favoriteSongsIds) }
+            }
         }
     }
 }

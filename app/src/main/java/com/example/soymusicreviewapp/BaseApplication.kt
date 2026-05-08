@@ -9,10 +9,13 @@ import com.google.firebase.firestore.firestore
 class BaseApplication: Application() {
     override fun onCreate() {
         super.onCreate()
-        if (BuildConfig.DEBUG) {
+
+        /*if (BuildConfig.DEBUG) {
             Firebase.firestore.useEmulator("10.0.2.2", 8085)
             //Firebase.firestore.useEmulator("10.0.2.2", 8080)
             Firebase.auth.useEmulator("10.0.2.2", 9099)
         }
+         */
+
     }
 }

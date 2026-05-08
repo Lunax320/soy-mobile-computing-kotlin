@@ -8,5 +8,6 @@ data class CreateReviewState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val navigateBack: Boolean = false,
-    val song: Song? = null
+    val song: Song? = null,
+    val isFavorite: Boolean = false
 )

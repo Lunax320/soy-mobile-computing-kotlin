@@ -54,6 +54,8 @@ fun ExploreScreen(
         ExploreScreenBody(
             songs = state.songs,
             onSongClick = onSongClick,
+            favoriteSongsIds = state.favoriteSongsIds,
+            onFavoriteClick = { songId -> viewModel.onFavoriteClick(songId) },
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
@@ -62,7 +64,7 @@ fun ExploreScreen(
 }
 
 
-// Component for filtering genres (kept as is)
+// Component for filtering genres
 @Composable
 fun GenresFilter(
     modifier: Modifier = Modifier
@@ -179,15 +181,18 @@ fun ExploreScreenHeader(
 fun ExploreScreenBody(
     songs: List<Song>,
     onSongClick: (String) -> Unit,
+    favoriteSongsIds: Set<String> = emptySet(),
+    onFavoriteClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         SoyBackground()
-
         SongList(
             songs = songs,
             modifier = Modifier.fillMaxSize(),
             isNewRelease = false,
+            favoriteSongsIds = favoriteSongsIds,
+            onFavoriteClick = onFavoriteClick,
             onSongClick = onSongClick
         )
     }

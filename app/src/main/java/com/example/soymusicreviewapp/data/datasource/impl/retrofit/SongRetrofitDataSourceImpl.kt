@@ -26,4 +26,27 @@ class SongRetrofitDataSourceImpl @Inject constructor(
     override fun listenAllSongs(): Flow<List<SongDto>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun addFavorite(userId: String, songId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removeFavorite(userId: String, songId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getFavoriteSongs(userId: String): List<SongDto> {
+        TODO("Not yet implemented")
+    }
+
+    override fun listenFavoriteSongs(userId: String): Flow<List<SongDto>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun isFavorite(
+        userId: String,
+        songId: String
+    ): Boolean {
+        TODO("Not yet implemented")
+    }
 }

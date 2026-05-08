@@ -8,11 +8,13 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -41,7 +43,7 @@ val bottomNavItems = listOf(
     BottomNavItem(Icons.Filled.Home, Icons.Outlined.Home, Screen.ForYouFeedScreen.route),
     BottomNavItem(Icons.Filled.Search, Icons.Outlined.Search, Screen.ExploreScreen.route),
     BottomNavItem(Icons.Filled.AddCircle, Icons.Outlined.AddCircle, Screen.CreateReviewScreen.route),
-    BottomNavItem(Icons.Filled.Notifications, Icons.Outlined.Notifications, Screen.NotificationScreen.route),
+    BottomNavItem(Icons.Filled.Star, Icons.Outlined.Star, Screen.NotificationScreen.route),
     BottomNavItem(Icons.Filled.Person, Icons.Outlined.Person, Screen.ProfileScreen.route),
 )
 

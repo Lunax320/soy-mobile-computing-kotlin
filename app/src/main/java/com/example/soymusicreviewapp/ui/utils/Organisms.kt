@@ -266,8 +266,9 @@ fun SongCard(
     song: Song,
     onClick: () -> Unit,
     isNewRelease: Boolean = false,
+    isFavorite: Boolean = false,
+    onFavoriteClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
-
 ) {
     Surface(
         onClick = onClick,
@@ -279,7 +280,9 @@ fun SongCard(
     ) {
         SongInfo(
             song = song,
-            isNewRelease = isNewRelease
+            isNewRelease = isNewRelease,
+            isFavorite = isFavorite,
+            onFavoriteClick = onFavoriteClick
         )
     }
 }
@@ -289,13 +292,82 @@ fun SongList(
     songs: List<Song>,
     onSongClick: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isNewRelease: Boolean = false
+    isNewRelease: Boolean = false,
+    favoriteSongsIds: Set<String> = emptySet(),
+    onFavoriteClick: ((String) -> Unit)? = null
 ) {
     LazyColumn(modifier = modifier) {
         items(songs.size) { index ->
             SongCard(
                 song = songs[index],
-                onClick = { onSongClick(songs[index].songId) }
+                onClick = { onSongClick(songs[index].songId) },
+                isNewRelease = isNewRelease,
+                isFavorite = favoriteSongsIds.contains(songs[index].songId),
+                onFavoriteClick = if (onFavoriteClick != null) {
+                    { onFavoriteClick(songs[index].songId) }
+                } else null
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SongCardPreview() {
+    CompMovilProyectoTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Canción NO favorita (estrella vacía)
+            SongCard(
+                song = Song(
+                    songId = "1",
+                    name = "The Mother We Share",
+                    artist = "CHVRCHES",
+                    genre = "Synth-pop",
+                    duration = "3:14",
+                    songImage = "https://images.genius.com/b47328a0f7ac737ec9c4aa2ab4133ef0.1000x977x1.png"
+                ),
+                onClick = {},
+                isNewRelease = false,
+                isFavorite = false,
+                onFavoriteClick = {}
+            )
+
+            // Canción FAVORITA (estrella llena)
+            SongCard(
+                song = Song(
+                    songId = "2",
+                    name = "Oblivion",
+                    artist = "Grimes",
+                    genre = "Electropop",
+                    duration = "3:05",
+                    songImage = "https://pubcrawl.madrid/wp-content/uploads/2020/10/82008765_2849539478438434_940167649604665344_o.jpg"
+                ),
+                onClick = {},
+                isNewRelease = true,
+                isFavorite = true,
+                onFavoriteClick = {}
+            )
+
+            // Canción con etiqueta "New"
+            SongCard(
+                song = Song(
+                    songId = "3",
+                    name = "Sunset",
+                    artist = "The Midnight",
+                    genre = "Synthwave",
+                    duration = "4:03",
+                    songImage = "https://i.scdn.co/image/ab67616d0000b27314d4c59761a337196af596cc"
+                ),
+                onClick = {},
+                isNewRelease = true,
+                isFavorite = false,
+                onFavoriteClick = {}
             )
         }
     }

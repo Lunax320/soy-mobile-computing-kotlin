@@ -18,7 +18,7 @@ import com.example.soymusicreviewapp.ui.screens.songdetail.SongsDetailScreen
 import com.example.soymusicreviewapp.ui.screens.foryou.ForYouFeedScreen
 import com.example.soymusicreviewapp.ui.screens.following.FollowingFeedScreen
 import com.example.soymusicreviewapp.ui.screens.latest.LatestFeedScreen
-import com.example.soymusicreviewapp.ui.screens.notifications.NotificationScreen
+import com.example.soymusicreviewapp.ui.screens.favorites.FavoritesScreen
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileScreen
 import com.example.soymusicreviewapp.ui.screens.profile.ProfileViewModel
 import com.example.soymusicreviewapp.ui.screens.settings.SettingsScreen
@@ -248,7 +248,12 @@ fun AppNavigation(
         }
 
         composable(route = Screen.NotificationScreen.route) {
-            NotificationScreen(viewModel = hiltViewModel())
+            FavoritesScreen(
+                viewModel = hiltViewModel(),
+                onSongClick = { songId ->
+                    navController.navigate("songDetail/$songId")
+                }
+            )
         }
 
         composable(route = Screen.SettingsScreen.route) {

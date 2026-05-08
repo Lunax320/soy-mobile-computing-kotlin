@@ -56,8 +56,10 @@ fun CreateReviewScreen(
                     reviewText = state.reviewText,
                     rating = state.rating,
                     isLoading = state.isLoading,
+                    isFavorite = state.isFavorite,
                     onReviewChange = { viewModel.onReviewTextChange(it) },
                     onRatingChange = { viewModel.onRatingChange(it) },
+                    onFavoriteClick = { viewModel.onFavoriteClick() },
                     onSubmitClick = { viewModel.createReview(songId) },
                     modifier = Modifier.weight(1f)
                 )
@@ -115,8 +117,10 @@ fun CreateReviewBody(
     reviewText: String,
     rating: Int,
     isLoading: Boolean,
+    isFavorite: Boolean,
     onReviewChange: (String) -> Unit,
     onRatingChange: (Int) -> Unit,
+    onFavoriteClick: () -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -129,17 +133,21 @@ fun CreateReviewBody(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        SelectedSongSection(song = song)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         RatingSelectionCard(rating = rating, onRatingChange = onRatingChange)
 
         Spacer(modifier = Modifier.height(16.dp))
 
         ReviewInputCard(reviewText = reviewText, onReviewChange = onReviewChange)
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(24.dp))
+
+        SelectedSongSection(
+            song = song,
+            isFavorite = isFavorite,
+            onFavoriteClick = onFavoriteClick
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         GeneralButton(
             text = if (isLoading) "Publishing..." else "Publish Review",
@@ -156,10 +164,17 @@ fun CreateReviewBody(
     }
 }
 @Composable
-fun SelectedSongSection(song: Song, modifier: Modifier = Modifier) {
+fun SelectedSongSection(
+    song: Song,
+    isFavorite: Boolean = false,
+    onFavoriteClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
     SongCard(
         song = song,
-        onClick = { }
+        onClick = { },
+        isFavorite = isFavorite,
+        onFavoriteClick = onFavoriteClick
     )
 }
 

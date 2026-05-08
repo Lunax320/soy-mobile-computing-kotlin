@@ -59,6 +59,8 @@ fun LatestFeedScreen(
                 onUserClick = onUserClick,
                 onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
                 onCommentClick = onCommentClick,
+                favoriteSongsIds = state.favoriteSongsIds,
+                onFavoriteClick = { songId -> viewModel.onFavoriteClick(songId) },
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -73,7 +75,9 @@ fun LatestFeedList(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onLikeClick: (String) -> Unit,
-    onCommentClick: (String) -> Unit, // Nuevo parámetro
+    onCommentClick: (String) -> Unit,
+    favoriteSongsIds: Set<String> = emptySet(),
+    onFavoriteClick: ((String) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -95,11 +99,15 @@ fun LatestFeedList(
         items(songs.size) { index ->
             SongCard(
                 song = songs[index],
+                onClick = {},
+                isNewRelease = true,
+                isFavorite = favoriteSongsIds.contains(songs[index].songId),
+                onFavoriteClick = if (onFavoriteClick != null) {
+                    { onFavoriteClick(songs[index].songId) }
+                } else null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                onClick = {},
-                isNewRelease = true
+                    .padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -124,7 +132,7 @@ fun LatestFeedList(
                 onReviewClick = onReviewClick,
                 onUserClick = onUserClick,
                 onLikeClick = onLikeClick,
-                onCommentClick = onCommentClick, // Propagado a la tarjeta
+                onCommentClick = onCommentClick,
                 isProfileView = false
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -132,18 +140,4 @@ fun LatestFeedList(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LatestFeedPreview() {
-    CompMovilProyectoTheme {
-        LatestFeedList(
-            songs = emptyList(),
-            reviews = emptyList(),
-            currentUserId = "1",
-            onReviewClick = {},
-            onUserClick = {},
-            onLikeClick = {},
-            onCommentClick = {}
-        )
-    }
-}
+

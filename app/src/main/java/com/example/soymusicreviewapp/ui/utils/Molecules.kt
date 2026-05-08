@@ -19,8 +19,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -181,14 +183,16 @@ fun SongInfo(
     song: Song,
     modifier: Modifier = Modifier,
     isNewRelease: Boolean = false,
+    isFavorite: Boolean = false,
+    onFavoriteClick: (() -> Unit)? = null,
     imageSize: Dp = 70.dp,
     titleSize: TextUnit = 16.sp,
     artistSize: TextUnit = 14.sp,
     tagSize: TextUnit = 12.sp,
     timeSize: TextUnit = 12.sp
-){
+) {
     Row(
-        modifier = Modifier.padding(18.dp),
+        modifier = modifier.padding(18.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         SongAsyncImage(
@@ -198,7 +202,7 @@ fun SongInfo(
 
         Spacer(modifier = Modifier.width(15.dp))
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             SongText(
                 songName = song.name,
                 fontSize = titleSize
@@ -217,9 +221,9 @@ fun SongInfo(
                 modifier = Modifier.padding(top = 4.dp)
             ) {
                 if (isNewRelease) {
-                    GenreTag("New", backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.onSurface, tagSize= tagSize)
+                    GenreTag("New", backgroundColor = MaterialTheme.colorScheme.surface, borderColor = MaterialTheme.colorScheme.onSurface, tagSize = tagSize)
                 } else {
-                    GenreTag(song.genre, tagSize= tagSize)
+                    GenreTag(song.genre, tagSize = tagSize)
                 }
 
                 Spacer(modifier = Modifier.width(8.dp))
@@ -228,6 +232,20 @@ fun SongInfo(
                     text = song.duration,
                     color = MaterialTheme.colorScheme.surfaceBright,
                     fontSize = timeSize
+                )
+            }
+        }
+
+        // Botón de favorito (estrella)
+        if (onFavoriteClick != null) {
+            IconButton(
+                onClick = onFavoriteClick,
+                modifier = Modifier.testTag("favoriteButton_${song.songId}")
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.Star,
+                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                    tint = if (isFavorite) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onPrimary
                 )
             }
         }

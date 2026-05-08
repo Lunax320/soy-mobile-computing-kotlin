@@ -7,5 +7,6 @@ data class LatestFeedState(
     // List of songs for the New Releases
     val newReleases: List<Song> = emptyList(),
     val recentReviews: List<Review> = emptyList(),
-    val currentUserId: String = ""
+    val currentUserId: String = "",
+    val favoriteSongsIds: Set<String> = emptySet()
 )

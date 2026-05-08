@@ -104,7 +104,6 @@ class FullE2EUserFlowTest {
         }
     }
 
-
     // NORMAL (ULTRA RAPIDO NO SE VE NADOTA) USANDO WAITUNTILTAG
     @Test
     fun fullUserFlow_registers_likesAndUnlikesReview() {
@@ -209,10 +208,12 @@ class FullE2EUserFlowTest {
     }
 
 
+
+    /*
     // USANDO THREAD PARA VER EL PASITO A PASITO, ES EXACTAMENTE LA MISMA DE ARRIBA
     // SOLO QUE USANDO PUES THREAD
 
-    /*@Test
+    @Test
     fun fullUserFlow_registers_likesAndUnlikesReview() {
         // Navegar a registro
         composeRule.onNodeWithTag("btnRegister").performClick()
@@ -298,7 +299,7 @@ class FullE2EUserFlowTest {
         // Pausa final (sin verificar feed al final)
         Thread.sleep(1500)
     }
-     */
+    */
 
 
     @After
