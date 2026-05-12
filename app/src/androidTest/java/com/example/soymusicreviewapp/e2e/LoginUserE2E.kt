@@ -39,7 +39,8 @@ class LoginUserE2E {
         hiltRule.inject()
         try {
             Firebase.auth.useEmulator("10.0.2.2", 9099)
-            Firebase.firestore.useEmulator("10.0.2.2", 8080)
+            Firebase.firestore.useEmulator("10.0.2.2", 8085)
+            //Firebase.firestore.useEmulator("10.0.2.2", 8080)
         } catch (_: Exception) { }
 
         runBlocking {

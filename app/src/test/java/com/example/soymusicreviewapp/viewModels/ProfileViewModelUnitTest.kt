@@ -1,4 +1,4 @@
-package com.example.soymusicreviewapp.viewmodels
+package com.example.soymusicreviewapp.viewModels
 
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.dtos.UserDto

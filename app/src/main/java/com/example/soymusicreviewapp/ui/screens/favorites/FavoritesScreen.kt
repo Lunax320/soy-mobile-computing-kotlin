@@ -1,5 +1,7 @@
 package com.example.soymusicreviewapp.ui.screens.favorites
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -78,18 +81,26 @@ fun FavoritesScreen(
 
 @Composable
 fun FavoritesScreenHeader(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxWidth()) {
-        TopPlainBackground()
-        Column(
+    Box(modifier = modifier) {
+        Image(
+            painter = painterResource(R.drawable.bg_plain_top_v2),
+            contentDescription = stringResource(R.string.background_plain_top_type_2)
+        )
+
+        Column (
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 40.dp, bottom = 16.dp, start = 16.dp)
+                .padding(top = 40.dp, bottom = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+
         ) {
             Text(
-                text = stringResource(R.string.favorites),
+                text = stringResource((R.string.my_favorites_songs)),
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp)
             )
         }
     }

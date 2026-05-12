@@ -161,7 +161,7 @@ fun RegisterScreenBody(
 
         GeneralButton(
             text = stringResource(R.string.create_account),
-            modifier = Modifier.testTag("btnRegisterFinal"),
+            //modifier = Modifier.testTag("btnRegisterFinal"),
             onClick = {
                 onRegisterButtonPressed()
             }

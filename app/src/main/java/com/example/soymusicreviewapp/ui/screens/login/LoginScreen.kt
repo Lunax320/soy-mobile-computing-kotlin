@@ -26,7 +26,8 @@ import com.example.soymusicreviewapp.ui.utils.*
 @Composable
 fun LoginScreen(
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier.testTag("loginScreen"),
+    //modifier: Modifier = Modifier.testTag("loginScreen"),
+    modifier: Modifier = Modifier,
     viewModel: LoginViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -95,7 +96,7 @@ fun LoginScreenBody(
             labelId = R.string.email,
             textValue = state.userText,
             onValueChanged = onUserChange,
-            modifier = Modifier.testTag("txtEmailLogin")
+            //modifier = Modifier.testTag("txtEmailLogin")
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -113,14 +114,14 @@ fun LoginScreenBody(
             isPassword = true,
             showPassword = state.showPassword,
             onTogglePasswordVisibility = onTogglePasswordVisibility,
-            modifier = Modifier.testTag("txtPasswordLogin")
+            //modifier = Modifier.testTag("txtPasswordLogin")
         )
 
         Spacer(modifier = Modifier.height(50.dp))
 
         GeneralButton(
             text = stringResource(R.string.login),
-            modifier = Modifier.testTag("btnLoginFinal"),
+            //modifier = Modifier.testTag("btnLoginFinal"),
             onClick = {
                 onLoginButtonPressed()
             }

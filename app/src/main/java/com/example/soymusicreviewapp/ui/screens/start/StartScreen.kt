@@ -92,7 +92,7 @@ fun StartScreenBody(
         Spacer(modifier = Modifier.height(50.dp))
 
         GeneralButton(
-            modifier = Modifier.testTag("btnLogin"),
+            //modifier = Modifier.testTag("btnLogin"),
             text = stringResource(R.string.login),
             onClick = loginButtonPressed
         )
@@ -100,7 +100,7 @@ fun StartScreenBody(
         Spacer(modifier = Modifier.height(4.dp))
 
         GeneralButton(
-            modifier = Modifier.testTag("btnRegister"),
+            //modifier = Modifier.testTag("btnRegister"),
             text = stringResource(R.string.register),
             color = MaterialTheme.colorScheme.tertiaryContainer,
             onClick = registerButtonPressed

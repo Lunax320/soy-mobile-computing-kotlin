@@ -35,8 +35,8 @@ class UserRepositoryIntegrationTest {
     @Before
     fun setUp() = runTest {
         try {
-            //db.useEmulator("10.0.2.2", 8085)
-            db.useEmulator("10.0.2.2", 8080)
+            db.useEmulator("10.0.2.2", 8085)
+            //db.useEmulator("10.0.2.2", 8080)
         } catch (_: Exception) {
         }
 
