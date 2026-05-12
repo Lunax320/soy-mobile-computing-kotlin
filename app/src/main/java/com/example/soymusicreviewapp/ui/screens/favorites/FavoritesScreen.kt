@@ -96,7 +96,7 @@ fun FavoritesScreenHeader(modifier: Modifier = Modifier) {
 
         ) {
             Text(
-                text = stringResource((R.string.my_favorites_songs)),
+                text = stringResource(R.string.favorites_songs),
                 color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
