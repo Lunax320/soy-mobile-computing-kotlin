@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +28,7 @@ import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.FeedScreenHeader
+import com.example.soymusicreviewapp.ui.utils.MapFloatingActionButton
 import com.example.soymusicreviewapp.ui.utils.ReviewCard
 import com.example.soymusicreviewapp.ui.utils.SongCard
 
@@ -35,34 +38,45 @@ fun LatestFeedScreen(
     onReviewClick: (String) -> Unit,
     onUserClick: (String) -> Unit,
     onCommentClick: (String) -> Unit,
+    onMapClick: () -> Unit,
     latestCreateAccount: () -> Unit,
     viewModel: LatestFeedViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        FeedScreenHeader(
-            currentTab = 2,
-            HeaderButtonPressed = latestCreateAccount
-        )
-
-        Box {
+    Scaffold(
+        containerColor = Color.Transparent,
+        floatingActionButton = {
+            MapFloatingActionButton(onNavigateToMap = onMapClick)
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
             PlainBackground()
 
-            LatestFeedList(
-                songs = state.newReleases,
-                reviews = state.recentReviews,
-                currentUserId = state.currentUserId,
-                onReviewClick = onReviewClick,
-                onUserClick = onUserClick,
-                onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
-                onCommentClick = onCommentClick,
-                favoriteSongsIds = state.favoriteSongsIds,
-                onFavoriteClick = { songId -> viewModel.onFavoriteClick(songId) },
+            Column(
                 modifier = Modifier.fillMaxSize()
-            )
+            ) {
+                FeedScreenHeader(
+                    currentTab = 2,
+                    HeaderButtonPressed = latestCreateAccount,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                LatestFeedList(
+                    songs = state.newReleases,
+                    reviews = state.recentReviews,
+                    currentUserId = state.currentUserId,
+                    onReviewClick = onReviewClick,
+                    onUserClick = onUserClick,
+                    onLikeClick = { reviewId -> viewModel.sendOrDeleteReviewLike(reviewId, state.currentUserId) },
+                    onCommentClick = onCommentClick,
+                    favoriteSongsIds = state.favoriteSongsIds,
+                    onFavoriteClick = { songId -> viewModel.onFavoriteClick(songId) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(bottom = paddingValues.calculateBottomPadding() / 200)
+                )
+            }
         }
     }
 }
@@ -84,7 +98,6 @@ fun LatestFeedList(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(bottom = 20.dp)
     ) {
-
         item {
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -104,10 +117,7 @@ fun LatestFeedList(
                 isFavorite = favoriteSongsIds.contains(songs[index].songId),
                 onFavoriteClick = if (onFavoriteClick != null) {
                     { onFavoriteClick(songs[index].songId) }
-                } else null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                } else null
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -139,5 +149,3 @@ fun LatestFeedList(
         }
     }
 }
-
-

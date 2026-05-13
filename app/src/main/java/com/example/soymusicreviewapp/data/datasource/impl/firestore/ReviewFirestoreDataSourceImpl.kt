@@ -5,6 +5,7 @@ import com.example.soymusicreviewapp.data.dtos.CreateReviewDto
 import com.example.soymusicreviewapp.data.dtos.ReviewDto
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -242,5 +243,29 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
                 }
             }
         awaitClose { listener.remove() }
+    }
+    
+    override suspend fun getLast24ReviewsWithLocation(): List<ReviewDto> {
+        // Calculamos el tiempo de hace 24 horas en milisegundos
+        val twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000)
+        val threshold = twentyFourHoursAgo.toString()
+
+        // Consultamos reviews cuya fecha sea mayor al umbral (más recientes)
+        // Nota: Al usar un filtro de desigualdad (>), Firestore requiere ordenar por ese mismo campo
+        val snapshot = db.collection("reviews")
+            .whereGreaterThan("date", threshold)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .get()
+            .await()
+
+        // Filtramos en memoria las que tienen ubicación (porque Firestore no permite desigualdades en dos campos distintos)
+        return snapshot.documents.mapNotNull { doc ->
+            val review = doc.toObject(ReviewDto::class.java)
+            if (review != null && review.latitude != null && review.longitude != null) {
+                review.copy(id = doc.id)
+            } else {
+                null
+            }
+        }
     }
 }

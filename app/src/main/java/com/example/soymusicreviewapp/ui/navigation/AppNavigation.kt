@@ -30,6 +30,7 @@ import com.example.soymusicreviewapp.ui.screens.commentreview.CommentReviewScree
 import com.example.soymusicreviewapp.ui.screens.followersDetail.FollowersDetailScreen
 import com.example.soymusicreviewapp.ui.screens.followingdetail.FollowingDetailScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
+import com.example.soymusicreviewapp.ui.screens.reviewsmap.ReviewsMapScreen as ActualReviewsMapScreen
 
 sealed class Screen(val route: String) {
     object SplashScreen : Screen("splash")
@@ -48,6 +49,7 @@ sealed class Screen(val route: String) {
     object EditProfileScreen : Screen("editProfile")
     object FollowersDetailScreen : Screen("followersDetail")
     object FollowingDetailScreen : Screen("followingDetail")
+    object ReviewsMapScreen : Screen("reviewsMap")
 }
 
 @Composable
@@ -104,7 +106,8 @@ fun AppNavigation(
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
-                followingButtonPressed = { navController.navigate(Screen.FollowingFeedScreen.route) }
+                followingButtonPressed = { navController.navigate(Screen.FollowingFeedScreen.route) },
+                onMapClick = { navController.navigate(Screen.ReviewsMapScreen.route) }
             )
         }
 
@@ -114,7 +117,8 @@ fun AppNavigation(
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
-                latestButtonPressed = { navController.navigate(Screen.LatestFeedScreen.route) }
+                latestButtonPressed = { navController.navigate(Screen.LatestFeedScreen.route) },
+                onMapClick = { navController.navigate(Screen.ReviewsMapScreen.route) }
             )
         }
 
@@ -124,7 +128,8 @@ fun AppNavigation(
                 onReviewClick = { reviewId -> navController.navigate("reviewDetail/$reviewId") },
                 onUserClick = { userId -> navController.navigate("userProfile/$userId") },
                 onCommentClick = { reviewId -> navController.navigate("commentReview/$reviewId") },
-                latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) }
+                latestCreateAccount = { navController.navigate(Screen.ForYouFeedScreen.route) },
+                onMapClick = { navController.navigate(Screen.ReviewsMapScreen.route) }
             )
         }
 
@@ -153,13 +158,10 @@ fun AppNavigation(
         composable(
             route = "createReview/{songId}",
             arguments = listOf(navArgument("songId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val songId = backStackEntry.arguments?.getString("songId") ?: "1"
-            val createViewModel: CreateReviewViewModel = hiltViewModel()
-
+        ) { 
+            // Corregido: Ya no pasamos parámetros manuales.
+            // ActualCreateReviewScreen obtiene todo lo necesario internamente.
             ActualCreateReviewScreen(
-                songId = songId,
-                viewModel = createViewModel,
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -312,6 +314,13 @@ fun AppNavigation(
                 userId = userId,
                 onBackClick = { navController.popBackStack() },
                 onUserClick = { clickedUserId -> navController.navigate("userProfile/$clickedUserId") }
+            )
+        }
+
+        composable(route = Screen.ReviewsMapScreen.route) {
+            ActualReviewsMapScreen(
+                onBackClick = { navController.popBackStack() },
+                viewModel = hiltViewModel()
             )
         }
     }

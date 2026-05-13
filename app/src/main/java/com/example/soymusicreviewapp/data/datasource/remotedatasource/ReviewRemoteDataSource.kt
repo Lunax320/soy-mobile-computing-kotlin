@@ -16,4 +16,7 @@ interface ReviewRemoteDataSource {
     fun listenSongReviews(songId: String, currentUserId: String = ""): Flow<List<ReviewDto>>
     suspend fun getCommentsForReview(parentReviewId: String, currentUserId: String = ""): List<ReviewDto>
     fun listenCommentsForReview(parentReviewId: String, currentUserId: String = ""): Flow<List<ReviewDto>>
+    
+    // Nueva función agregada al contrato
+    suspend fun getLast24ReviewsWithLocation(): List<ReviewDto>
 }

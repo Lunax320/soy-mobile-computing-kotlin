@@ -15,8 +15,10 @@ data class ReviewDto(
     val updatedAt: String,
     val parentId: String?,
     val user: UserDto?,
-    val likesCount : Int,
-    val liked: Boolean
+    val likesCount: Int,
+    val liked: Boolean,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 ) {
     constructor() : this(
         id = "",
@@ -32,7 +34,9 @@ data class ReviewDto(
         parentId = null,
         user = null,
         likesCount = 0,
-        liked = false
+        liked = false,
+        latitude = null,
+        longitude = null
     )
 }
 
@@ -70,6 +74,8 @@ fun ReviewDto.toReview(): Review {
         rating = rating,
         parentId = parentId,
         likesCount = likesCount,
-        liked = liked
+        liked = liked,
+        latitude = latitude,
+        longitude = longitude
     )
 }

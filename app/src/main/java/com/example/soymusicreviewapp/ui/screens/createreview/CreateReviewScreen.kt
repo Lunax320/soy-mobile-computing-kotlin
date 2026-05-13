@@ -1,5 +1,9 @@
 package com.example.soymusicreviewapp.ui.screens.createreview
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,13 +16,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Song
 import com.example.soymusicreviewapp.data.local.LocalSongsProvider
@@ -27,16 +33,57 @@ import com.example.soymusicreviewapp.ui.utils.BackButton
 import com.example.soymusicreviewapp.ui.utils.GeneralButton
 import com.example.soymusicreviewapp.ui.utils.SongCard
 import com.example.soymusicreviewapp.ui.utils.SoyBackground
+import com.google.android.gms.location.LocationServices
 
 @Composable
 fun CreateReviewScreen(
-    songId: String,
     onBackClick: () -> Unit,
-    viewModel: CreateReviewViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CreateReviewViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-    val song = state.song
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+
+    // Para localizacion
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val isGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (isGranted) {
+            try {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        viewModel.updateLocation(location.latitude, location.longitude)
+                    }
+                    viewModel.saveReview()
+                }.addOnFailureListener { viewModel.saveReview() }
+            } catch (_: SecurityException) { viewModel.saveReview() }
+        } else {
+            viewModel.saveReview()
+        }
+    }
+
+    val onPublishClick: () -> Unit = {
+        val hasFine = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val hasCoarse = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+        if (hasFine || hasCoarse) {
+            try {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        viewModel.updateLocation(location.latitude, location.longitude)
+                    }
+                    viewModel.saveReview()
+                }.addOnFailureListener { viewModel.saveReview() }
+            } catch (_: SecurityException) { viewModel.saveReview() }
+        } else {
+            permissionLauncher.launch(
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+            )
+        }
+    }
 
     LaunchedEffect(state.navigateBack) {
         if (state.navigateBack) {
@@ -50,24 +97,24 @@ fun CreateReviewScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             CreateReviewHeader(onBackClick = onBackClick)
 
-            if (song != null) {
+            state.song?.let { song ->
                 CreateReviewBody(
                     song = song,
                     reviewText = state.reviewText,
                     rating = state.rating,
                     isLoading = state.isLoading,
                     isFavorite = state.isFavorite,
-                    onReviewChange = { viewModel.onReviewTextChange(it) },
-                    onRatingChange = { viewModel.onRatingChange(it) },
-                    onFavoriteClick = { viewModel.onFavoriteClick() },
-                    onSubmitClick = { viewModel.createReview(songId) },
+                    onReviewChange = { viewModel.onReviewTextChanged(it) },
+                    onRatingChange = { viewModel.onRatingChanged(it) },
+                    onFavoriteClick = { /* TODO */ },
+                    onSubmitClick = onPublishClick,
                     modifier = Modifier.weight(1f)
                 )
-            }
-            else {
-                Box(modifier = Modifier.fillMaxSize().weight(1f), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
-                }
+            } ?: Box(
+                modifier = Modifier.fillMaxSize().weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.secondary)
             }
         }
 
@@ -95,17 +142,17 @@ fun CreateReviewScreen(
 fun CreateReviewHeader(onBackClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(modifier = modifier) {
         Image(
-            painter = painterResource(com.example.soymusicreviewapp.R.drawable.bg_plain_top_v2),
+            painter = painterResource(R.drawable.bg_plain_top_v2),
             contentDescription = stringResource(R.string.background_plain_top_type_2)
         )
         Column(modifier = Modifier.padding(top = 10.dp, start = 16.dp, end = 16.dp)) {
             BackButton(onBack = onBackClick)
             Text(
-                text = "Create Review",
-                color = Color.White,
+                text = stringResource(R.string.create_review),
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp, bottom = 20.dp)
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 20.dp)
             )
         }
     }
@@ -131,15 +178,7 @@ fun CreateReviewBody(
             .fillMaxSize()
             .verticalScroll(scrollState)
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-
-        RatingSelectionCard(rating = rating, onRatingChange = onRatingChange)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ReviewInputCard(reviewText = reviewText, onReviewChange = onReviewChange)
-
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(17.dp))
 
         SelectedSongSection(
             song = song,
@@ -147,7 +186,15 @@ fun CreateReviewBody(
             onFavoriteClick = onFavoriteClick
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        RatingSelectionCard(rating = rating, onRatingChange = onRatingChange)
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        ReviewInputCard(reviewText = reviewText, onReviewChange = onReviewChange)
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         GeneralButton(
             text = if (isLoading) "Publishing..." else "Publish Review",
@@ -163,6 +210,7 @@ fun CreateReviewBody(
         )
     }
 }
+
 @Composable
 fun SelectedSongSection(
     song: Song,
@@ -174,7 +222,8 @@ fun SelectedSongSection(
         song = song,
         onClick = { },
         isFavorite = isFavorite,
-        onFavoriteClick = onFavoriteClick
+        onFavoriteClick = onFavoriteClick,
+        modifier = modifier.padding(horizontal = 3.dp)
     )
 }
 
@@ -182,7 +231,7 @@ fun SelectedSongSection(
 fun RatingSelectionCard(rating: Int, onRatingChange: (Int) -> Unit, modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceDim,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = modifier.padding(horizontal = 18.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -216,7 +265,7 @@ fun RatingSelectionCard(rating: Int, onRatingChange: (Int) -> Unit, modifier: Mo
 fun ReviewInputCard(reviewText: String, onReviewChange: (String) -> Unit, modifier: Modifier = Modifier) {
     Surface(
         color = MaterialTheme.colorScheme.surfaceDim,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = modifier.padding(horizontal = 18.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -258,19 +307,26 @@ fun ReviewInputCard(reviewText: String, onReviewChange: (String) -> Unit, modifi
     }
 }
 
-//--------------------------------------------------------------------------------------------------
-// PREVIEWS
-//--------------------------------------------------------------------------------------------------
 @Preview(showBackground = true)
 @Composable
 fun CreateReviewScreenPreview() {
     CompMovilProyectoTheme {
-        val songId = LocalSongsProvider.songs.first().songId
-
-        CreateReviewScreen(
-            songId = songId,
-            viewModel = viewModel(),
-            onBackClick = {}
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
+            SoyBackground()
+            Column(modifier = Modifier.fillMaxSize()) {
+                CreateReviewHeader(onBackClick = {})
+                CreateReviewBody(
+                    song = LocalSongsProvider.songs[0],
+                    reviewText = "",
+                    rating = 0,
+                    isLoading = false,
+                    isFavorite = false,
+                    onReviewChange = {},
+                    onRatingChange = {},
+                    onFavoriteClick = {},
+                    onSubmitClick = {}
+                )
+            }
+        }
     }
 }

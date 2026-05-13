@@ -154,4 +154,11 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.52")
     kaptAndroidTest("com.google.dagger:hilt-compiler:2.52")
 
+    // Dependencia para acceder al GPS y servicios de ubicacion de Google
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Dependencias para implementar Google Maps en Jetpack Compose
+    implementation("com.google.maps.android:maps-compose:2.14.0")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+
 }

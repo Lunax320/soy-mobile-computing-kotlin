@@ -72,39 +72,21 @@ class ReviewRepository @Inject constructor(
         }
     }
 
-    suspend fun createReview(
-        userId: String = "",
-        songId: String,
-        reviewText: String,
-        rating: Int,
-        date: String,
-        parentId: String? = null
-    ): Result<Unit> {
-
+    suspend fun createReview(review: CreateReviewDto): Result<Unit> {
         return try {
-            val userResult = userRepository.getUserById(userId)
-            val userProfile = userResult.getOrNull()
+            val userProfile = if (review.user == null) {
+                userRepository.getUserById(review.userId).getOrNull()
+            } else {
+                review.user
+            }
 
-            val songResult = songRepository.getSongById(songId)
-            val songDetails = songResult.getOrNull()
+            val enrichedReview = review.copy(user = userProfile)
 
-            val createReviewDto = CreateReviewDto(
-                userId = userId,
-                songId = songId,
-                songName = songDetails?.name ?: "Cancion Desconocida",
-                artistName = songDetails?.artist ?: "Artista Desconocido",
-                reviewText = reviewText,
-                rating = rating,
-                date = date,
-                parentId = parentId,
-                user = userProfile
-            )
-
-            reviewDataSource.createReview(createReviewDto)
-            Log.d("API_TRACKER", "Reseña normalizados")
+            reviewDataSource.createReview(enrichedReview)
+            Log.d("API_TRACKER", "Reseña creada con éxito")
             Result.success(Unit)
         } catch (e: Exception) {
-            Log.e("API_TRACKER", "Fallo al crear la reseña")
+            Log.e("API_TRACKER", "Fallo al crear la reseña: ${e.message}")
             Result.failure(e)
         }
     }
@@ -226,6 +208,16 @@ class ReviewRepository @Inject constructor(
             reviews
                 .map { it.toReview() }
                 .filter { it.parentId != null }
+        }
+    }
+
+    suspend fun getReviewsForMap(): List<Review> {
+        return try {
+            val reviewsDto = reviewDataSource.getLast24ReviewsWithLocation()
+            reviewsDto.map { it.toReview() }
+        } catch (e: Exception) {
+            Log.e("ReviewRepository", "Error al obtener reseñas para el mapa: ${e.message}")
+            emptyList()
         }
     }
 }

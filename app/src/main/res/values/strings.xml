@@ -72,4 +72,5 @@
     <string name="favorites" />
     <string name="my_favorites_songs">My Favorites Songs</string>
     <string name="favorites_songs">Favorites Songs</string>
+    <string name="publish_review">Publish Review</string>
 </resources>

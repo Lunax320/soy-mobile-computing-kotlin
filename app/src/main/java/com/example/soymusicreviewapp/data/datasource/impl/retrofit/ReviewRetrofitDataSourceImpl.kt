@@ -71,4 +71,8 @@ class ReviewRetrofitDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getLast24ReviewsWithLocation(): List<ReviewDto> {
+        TODO("Not yet implemented")
+    }
+
 }

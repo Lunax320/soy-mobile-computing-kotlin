@@ -48,6 +48,16 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.ui.theme.CompMovilProyectoTheme
+import android.Manifest
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material3.FloatingActionButton
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun TextSoy(
@@ -269,7 +279,7 @@ fun DateText(
     date: String
 ) {
     Text(
-        text = date,
+        text = formatReviewDate(date),
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         fontSize = 14.sp,
         modifier = modifier
@@ -402,6 +412,58 @@ fun BackButton(
         )
     }
 }
+
+@Composable
+fun MapFloatingActionButton(onNavigateToMap: () -> Unit) {
+    val context = LocalContext.current
+
+    // Se prepara el lanzador de permisos
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val fineGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+        val coarseGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        if (fineGranted || coarseGranted) {
+            // si dio permiso se ejecuta la navegacion
+            onNavigateToMap()
+        } else {
+            // Si lo denego se le avisamos por que no se puede abrir el mapa
+            Toast.makeText(context, "Se requiere permiso de ubicacion para ver el mapa", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Boton flotante
+    FloatingActionButton(
+        onClick = {
+            // Al hacer clic se dispara la peticion de permisos
+            permissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        },
+        containerColor = MaterialTheme.colorScheme.secondary,
+        contentColor = MaterialTheme.colorScheme.onSecondary
+    ) {
+        Icon(imageVector = Icons.Filled.Map, contentDescription = "Ver Mapa")
+    }
+}
+
+fun formatReviewDate(dateStr: String): String {
+    return try {
+        val millis = dateStr.toLong()
+        val date = Date(millis)
+        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        formatter.timeZone = TimeZone.getDefault()
+        formatter.format(date)
+    } catch (e: Exception) {
+        dateStr
+    }
+}
+
+
 
 // Preview
 

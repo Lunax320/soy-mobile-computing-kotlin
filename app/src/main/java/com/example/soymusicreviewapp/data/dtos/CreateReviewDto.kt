@@ -9,7 +9,9 @@ data class CreateReviewDto(
     val rating: Int,
     val date: String,
     val parentId: String?,
-    val user: UserDto?
+    val user: UserDto?,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 ) {
     constructor() : this(
         userId = "",
@@ -20,6 +22,8 @@ data class CreateReviewDto(
         rating = 0,
         date = "",
         parentId = null,
-        user = null
+        user = null,
+        latitude = null,
+        longitude = null
     )
 }

@@ -14,5 +14,7 @@ data class Review(
     val rating: Int,
     val parentId: String? = null,
     val likesCount: Int = 0,
-    val liked: Boolean = false
+    val liked: Boolean = false,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 )

@@ -9,5 +9,7 @@ data class CreateReviewState(
     val errorMessage: String? = null,
     val navigateBack: Boolean = false,
     val song: Song? = null,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val latitude: Double? = null,
+    val longitude: Double? = null
 )
