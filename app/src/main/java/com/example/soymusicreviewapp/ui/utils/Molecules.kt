@@ -1,5 +1,6 @@
 package com.example.soymusicreviewapp.ui.utils
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -34,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +49,41 @@ import androidx.compose.ui.unit.sp
 import com.example.soymusicreviewapp.R
 import com.example.soymusicreviewapp.data.Review
 import com.example.soymusicreviewapp.data.Song
+
+@Composable
+fun ShareReviewAction(
+    albumName: String,
+    artistName: String,
+    rating: Int,
+    comment: String,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val shareMessage = "¡Mira mi reseña en SoyMusicReviewApp! " +
+            "🎧 Álbum: $albumName de $artistName. " +
+            "Mi calificación: $rating/5 estrellas. " +
+            "Opinión: $comment" +
+            "<3"
+
+    IconButton(
+        onClick = {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, shareMessage)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            context.startActivity(shareIntent)
+        },
+        modifier = modifier
+    ) {
+        Icon(
+            imageVector = Icons.Default.Share,
+            contentDescription = "Share review",
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
 
 @Composable
 fun ReviewInfo(
@@ -141,6 +179,10 @@ fun ReviewInteractionBar(
     isLiked: Boolean,
     onLikeClick: () -> Unit,
     onCommentClick: () -> Unit,
+    albumName: String,
+    artistName: String,
+    rating: Int,
+    comment: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -175,6 +217,15 @@ fun ReviewInteractionBar(
                 tint = MaterialTheme.colorScheme.onPrimary
             )
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        ShareReviewAction(
+            albumName = albumName,
+            artistName = artistName,
+            rating = rating,
+            comment = comment
+        )
     }
 }
 
@@ -351,6 +402,10 @@ fun PreviewReviewInteractionBar(
         likesCount = 10,
         isLiked = true,
         onLikeClick = {},
-        onCommentClick = {}
+        onCommentClick = {},
+        albumName = "Album",
+        artistName = "Artist",
+        rating = 5,
+        comment = "Comment"
     )
 }

@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Send
-import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.soymusicreviewapp.ui.utils.BackButton
 import com.example.soymusicreviewapp.ui.utils.PlainBackground
 import com.example.soymusicreviewapp.ui.utils.ReviewInfo
+import com.example.soymusicreviewapp.ui.utils.ShareReviewAction
 
 @Composable
 fun ReviewDetailScreen(
@@ -78,10 +78,13 @@ fun ReviewDetailScreen(
                         onLike = {
                             Log.d("ReviewDetailScreen", "Usuario ${state.currentUserId} dio like a $reviewId")
                         },
-                        onShare = { /* */ },
                         onFavorite = { /* */ },
                         onComment = { onCommentClick(reviewId) },
                         isLiked = state.selectedReview?.liked ?: false,
+                        albumName = state.selectedReview!!.songName,
+                        artistName = state.selectedReview!!.artistName,
+                        rating = state.selectedReview!!.rating,
+                        comment = state.selectedReview!!.reviewText,
                         modifier = Modifier.testTag("reviewActionBar")
                     )
 
@@ -123,12 +126,15 @@ fun ReviewActionBar(
     modifier: Modifier = Modifier,
     onLike: () -> Unit,
     onComment: () -> Unit,
-    onShare: () -> Unit,
     onFavorite: () -> Unit,
-    isLiked: Boolean
+    isLiked: Boolean,
+    albumName: String,
+    artistName: String,
+    rating: Int,
+    comment: String
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -160,13 +166,11 @@ fun ReviewActionBar(
             )
         }
 
-        IconButton(onClick = onShare) {
-            Icon(
-                imageVector = Icons.Outlined.Share,
-                contentDescription = "Share",
-                tint = MaterialTheme.colorScheme.onPrimary
-            )
-        }
+        ShareReviewAction(
+            albumName = albumName,
+            artistName = artistName,
+            rating = rating,
+            comment = comment
+        )
     }
 }
-

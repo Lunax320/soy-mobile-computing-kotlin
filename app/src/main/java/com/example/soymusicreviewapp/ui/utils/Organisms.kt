@@ -172,7 +172,11 @@ fun ReviewCard(
                 likesCount = review.likesCount,
                 isLiked = review.liked,
                 onLikeClick = { onLikeClick(review.id) },
-                onCommentClick = { onCommentClick(review.id) }
+                onCommentClick = { onCommentClick(review.id) },
+                albumName = review.songName,
+                artistName = review.artistName,
+                rating = review.rating,
+                comment = review.reviewText
             )
         }
     }
