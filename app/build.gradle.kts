@@ -84,6 +84,7 @@ dependencies {
     //Hilt
     implementation(libs.dagger.hilt)
     implementation(libs.hilt.compose.navigation)
+    implementation(libs.androidx.compose.foundation)
     kapt(libs.dagger.kapt)
 
     //Firebase

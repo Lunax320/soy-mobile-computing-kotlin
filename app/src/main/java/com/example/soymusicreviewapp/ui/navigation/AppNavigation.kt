@@ -29,6 +29,7 @@ import com.example.soymusicreviewapp.ui.screens.editprofile.EditProfileScreen
 import com.example.soymusicreviewapp.ui.screens.commentreview.CommentReviewScreen
 import com.example.soymusicreviewapp.ui.screens.followersDetail.FollowersDetailScreen
 import com.example.soymusicreviewapp.ui.screens.followingdetail.FollowingDetailScreen
+import com.example.soymusicreviewapp.ui.screens.forgotpassword.ForgotPasswordScreen
 import com.example.soymusicreviewapp.ui.screens.createreview.CreateReviewScreen as ActualCreateReviewScreen
 import com.example.soymusicreviewapp.ui.screens.reviewsmap.ReviewsMapScreen as ActualReviewsMapScreen
 
@@ -50,6 +51,7 @@ sealed class Screen(val route: String) {
     object FollowersDetailScreen : Screen("followersDetail")
     object FollowingDetailScreen : Screen("followingDetail")
     object ReviewsMapScreen : Screen("reviewsMap")
+    object ForgotPasswordScreen : Screen("forgotPassword")
 }
 
 @Composable
@@ -89,7 +91,10 @@ fun AppNavigation(
         composable(route = Screen.LoginScreen.route) {
             LoginScreen(
                 viewModel = hiltViewModel(),
-                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) }
+                navigateToHome = { navController.navigate(Screen.ForYouFeedScreen.route) },
+                onForgotPasswordClick = {
+                    navController.navigate(Screen.ForgotPasswordScreen.route)
+                }
             )
         }
 
@@ -158,9 +163,7 @@ fun AppNavigation(
         composable(
             route = "createReview/{songId}",
             arguments = listOf(navArgument("songId") { type = NavType.StringType })
-        ) { 
-            // Corregido: Ya no pasamos parámetros manuales.
-            // ActualCreateReviewScreen obtiene todo lo necesario internamente.
+        ) {
             ActualCreateReviewScreen(
                 onBackClick = { navController.popBackStack() }
             )
@@ -321,6 +324,16 @@ fun AppNavigation(
             ActualReviewsMapScreen(
                 onBackClick = { navController.popBackStack() },
                 viewModel = hiltViewModel()
+            )
+        }
+
+        composable(route = Screen.ForgotPasswordScreen.route) {
+            ForgotPasswordScreen(
+                viewModel = hiltViewModel(),
+                onBackClick = { navController.popBackStack() },
+                onSuccess = {
+                    navController.popBackStack()
+                }
             )
         }
     }

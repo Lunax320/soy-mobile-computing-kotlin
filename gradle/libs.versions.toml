@@ -20,6 +20,7 @@ googleKotlinKsp = "2.0.21-1.0.25"
 firebaseCrashlytics = "3.0.3"
 firebaseBom = "33.7.0"
 hilt = "2.55"
+foundation = "1.11.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +29,7 @@ fun LoginScreen(
     navigateToHome: () -> Unit,
     //modifier: Modifier = Modifier.testTag("loginScreen"),
     modifier: Modifier = Modifier,
+    onForgotPasswordClick: () -> Unit,
     viewModel: LoginViewModel
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -57,7 +59,8 @@ fun LoginScreen(
                 onUserChange = { viewModel.onUserChange(it) },
                 onPasswordChange = { viewModel.onPasswordChange(it) },
                 onLoginButtonPressed = { viewModel.onLoginButtonPressed() },
-                onTogglePasswordVisibility = { viewModel.togglePasswordVisibility() }
+                onTogglePasswordVisibility = { viewModel.togglePasswordVisibility() },
+                onForgotPasswordClick = onForgotPasswordClick
             )
         }
     }
@@ -70,7 +73,8 @@ fun LoginScreenBody(
     onPasswordChange: (String) -> Unit,
     onLoginButtonPressed: () -> Unit,
     onTogglePasswordVisibility: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onForgotPasswordClick: () -> Unit,
 ) {
     Column(
         modifier = modifier.padding(horizontal = 35.dp)
@@ -126,6 +130,19 @@ fun LoginScreenBody(
                 onLoginButtonPressed()
             }
         )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        TextButton(
+            onClick = onForgotPasswordClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Forgot your password?",
+                color = MaterialTheme.colorScheme.secondary,
+                fontSize = 14.sp
+            )
+        }
     }
 }
 
@@ -138,7 +155,8 @@ fun LoginScreenPreview(){
     CompMovilProyectoTheme {
         LoginScreen(
             viewModel = viewModel(),
-            navigateToHome = {}
+            navigateToHome = {},
+            onForgotPasswordClick = {}
         )
     }
 }

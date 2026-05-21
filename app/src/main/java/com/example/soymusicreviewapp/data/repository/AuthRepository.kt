@@ -42,4 +42,15 @@ class AuthRepository @Inject constructor(
         authDataSource.signOut()
     }
 
+    suspend fun resetPassword(email: String): Result<Unit> {
+        return try {
+            authDataSource.resetPassword(email)
+            Result.success(Unit)
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Result.failure(Exception("No existe una cuenta con este correo electrónico"))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error al enviar el correo. Intenta nuevamente."))
+        }
+    }
 }
+

@@ -44,6 +44,7 @@ fun SOYApp() {
             currentRoute != Screen.LoginScreen.route &&
             currentRoute != Screen.RegisterScreen.route &&
             currentRoute != Screen.SplashScreen.route &&
+            currentRoute != Screen.ForgotPasswordScreen.route &&
             currentRoute?.startsWith("commentReview") != true
 
     val context = LocalContext.current
