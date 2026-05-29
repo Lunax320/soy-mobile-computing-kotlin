@@ -17,6 +17,8 @@ class ReviewFirestoreDataSourceImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : ReviewRemoteDataSource {
 
+    // Revisar
+
     override suspend fun getAllReviews(currentUserId: String): List<ReviewDto> {
         val snapshot = db.collection("reviews").get().await()
 
